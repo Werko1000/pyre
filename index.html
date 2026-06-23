@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PYRE — On-chain pixel art</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236B8FA0'/><rect x='20' y='45' width='40' height='8' fill='%23F0F0F0'/><rect x='30' y='25' width='8' height='40' fill='%23C4B5D0'/><rect x='55' y='35' width='8' height='8' fill='%23D4B87A'/><rect x='65' y='35' width='8' height='8' fill='%23D4B87A'/><rect x='55' y='45' width='8' height='8' fill='%23D4B87A'/><rect x='65' y='55' width='8' height='8' fill='%23D4B87A'/></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700;1,900&display=swap');
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --bg:#fff; --bg2:#fafafa; --bg3:#f5f5f5; --bg4:#efefef;
+  --border:#e8e8e8; --border2:#ddd; --border3:#ccc;
+  --text:#000; --text2:#666; --text3:#bbb;
+  --accent:#6B8FA0; --accent2:#4A7A8C;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Courier New',Courier,monospace;
+  --max:900px;
+  --c1:#E63946;--c2:#F4A261;--c3:#E9C46A;--c4:#2A9D8F;
+  --c5:#264653;--c6:#A8DADC;--c7:#457B9D;--c8:#1D3557;
+  --c9:#F1FAEE;--c10:#C8B6FF;--c11:#FF6B6B;--c12:#FFE66D;
+  --c13:#6BCB77;--c14:#4D96FF;--c15:#FF6FC8;--c16:#111111;
+}
+html { scroll-behavior:smooth; }
+body { font-family:var(--sans); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; }
+
+/* NAV */
+nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; top:0; z-index:100; }
+.nav-inner { max-width:var(--max); margin:0 auto; padding:0 32px; height:56px; display:flex; align-items:center; justify-content:space-between; }
+.nav-logo { font-family:var(--serif); font-style:italic; font-size:22px; font-weight:700; cursor:pointer; color:#000; letter-spacing:-0.5px; }
+.logo-s,.logo-t,.logo-i,.logo-x { color:#000; }
+.logo-dot { color:var(--accent); }
+.nav-links { display:flex; gap:32px; align-items:center; }
+.nav-links a { font-size:13px; color:var(--text3); text-decoration:none; cursor:pointer; transition:color 0.15s; letter-spacing:0; }
+.nav-links a:hover { color:#000; }
+.nav-menu-btn { display:none; background:none; border:none; cursor:pointer; font-size:20px; color:var(--text3); }
+.btn-wallet { font-size:12px; padding:7px 16px; border:1px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
+.btn-wallet:hover { border-color:#000; color:#000; }
+.btn-wallet.connected { border-color:var(--accent); color:var(--accent); }
+.wallet-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+.wallet-dropdown { position:absolute; right:32px; top:56px; background:#fff; border:1px solid var(--border); padding:6px; min-width:200px; z-index:200; }
+.wallet-dropdown-addr { font-size:11px; color:var(--text3); padding:6px 8px; border-bottom:1px solid var(--border); margin-bottom:4px; font-family:var(--mono); }
+.wallet-dropdown-item { width:100%; text-align:left; padding:8px 10px; font-size:12px; color:var(--c1); background:transparent; border:none; cursor:pointer; }
+.wallet-dropdown-item:hover { background:var(--bg3); }
+.mobile-nav { display:none; background:#fff; border-bottom:1px solid var(--border); padding:10px 32px; flex-direction:column; }
+.mobile-nav a { font-size:14px; color:var(--text2); padding:12px 0; cursor:pointer; border-bottom:1px solid var(--border); }
+.mobile-nav.open { display:flex; }
+
+/* HERO */
+.hero { padding:80px 0 72px; border-bottom:1px solid var(--border); }
+.hero-inner { max-width:var(--max); margin:0 auto; padding:0 32px; }
+.hero-eyebrow { font-size:12px; color:var(--text3); margin-bottom:24px; font-family:var(--mono); letter-spacing:0.5px; }
+.hero-title { font-family:var(--serif); font-style:italic; font-size:clamp(52px,9vw,96px); font-weight:900; letter-spacing:-3px; line-height:0.9; color:#000; margin-bottom:28px; }
+.hero-title span { color:var(--accent); font-style:italic; }
+.hero-sub { font-size:14px; color:var(--text2); line-height:1.8; max-width:380px; margin-bottom:36px; }
+.hero-sub2 { display:none; }
+.hero-actions { display:flex; gap:12px; margin-bottom:56px; flex-wrap:wrap; align-items:center; }
+.btn-primary { font-size:13px; padding:11px 28px; background:#000; color:#fff; border:1px solid #000; cursor:pointer; transition:all 0.15s; }
+.btn-primary:hover { background:var(--accent); border-color:var(--accent); }
+.btn-outline { font-size:13px; padding:11px 0; background:transparent; color:var(--text2); border:none; border-bottom:1px solid var(--border2); cursor:pointer; transition:all 0.15s; }
+.btn-outline:hover { color:#000; border-color:#000; }
+
+/* TICKER */
+.hero-ticker { display:flex; gap:12px; overflow-x:auto; padding-bottom:4px; }
+.hero-ticker::-webkit-scrollbar { display:none; }
+.ticker-card { flex-shrink:0; border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:border-color 0.15s; }
+.ticker-card:hover { border-color:var(--accent); }
+.ticker-card canvas { display:block; image-rendering:pixelated; width:160px; height:160px; }
+.ticker-footer { padding:7px 10px; display:flex; justify-content:space-between; background:#fff; border-top:1px solid var(--border); }
+.ticker-id { font-size:11px; color:#000; font-weight:600; font-family:var(--mono); }
+.ticker-label { font-size:10px; color:var(--text3); }
+
+/* STATS */
+.stats-bar { border-bottom:1px solid var(--border); }
+.stats-inner { max-width:var(--max); margin:0 auto; padding:0 32px; display:grid; grid-template-columns:repeat(4,1fr); }
+.stat { padding:28px 0; border-right:1px solid var(--border); padding-right:24px; margin-right:24px; }
+.stat:last-child { border-right:none; margin-right:0; }
+.stat-val { font-family:var(--serif); font-size:32px; font-weight:700; letter-spacing:-1px; color:#000; }
+.stat-lbl { font-size:11px; color:var(--text3); margin-top:4px; }
+
+/* SECTIONS */
+.section { border-bottom:1px solid var(--border); }
+.section-inner { max-width:var(--max); margin:0 auto; padding:56px 32px; }
+.section-label { font-size:11px; color:var(--text3); margin-bottom:28px; font-family:var(--mono); }
+
+/* MANIFESTO */
+.manifesto { border-bottom:1px solid var(--border); }
+.manifesto-inner { max-width:var(--max); margin:0 auto; padding:64px 32px; display:grid; grid-template-columns:1fr 1fr; gap:56px; }
+.manifesto h2 { font-family:var(--serif); font-style:italic; font-size:clamp(26px,4vw,42px); font-weight:700; letter-spacing:-1px; line-height:1.08; margin-bottom:24px; }
+.manifesto p { font-size:14px; color:var(--text2); line-height:1.85; margin-bottom:16px; }
+.manifesto-right { display:flex; flex-direction:column; gap:0; border-left:1px solid var(--border); padding-left:40px; }
+.manifesto-fact { padding:20px 0; border-bottom:1px solid var(--border); }
+.manifesto-fact:first-child { padding-top:0; }
+.manifesto-fact:last-child { border-bottom:none; }
+.fact-label { font-size:10px; color:var(--text3); margin-bottom:6px; font-family:var(--mono); }
+.fact-val { font-size:14px; font-weight:600; color:#000; margin-bottom:4px; }
+.fact-desc { font-size:13px; color:var(--text2); line-height:1.65; }
+
+/* HOW */
+.how { border-bottom:1px solid var(--border); }
+.how-inner { max-width:var(--max); margin:0 auto; padding:56px 32px; }
+.how-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-left:1px solid var(--border); }
+.how-step { padding:28px 32px; border-right:1px solid var(--border); }
+.how-step-num { font-size:11px; color:var(--accent); margin-bottom:14px; font-family:var(--mono); }
+.how-step h3 { font-family:var(--serif); font-style:italic; font-size:17px; font-weight:700; margin-bottom:10px; }
+.how-step p { font-size:13px; color:var(--text2); line-height:1.75; }
+
+/* GALLERY */
+.gallery-filters { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+.filter-btn { font-size:12px; padding:5px 14px; border:1px solid var(--border); background:transparent; color:var(--text3); cursor:pointer; transition:all 0.15s; }
+.filter-btn.active { border-color:#000; background:#000; color:#fff; }
+.nft-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.nft-card { border:1px solid var(--border); cursor:pointer; transition:border-color 0.15s; background:#fff; }
+.nft-card:hover { border-color:var(--accent); }
+.nft-card canvas { display:block; width:100%; image-rendering:pixelated; }
+.nft-footer { padding:9px 12px; display:flex; justify-content:space-between; border-top:1px solid var(--border); }
+.nft-footer-id { font-size:11px; font-weight:600; color:#000; font-family:var(--mono); }
+.nft-footer-price { font-size:11px; color:var(--text3); }
+
+/* MASTERPIECE GRID */
+.masterpiece-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.mp-card { border:1px solid var(--border); cursor:pointer; transition:border-color 0.15s; background:#fff; }
+.mp-card:hover { border-color:var(--accent); }
+.mp-card canvas { display:block; width:100%; image-rendering:pixelated; }
+.mp-card-info { padding:10px 12px; border-top:1px solid var(--border); }
+.mp-card-id { font-size:11px; font-weight:600; color:#000; font-family:var(--mono); }
+.mp-card-label { font-size:10px; color:var(--text3); margin-top:2px; }
+.mp-card-stage { display:inline-block; font-size:10px; color:var(--accent); margin-top:4px; font-family:var(--mono); }
+
+/* MINT */
+.mint-page-inner { max-width:var(--max); margin:0 auto; padding:48px 32px; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
+.mint-stage { display:grid; grid-template-columns:300px 1fr; gap:32px; align-items:start; }
+.mint-visual { position:relative; width:300px; height:300px; }
+.mint-visual canvas,.mint-visual img { display:block; image-rendering:pixelated; width:300px; height:300px; background:var(--bg2); border:1px solid var(--border); }
+.mint-info { display:flex; flex-direction:column; gap:14px; }
+.mint-rows { border:1px solid var(--border); overflow:hidden; }
+.mint-row { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }
+.mint-row:last-child { border-bottom:none; }
+.mint-row .lbl { font-size:11px; color:var(--text3); font-family:var(--mono); }
+.mint-row .val { font-size:13px; font-weight:600; color:#000; }
+.mint-cta { width:100%; padding:13px; border:none; background:#000; color:#fff; font-size:13px; cursor:pointer; transition:background 0.15s; }
+.mint-cta:hover { background:var(--accent); }
+.mint-cta:disabled { background:var(--bg3); color:var(--text3); cursor:not-allowed; }
+.mint-spinner-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.92); display:none; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+.mint-spinner-overlay.active { display:flex; }
+.mint-spinner-ring { width:32px; height:32px; border:2px solid var(--border2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+.mint-spinner-text { font-size:12px; color:var(--text2); font-family:var(--mono); }
+@keyframes spin { to { transform:rotate(360deg); } }
+.reveal-pop { animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes pop { from { transform:scale(0.92); opacity:0; } to { transform:scale(1); opacity:1; } }
+.reveal-title { font-family:var(--serif); font-style:italic; font-size:24px; font-weight:700; letter-spacing:-0.5px; }
+.mint-desc { font-size:13px; color:var(--text2); line-height:1.7; }
+.attr-pill { font-size:11px; background:var(--bg3); border:1px solid var(--border); padding:3px 8px; color:var(--text2); font-family:var(--mono); }
+.color-dot { display:inline-block; width:8px; height:8px; vertical-align:middle; margin-right:4px; }
+.stick-attrs { display:flex; gap:5px; flex-wrap:wrap; }
+.mint-actions { display:flex; gap:10px; }
+.mint-price-display { color:var(--accent); font-weight:600; }
+
+/* QTY PICKER */
+.qty-wrap { margin:14px 0 10px; }
+.qty-label { font-size:11px; color:var(--text3); margin-bottom:8px; font-family:var(--mono); }
+.qty-btns { display:flex; gap:6px; }
+.qty-btn { flex:1; padding:10px 0; border:1px solid var(--border2); background:transparent; color:var(--text2); font-size:15px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+.qty-btn:hover { border-color:#000; color:#000; }
+.qty-btn.active { border-color:#000; background:#000; color:#fff; }
+.mint-total-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0 14px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+
+/* BURN */
+.burn-select-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; }
+.burn-col h4 { font-size:13px; font-weight:600; margin-bottom:4px; }
+.burn-col.keep h4 { color:var(--accent); }
+.burn-col.burn h4 { color:var(--c1); }
+.burn-col-sub { font-size:12px; color:var(--text3); margin-bottom:12px; font-family:var(--mono); }
+.burn-pick-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.burn-pick { border:1.5px solid var(--border); cursor:pointer; transition:border-color 0.15s; position:relative; background:#fff; }
+.burn-pick:hover { border-color:var(--border2); }
+.burn-pick canvas { display:block; width:100%; image-rendering:pixelated; }
+.burn-pick .pick-label { padding:6px 8px; font-size:11px; color:var(--text3); border-top:1px solid var(--border); font-family:var(--mono); }
+.burn-pick.sel-keep { border-color:var(--accent); }
+.burn-pick.sel-burn { border-color:var(--c1); }
+.burn-pick .pick-tag { position:absolute; top:6px; right:6px; font-size:10px; font-weight:700; padding:2px 7px; color:#fff; }
+.burn-pick.sel-keep .pick-tag { background:var(--accent); }
+.burn-pick.sel-burn .pick-tag { background:var(--c1); }
+.burn-confirm { border:1px solid var(--border); padding:20px; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+.burn-preview-canvas { image-rendering:pixelated; border:1px solid var(--border); }
+.burn-confirm-text h4 { font-family:var(--serif); font-style:italic; font-size:16px; font-weight:700; margin-bottom:6px; }
+.burn-confirm-text p { font-size:13px; color:var(--text2); line-height:1.65; margin-bottom:14px; }
+.burn-go { padding:11px 22px; background:var(--c1); color:#fff; border:none; font-size:13px; cursor:pointer; }
+.burn-go:hover { opacity:0.88; }
+.burn-go:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* EDITOR */
+.editor-wrap { display:grid; grid-template-columns:480px 1fr; gap:24px; align-items:start; }
+.editor-canvas-area { display:flex; flex-direction:column; gap:10px; }
+.editor-canvas-area canvas { image-rendering:pixelated; border:1px solid var(--border); width:480px; height:480px; display:block; cursor:crosshair; }
+.editor-side { display:flex; flex-direction:column; gap:10px; }
+#editor-stick-list { max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
+.tool-tabs { display:flex; gap:6px; margin-bottom:8px; }
+.tool-tab { flex:1; padding:9px; font-size:12px; font-weight:600; border:1px solid var(--border2); background:transparent; color:var(--text3); cursor:pointer; text-align:center; transition:all 0.15s; }
+.tool-tab.active.sticks-tab { border-color:var(--accent); background:var(--accent); color:#fff; }
+.tool-tab.active.blocks-tab { border-color:var(--c1); background:var(--c1); color:#fff; }
+.tetro-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.tetro-btn { border:1px solid var(--border); padding:6px 3px 4px; cursor:pointer; background:#fff; transition:all 0.15s; display:flex; flex-direction:column; align-items:center; }
+.tetro-btn:hover { border-color:var(--border2); }
+.tetro-btn.active { border-color:var(--c1); background:rgba(230,57,70,0.04); }
+.rot-btns { display:flex; gap:4px; }
+.rot-btn { flex:1; padding:7px 4px; font-size:11px; border:1px solid var(--border2); background:transparent; cursor:pointer; text-align:center; font-weight:600; color:var(--text3); transition:all 0.12s; }
+.rot-btn.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+.editor-section { font-size:11px; font-weight:600; color:var(--text3); margin-bottom:6px; font-family:var(--mono); }
+.save-btn { width:100%; padding:11px; border:none; background:#000; color:#fff; font-size:13px; cursor:pointer; transition:background 0.15s; }
+.save-btn:hover { background:var(--accent); }
+.save-btn:disabled { background:var(--bg3); color:var(--text3); cursor:not-allowed; }
+.burn-card { background:rgba(230,57,70,0.03); border:1px solid rgba(230,57,70,0.15); padding:14px; }
+.burn-card h4 { font-size:13px; color:var(--c1); margin-bottom:5px; font-family:var(--serif); font-style:italic; }
+.burn-card p { font-size:12px; color:var(--text2); line-height:1.55; margin-bottom:10px; }
+.burn-btn { width:100%; padding:8px; border:1px solid var(--c1); background:transparent; color:var(--c1); font-size:12px; cursor:pointer; transition:all 0.15s; }
+.burn-btn:hover { background:var(--c1); color:#fff; }
+.editor-stick-card { border:1px solid var(--border); padding:10px 13px; cursor:pointer; background:#fff; transition:border-color 0.15s; }
+.editor-stick-card.active { border-color:var(--accent); }
+.stick-label { font-size:10px; color:var(--text3); margin-bottom:5px; font-family:var(--mono); }
+.edit-status { display:flex; align-items:center; gap:10px; padding:11px 14px; margin-bottom:18px; font-size:12px; }
+.edit-status.has-credit { background:rgba(107,143,160,0.06); border:1px solid rgba(107,143,160,0.2); color:var(--accent); }
+.edit-status.no-credit { background:var(--bg2); border:1px solid var(--border); color:var(--text3); }
+.edit-status .credit-num { font-family:var(--serif); font-size:20px; font-weight:700; }
+.dir-btn { flex:1; padding:8px 0; border:1px solid var(--border2); background:transparent; color:var(--text2); font-size:15px; cursor:pointer; transition:all 0.15s; }
+.dir-btn.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+
+/* MY PYRES */
+.mynft-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.mynft-card { border:1px solid var(--border); cursor:pointer; transition:border-color 0.15s; background:#fff; position:relative; }
+.mynft-card:hover { border-color:var(--accent); }
+.mynft-card.editable { border-color:var(--accent); }
+.mynft-card canvas { display:block; width:100%; image-rendering:pixelated; }
+.mynft-footer { padding:10px 12px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); }
+.mynft-info h4 { font-size:12px; font-weight:600; font-family:var(--mono); }
+.mynft-info span { font-size:11px; color:var(--text3); }
+.edit-btn { font-size:11px; padding:5px 12px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all 0.15s; }
+.edit-btn:hover { border-color:#000; color:#000; }
+.edit-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:600; padding:2px 8px; }
+.mynft-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); margin-bottom:20px; }
+.mynft-stat { background:#fff; padding:16px; }
+.mynft-stat-val { font-family:var(--serif); font-size:24px; font-weight:700; color:#000; }
+.mynft-stat-lbl { font-size:10px; color:var(--text3); margin-top:3px; font-family:var(--mono); }
+.history-wrap { margin-top:28px; border-top:1px solid var(--border); padding-top:20px; }
+.history-label { font-size:11px; color:var(--text3); margin-bottom:12px; font-family:var(--mono); }
+.history-list { display:flex; flex-direction:column; gap:6px; }
+.history-item { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--bg2); border:1px solid var(--border); }
+.history-icon { font-size:14px; flex-shrink:0; width:20px; text-align:center; }
+.history-text { font-size:12px; color:var(--text2); flex:1; line-height:1.5; }
+.history-text strong { color:#000; font-weight:600; }
+.history-time { font-size:10px; color:var(--text3); font-family:var(--mono); }
+
+/* BUILDING BLOCKS */
+.blocks-section { display:flex; flex-direction:column; gap:32px; }
+.blocks-title { font-size:11px; font-weight:600; color:var(--text3); margin-bottom:14px; font-family:var(--mono); }
+.color-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.color-swatch { width:32px; height:32px; border:1px solid var(--border); cursor:pointer; transition:transform 0.15s; }
+.color-swatch:hover { transform:scale(1.15); }
+.tetro-showcase { display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start; }
+.tetro-type { display:flex; flex-direction:column; gap:8px; }
+.tetro-type-name { font-size:13px; font-weight:600; color:var(--accent); font-family:var(--mono); }
+.tetro-rot-row { display:flex; gap:4px; }
+.sticks-showcase { display:flex; gap:20px; }
+.stick-demo { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.stick-lbl { font-size:10px; color:var(--text3); font-family:var(--mono); }
+
+/* EVOLUTION */
+.evo-section { display:flex; flex-direction:column; gap:32px; }
+.evo-row { display:flex; gap:12px; align-items:flex-end; }
+.evo-item { flex:1; display:flex; flex-direction:column; gap:8px; position:relative; }
+.evo-item:not(:last-child)::after { content:'→'; position:absolute; right:-10px; top:40%; font-size:14px; color:var(--text3); }
+.evo-canvas-wrap { width:100%; border:1px solid var(--border); overflow:hidden; transition:border-color 0.15s; }
+.evo-canvas-wrap:hover { border-color:var(--accent); }
+.evo-canvas-wrap canvas { display:block; width:100%; image-rendering:pixelated; }
+.evo-info { text-align:center; }
+.evo-stage { font-size:11px; font-weight:600; color:#000; font-family:var(--mono); }
+.evo-burns { font-size:10px; color:var(--text3); margin-top:2px; font-family:var(--mono); }
+.evo-bar { width:100%; height:2px; border-radius:1px; margin-top:6px; }
+.evo-label { font-size:11px; color:var(--text3); margin-bottom:16px; font-family:var(--mono); }
+
+/* MISC */
+.connect-prompt { text-align:center; padding:80px 20px; }
+.connect-prompt h2 { font-family:var(--serif); font-style:italic; font-size:26px; font-weight:700; margin-bottom:10px; }
+.connect-prompt p { font-size:14px; color:var(--text2); margin-bottom:28px; max-width:320px; margin-left:auto; margin-right:auto; }
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(8px); background:#000; color:#fff; padding:10px 18px; font-size:13px; opacity:0; transition:all 0.22s; pointer-events:none; z-index:999; white-space:nowrap; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+footer { border-top:1px solid var(--border); }
+.footer-inner { max-width:var(--max); margin:0 auto; padding:24px 32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+.footer-logo { font-family:var(--serif); font-style:italic; font-size:18px; font-weight:700; color:#000; }
+.footer-links a { font-size:12px; color:var(--text3); text-decoration:none; cursor:pointer; margin-left:20px; }
+.footer-links a:hover { color:var(--text2); }
+.footer-note { font-size:11px; color:var(--text3); font-family:var(--mono); }
+.page { display:none; }
+.page.active { display:block; }
+@media(max-width:700px){
+  .nav-links { display:none; }
+  .nav-menu-btn { display:block !important; }
+  .stats-inner { grid-template-columns:repeat(2,1fr); }
+  .manifesto-inner { grid-template-columns:1fr; gap:28px; }
+  .how-steps { grid-template-columns:1fr; }
+  .nft-grid,.masterpiece-grid { grid-template-columns:repeat(2,1fr); }
+  .mint-page-inner { grid-template-columns:1fr; }
+  .mint-visual { width:100%; height:auto; aspect-ratio:1; }
+  .mint-visual canvas { width:100%; height:auto; }
+  .editor-wrap { grid-template-columns:1fr; }
+  .mynft-grid { grid-template-columns:repeat(2,1fr); }
+  .evo-row { gap:6px; }
+  .evo-item:not(:last-child)::after { display:none; }
+}
+@media(max-width:420px){
+  .nft-grid,.masterpiece-grid { grid-template-columns:1fr; }
+}
+.qty-wrap,.qty-label,.qty-btns,.qty-btn{} 
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="showPage('home')">
+      <span class="logo-s">P</span><span class="logo-t">y</span><span class="logo-i">r</span><span class="logo-x">e</span><span class="logo-dot">.</span>
+    </div>
+    <div class="nav-links">
+      <a onclick="showPage('home')">home</a>
+      <a onclick="showPage('mint')">mint</a>
+      <a onclick="showPage('gallery')">gallery</a>
+      <a onclick="showPage('mynfts')">my pyres</a>
+      <a onclick="showPage('burn')">burn</a>
+      <a onclick="showPage('editor')">editor</a>
+      <button class="btn-wallet" id="wallet-btn" onclick="handleWalletClick()">
+        <span class="wallet-dot"></span>
+        <span id="wallet-label">Connect wallet</span>
+      </button>
+      <div class="wallet-dropdown" id="wallet-dropdown" style="display:none;">
+        <div class="wallet-dropdown-addr" id="wallet-dropdown-addr"></div>
+        <button class="wallet-dropdown-item" onclick="disconnectWallet()">Disconnect</button>
+      </div>
+    </div>
+    <button class="nav-menu-btn" onclick="toggleMobileNav()" aria-label="Menu">&#9776;</button>
+  </div>
+  <div class="mobile-nav" id="mobile-nav">
+    <a onclick="showPage('home');toggleMobileNav()">home</a>
+    <a onclick="showPage('mint');toggleMobileNav()">mint</a>
+    <a onclick="showPage('gallery');toggleMobileNav()">gallery</a>
+    <a onclick="showPage('mynfts');toggleMobileNav()">my pyres</a>
+    <a onclick="showPage('burn');toggleMobileNav()">burn</a>
+    <a onclick="showPage('editor');toggleMobileNav()">editor</a>
+    <a onclick="handleWalletClick();toggleMobileNav()" id="mobile-wallet-link">Connect wallet</a>
+  </div>
+</nav>
+
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">on-chain pixel art · ethereum · cc0</div>
+      <div class="hero-title">Burn every<br><span>thing.</span></div>
+      <div class="hero-sub">Two tokens enter. One survives — carrying everything. Arrange it pixel by pixel. Save it to the chain. No servers. No IPFS. Forever.</div>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('mint')">Mint a Pyre</button>
+        <button class="btn-outline" onclick="showPage('gallery')">View collection →</button>
+      </div>
+      <div class="hero-ticker" id="hero-ticker"></div>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat"><div class="stat-val" id="stat-remaining">10,000</div><div class="stat-lbl">Remaining</div></div>
+      <div class="stat"><div class="stat-val">0.001Ξ</div><div class="stat-lbl">Mint Price</div></div>
+      <div class="stat"><div class="stat-val" id="stat-burned">—</div><div class="stat-lbl">Burned</div></div>
+      <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">Tetromino Types</div></div>
+    </div>
+  </div>
+  <div class="manifesto">
+    <div class="manifesto-inner">
+      <div>
+        <h2>Art that lives<br>on the chain.</h2>
+        <p>Most NFT projects store images on IPFS or a centralized server. If the team disappears, the art disappears. PYRE is different.</p>
+        <p>Every pixel, every color, every stick position is encoded directly into the smart contract on Ethereum. The SVG is generated on-chain, on demand, every time. No image to host. Nothing to lose.</p>
+        <p>Burn two Pyres together and get all elements in one canvas — yours to arrange however you like. Keep burning, keep building. The chain remembers everything.</p>
+      </div>
+      <div class="manifesto-right">
+        <div class="manifesto-fact">
+          <div class="fact-label">Storage</div>
+          <div class="fact-val">On-chain SVG</div>
+          <div class="fact-desc">Pixel data packed directly into the contract. No IPFS. No external URLs.</div>
+        </div>
+        <div class="manifesto-fact">
+          <div class="fact-label">Licence</div>
+          <div class="fact-val">CC0 — Public Domain</div>
+          <div class="fact-desc">The art, the contracts, the code — all belong to everyone.</div>
+        </div>
+        <div class="manifesto-fact">
+          <div class="fact-label">Blockchain</div>
+          <div class="fact-val">Ethereum</div>
+          <div class="fact-desc">Permanent, decentralised, unstoppable. If Ethereum exists, your Pyre exists.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="how">
+    <div class="how-inner">
+      <div class="section-label">How it works</div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-num">01 — Mint</div>
+          <h3>Random elements, VRF-powered.</h3>
+          <p>Each Pyre is minted with random sticks and Tetrominos — color, length, type all chosen by Chainlink VRF. No two are alike.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">02 — Burn</div>
+          <h3>Burn two, get one richer.</h3>
+          <p>Sacrifice two Pyres and receive one carrying all elements. Burn again. Stack more. The more you burn, the richer your canvas.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">03 — Create</div>
+          <h3>Arrange. Commit. Own.</h3>
+          <p>Use the on-chain editor to place every element exactly where you want. Save to the contract. That's your art, permanently.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">What you can build</div>
+      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:480px;">Burn enough Pyres and the elements add up. Here's what's possible on a 24×24 canvas.</p>
+      <div class="masterpiece-grid" id="home-gallery"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Evolution</div>
+      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre starts as a few random elements. Burn to grow. The same DNA evolves from Line to Masterpiece.</p>
+      <div class="evo-section" id="home-evo"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Building Blocks</div>
+      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre is built from just three ingredients — colors, sticks, and Tetrominos. Infinite combinations, all on-chain.</p>
+      <div class="blocks-section" id="home-blocks"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-gallery" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Gallery</div>
+      <div class="gallery-filters">
+        <button class="filter-btn active" onclick="filterGallery(this,'all')">All</button>
+        <button class="filter-btn" onclick="filterGallery(this,'art')">Artworks</button>
+        <button class="filter-btn" onclick="filterGallery(this,'3')">3 sticks</button>
+        <button class="filter-btn" onclick="filterGallery(this,'6')">6 sticks</button>
+        <button class="filter-btn" onclick="filterGallery(this,'9')">9+ sticks</button>
+      </div>
+      <div class="nft-grid" id="gallery-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-mint" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Mint a Pyre</div>
+      <div class="mint-stage">
+        <div class="mint-visual">
+          <canvas id="mint-canvas" width="300" height="300"></canvas>
+          <div class="mint-spinner-overlay" id="mint-spinner">
+            <div class="mint-spinner-ring"></div>
+            <div class="mint-spinner-text" id="mint-spinner-text">Requesting randomness…</div>
+          </div>
+        </div>
+        <div class="mint-info">
+          <div id="mint-state-idle">
+            <h3>Mint is a surprise.</h3>
+            <p class="mint-desc">Each Pyre is generated from on-chain Chainlink randomness — sticks and Tetrominos, unmanipulable, unknowable in advance.</p>
+            <div class="mint-rows">
+              <div class="mint-row"><span class="lbl">Elements</span><span class="val">3–5 per Pyre (random)</span></div>
+              <div class="mint-row"><span class="lbl">Canvas</span><span class="val">24×24 px on-chain</span></div>
+              <div class="mint-row"><span class="lbl">Storage</span><span class="val">100% on-chain</span></div>
+              <div class="mint-row"><span class="lbl">Network</span><span class="val">Ethereum Sepolia</span></div>
+              <div class="mint-row" style="border:none"><span class="lbl">Price per Pyre</span><span class="val mint-price-display" id="price-per">TBD</span></div>
+            </div>
+            <!-- Quantity picker -->
+            <div class="qty-wrap">
+              <div class="qty-label">How many?</div>
+              <div class="qty-btns">
+                <button class="qty-btn active" onclick="setQty(1)">1</button>
+                <button class="qty-btn" onclick="setQty(2)">2</button>
+                <button class="qty-btn" onclick="setQty(3)">3</button>
+                <button class="qty-btn" onclick="setQty(4)">4</button>
+                <button class="qty-btn" onclick="setQty(5)">5</button>
+              </div>
+            </div>
+            <div class="mint-total-row">
+              <span style="color:var(--text2);font-size:13px;">Total</span>
+              <span class="mint-price-display" id="mint-total-price" style="font-size:16px;font-weight:700;">TBD</span>
+            </div>
+            <button class="mint-cta" id="mint-cta" onclick="handleMint()">Mint 1 Pyre</button>
+          </div>
+          <div id="mint-state-revealed" style="display:none;">
+            <h3 id="reveal-title">Meet Pyre #—</h3>
+            <p class="mint-desc">Minted and stored on-chain. Sticks and Tetrominos — burn another Pyre to unlock edits.</p>
+            <div id="reveal-stick-list"></div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button class="mint-cta" style="flex:1;" onclick="showPage('mynfts')">View in My Pyres</button>
+              <button class="btn-outline" onclick="resetMint()">Mint another</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-mynfts" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">My collection</div>
+      <div id="mynft-content"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-burn" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Burn Burn &amp; mergeamp; forge</div>
+      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px;max-width:520px;">Pick the Pyre you want to <b>keep</b> and the one you want to <b>burn</b>. The burned Pyre's elements move into the keeper — and the keeper unlocks one edit. The burned token is gone forever.</p>
+      <div id="burn-content"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-editor" class="page">
+  <div class="section-inner" style="max-width:900px;margin:0 auto;padding:28px 24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="section-label" id="editor-title-label" style="margin-bottom:0;">Editor</div>
+      <div id="edit-status"></div>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-canvas-area">
+        <canvas id="editor-canvas" width="480" height="480"></canvas>
+        <div class="editor-hint" id="editor-hint">Click to place · drag to move sticks</div>
+      </div>
+      <div class="editor-side">
+        <div class="tool-tabs">
+          <button class="tool-tab sticks-tab active" id="tab-sticks" onclick="setEditorTool('sticks')">✏️ Sticks</button>
+          <button class="tool-tab blocks-tab" id="tab-blocks" onclick="setEditorTool('blocks')">🟦 Tetrix</button>
+        </div>
+        <div id="editor-stick-panel">
+          <div class="section-label">Sticks</div>
+          <div id="editor-stick-list"></div>
+        </div>
+        <div id="editor-block-panel" style="display:none;">
+          <div class="section-label" style="margin-bottom:6px;">Tetromino</div>
+          <div class="tetro-grid" id="tetro-picker"></div>
+          <div style="margin-top:8px;">
+            <div class="section-label" style="margin-bottom:4px;">Rotation</div>
+            <div class="rot-btns" id="rot-btns">
+              <button class="rot-btn active" onclick="setBlockRot(0)">0°</button>
+              <button class="rot-btn" onclick="setBlockRot(1)">90°</button>
+              <button class="rot-btn" onclick="setBlockRot(2)">180°</button>
+              <button class="rot-btn" onclick="setBlockRot(3)">270°</button>
+            </div>
+          </div>
+          <div style="margin-top:8px;" class="section-label">Color</div>
+          <div id="block-color-picker" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;"></div>
+        </div>
+        <div id="editor-controls"></div>
+        <button class="save-btn" id="save-btn" onclick="handleSave()">Save layout on-chain</button>
+        <div style="margin-top:6px;">
+          <div class="section-label" style="margin-bottom:6px;">Name your Pyre</div>
+          <div style="display:flex;gap:6px;">
+            <input id="name-input" type="text" maxlength="32" placeholder="Untitled"
+              style="flex:1;font-size:12px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:6px;outline:none;font-family:inherit;background:var(--bg3);color:var(--text);">
+            <button onclick="handleSetName()" style="font-size:12px;padding:7px 12px;border:none;border-radius:6px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;">Set</button>
+          </div>
+        </div>
+        <div class="burn-card">
+          <h4>Burn Burn &amp; mergeamp; forge</h4>
+          <p>Burn another Pyre to absorb its elements — and unlock one new edit.</p>
+          <button class="burn-btn" onclick="showPage('burn')">Go to Burn Burn &amp; mergeamp; forge</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo"><span class="logo-s">P</span><span class="logo-t">y</span><span class="logo-i">r</span><span class="logo-x">e</span><span class="logo-dot">.</span></div>
+    <div class="footer-links">
+      <a>OpenSea</a><a>BaseScan</a><a>Twitter</a><a>Discord</a>
+    </div>
+    <div class="footer-note">CC0 &middot; 100% on-chain &middot; Base</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script>
+// NPC-inspired palette: skin tones, grays, muted accents
+const PALETTE=['#252525','#6B6B6B','#C8C8C8','#F0F0F0','#D4B87A','#BEA865','#C4B5D0','#9080A0','#4A6B80','#B5C4CC','#8A7060','#E8E0D0','#1C1C1C','#A0A0A0','#D0C0A8','#5A7A90'];
+const DIR_NAMES=["--","|","↘","↗"];
+const GRID=24;
+
+// ── Contract config ──────────────────────────────────────────────────────────
+const CONTRACT_ADDRESS = "0x4CCB74c3188A4e463001352603ea82a2CF0BAC7d";
+const CHAIN_ID_HEX = "0xaa36a7"; // Ethereum Sepolia = 11155111
+const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_KEY";
+
+const ABI = [
+  "function requestMint() payable returns (uint256)",
+  "function mergeBurn(uint256 keepId, uint256 burnId)",
+  "function saveLayout(uint256 tokenId, tuple(uint8 color, uint8 length, uint8 x, uint8 y, uint8 dir)[] newSticks, tuple(uint8 color, uint8 blockType, uint8 rotation, uint8 x, uint8 y)[] newBlocks)",
+  "function setTokenName(uint256 tokenId, string name)",
+  "function getSticks(uint256 tokenId) view returns (tuple(uint8 color, uint8 length, uint8 x, uint8 y, uint8 dir)[])",
+  "function getBlocks(uint256 tokenId) view returns (tuple(uint8 color, uint8 blockType, uint8 rotation, uint8 x, uint8 y)[])",
+  "function elementCount(uint256 tokenId) view returns (uint256 sticks, uint256 blocks)",
+  "function editCredits(uint256 tokenId) view returns (uint8)",
+  "function tokenName(uint256 tokenId) view returns (string)",
+  "function tokenURI(uint256 tokenId) view returns (string)",
+  "function tokensOfOwner(address owner) view returns (uint256[])",
+  "function balanceOf(address owner) view returns (uint256)",
+  "function totalMinted() view returns (uint256)",
+  "function totalSupply() view returns (uint256)",
+  "function mintOpen() view returns (bool)",
+  "function price() view returns (uint256)",
+  "function ownerOf(uint256 tokenId) view returns (address)",
+  "event Minted(address indexed minter, uint256 indexed tokenId, uint8 sticks, uint8 blocks)",
+  "event Merged(uint256 indexed keepId, uint256 indexed burnedId, uint8 newCredits)",
+  "event LayoutSaved(uint256 indexed tokenId, uint8 remainingCredits)"
+];
+
+function getProvider() {
+  // Always use Alchemy for read calls — MetaMask's RPC is too limited
+  return new ethers.providers.JsonRpcProvider(RPC_URL);
+}
+function getContract(withSigner=false) {
+  if (withSigner) {
+    const eth = getEthereum();
+    if (!eth) throw new Error('No wallet connected');
+    const web3provider = new ethers.providers.Web3Provider(eth);
+    return new ethers.Contract(CONTRACT_ADDRESS, ABI, web3provider.getSigner());
+  }
+  return new ethers.Contract(CONTRACT_ADDRESS, ABI, getProvider());
+}
+
+// Convert on-chain stick tuple to our JS format
+// ethers.js v5 returns tuples as arrays [color, length, x, y, dir]
+// IMPORTANT: s.length = array length (5), NOT the stick length!
+// Always use numeric indices to avoid this ambiguity.
+function formatStick(s) {
+  return {
+    color:  PALETTE[Number(s[0])] || PALETTE[0],
+    length: Number(s[1]),
+    x:      Number(s[2]),
+    y:      Number(s[3]),
+    dir:    Number(s[4])
+  };
+}
+function formatBlock(b) {
+  return {
+    color:     PALETTE[Number(b[0])] || PALETTE[0],
+    blockType: Number(b[1]),
+    rotation:  Number(b[2]),
+    x:         Number(b[3]),
+    y:         Number(b[4])
+  };
+}
+function toChainStick(s) {
+  const colorIdx = PALETTE.indexOf(s.color);
+  return { color: colorIdx>=0?colorIdx:0, length: Number(s.length), x: Number(s.x), y: Number(s.y), dir: Number(s.dir) };
+}
+function toChainBlock(b) {
+  const colorIdx = PALETTE.indexOf(b.color);
+  return { color: colorIdx>=0?colorIdx:0, blockType: Number(b.blockType), rotation: Number(b.rotation), x: Number(b.x), y: Number(b.y) };
+}
+// Fetch on-chain SVG image from tokenURI
+async function fetchTokenImage(tokenId){
+  try{
+    const contract=getContract();
+    const uri=await contract.tokenURI(tokenId);
+    const json=JSON.parse(atob(uri.split(',')[1]));
+    return json.image; // "data:image/svg+xml;base64,..."
+  }catch(e){ console.warn('fetchTokenImage error:',e.message); return null; }
+}
+
+// Create an <img> that shows the on-chain SVG (with placeholder while loading)
+function makeOnchainImg(tokenId, size){
+  const img=document.createElement('img');
+  img.style.cssText='width:100%;display:block;border-radius:0;';
+  img.alt='Pyre #'+tokenId;
+  // grey placeholder
+  img.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"><rect width="50" height="50" fill="%23f5f5f5"/></svg>';
+  fetchTokenImage(tokenId).then(src=>{ if(src) img.src=src; });
+  return img;
+}
+// Convert JS stick back to on-chain tuple
+function toChainStick(s) {
+  const colorIdx = PALETTE.indexOf(s.color);
+  return {
+    color:  colorIdx >= 0 ? colorIdx : 0,
+    length: Number(s.length),
+    x:      Number(s.x),
+    y:      Number(s.y),
+    dir:    Number(s.dir)
+  };
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+let walletAddress=null;
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function makeStick(){return{color:PALETTE[rand(0,15)],length:rand(5,15),x:rand(8,42),y:rand(8,42),dir:rand(0,3)};}
+function makeNFT(n,seedArr){
+  if(!seedArr) return Array.from({length:n||3},makeStick);
+  const s=seedArr[0];
+  const sticks=[];
+  for(let i=0;i<Math.min(n,12);i++){
+    sticks.push({
+      color:PALETTE[Math.abs(Math.floor(Math.sin(s+i*3+1)*16))%16],
+      length:3+Math.abs(Math.floor(Math.sin(s+i*7+1)*7))%7,
+      x:2+Math.abs(Math.floor(Math.sin(s+i*11+1)*20))%(GRID-4),
+      y:2+Math.abs(Math.floor(Math.sin(s+i*13+1)*20))%(GRID-4),
+      dir:Math.abs(Math.floor(Math.sin(s+i*17+1)*2))%2,
+    });
+  }
+  return sticks;
+}
+function pp(ctx,x,y,c,sc){if(x<0||x>=GRID||y<0||y>=GRID)return;ctx.fillStyle=c;ctx.fillRect(x*sc,y*sc,sc,sc);}
+// Tetromino pixel offsets per type and rotation
+const TETROS=[
+  [[[0,0],[1,0],[2,0],[3,0]],[[0,0],[0,1],[0,2],[0,3]]],                                                        // I
+  [[[0,0],[1,0],[0,1],[1,1]]],                                                                                   // O
+  [[[0,0],[1,0],[2,0],[1,1]],[[0,0],[0,1],[1,1],[0,2]],[[1,0],[0,1],[1,1],[2,1]],[[1,0],[0,1],[1,1],[1,2]]],   // T
+  [[[1,0],[2,0],[0,1],[1,1]],[[0,0],[0,1],[1,1],[1,2]]],                                                        // S
+  [[[0,0],[1,0],[1,1],[2,1]],[[1,0],[0,1],[1,1],[0,2]]],                                                        // Z
+  [[[0,0],[0,1],[0,2],[1,2]],[[0,0],[1,0],[2,0],[0,1]],[[0,0],[1,0],[1,1],[1,2]],[[2,0],[0,1],[1,1],[2,1]]],   // L
+  [[[1,0],[1,1],[0,2],[1,2]],[[0,0],[0,1],[1,1],[2,1]],[[0,0],[1,0],[0,1],[0,2]],[[0,0],[1,0],[2,0],[2,1]]],   // J
+];
+
+function getTetroPixels(blockType,rotation,ox,oy){
+  const shapes=TETROS[blockType]||TETROS[0];
+  const shape=shapes[rotation%shapes.length];
+  return shape.map(([dx,dy])=>[ox+dx,oy+dy]);
+}
+
+function drawNFT(ctx,sticks,scale,blocks){
+  ctx.fillStyle='#6B8FA0';ctx.fillRect(0,0,GRID*scale,GRID*scale);
+  // Draw sticks (H/V only)
+  sticks.forEach(s=>{
+    const h=Math.floor(Number(s.length)/2);
+    const sx=Number(s.x),sy=Number(s.y),sd=Number(s.dir);
+    const col=typeof s.color==='string'?s.color:(PALETTE[Number(s.color)]||'#111');
+    for(let i=-h;i<=h;i++){
+      if(sd===0)pp(ctx,sx+i,sy,col,scale);
+      else pp(ctx,sx,sy+i,col,scale);
+    }
+  });
+  // Draw tetromino blocks
+  (blocks||[]).forEach(b=>{
+    const col=typeof b.color==='string'?b.color:(PALETTE[Number(b.color)]||'#111');
+    getTetroPixels(Number(b.blockType),Number(b.rotation),Number(b.x),Number(b.y))
+      .forEach(([x,y])=>pp(ctx,x,y,col,scale));
+  });
+}
+function makeThumb(sticks,size,blocks){const c=document.createElement('canvas');c.width=size;c.height=size;drawNFT(c.getContext('2d'),sticks,size/GRID,blocks||[]);return c;}
+function toggleMobileNav(){document.getElementById('mobile-nav').classList.toggle('open');}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='gallery')buildGallery();
+  if(id==='mynfts')buildMyNFTs();
+  if(id==='editor')buildEditor();
+  if(id==='mint')resetMint();
+  if(id==='burn')buildBurn();}
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.innerHTML=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+function showActionToast(msg, btnLabel, onClick){
+  const el=document.getElementById('toast');
+  const btnId='action-toast-btn-'+Date.now();
+  el.innerHTML=msg+'<button id="'+btnId+'" style="margin-left:12px;padding:4px 12px;background:#fff;color:#111;border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">'+btnLabel+'</button>';
+  el.classList.add('show');
+  document.getElementById(btnId).onclick=()=>{el.classList.remove('show');onClick();};
+  setTimeout(()=>el.classList.remove('show'),7000);
+}
+let detectedProvider=null;
+const eip6963Providers=[];
+window.addEventListener('eip6963:announceProvider',(e)=>{
+  if(e.detail&&e.detail.provider)eip6963Providers.push(e.detail);
+});
+try{window.dispatchEvent(new Event('eip6963:requestProvider'));}catch(e){}
+
+function getEthereum(){
+  if(detectedProvider)return detectedProvider;
+  if(eip6963Providers.length>0){
+    const mm=eip6963Providers.find(p=>p.info&&/metamask/i.test(p.info.name));
+    detectedProvider=(mm||eip6963Providers[0]).provider;
+    return detectedProvider;
+  }
+  if(typeof window.ethereum!=='undefined'){
+    if(window.ethereum.providers&&window.ethereum.providers.length){
+      const mm=window.ethereum.providers.find(p=>p.isMetaMask);
+      detectedProvider=mm||window.ethereum.providers[0];
+    }else{
+      detectedProvider=window.ethereum;
+    }
+    return detectedProvider;
+  }
+  return null;
+}
+
+async function handleWalletClick(){
+  if(walletAddress){
+    // Show disconnect dropdown
+    const existing=document.getElementById('wallet-dropdown');
+    if(existing){existing.remove();return;}
+    const btn=document.getElementById('wallet-btn');
+    const rect=btn.getBoundingClientRect();
+    const dd=document.createElement('div');
+    dd.id='wallet-dropdown';
+    dd.style.cssText='position:fixed;top:'+(rect.bottom+6)+'px;right:'+(window.innerWidth-rect.right)+'px;'
+      +'background:#222;border:0.5px solid #444;border-radius:8px;padding:6px;z-index:200;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.5);';
+    dd.innerHTML=
+      '<div style="font-size:11px;color:#666;padding:6px 10px 8px;border-bottom:0.5px solid #333;">'+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4)+'</div>'+
+      '<button onclick="copyWallet()" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'#2a2a2a\'" onmouseout="this.style.background=\'none\'">📋 Copy address</button>'+
+      '<button onclick="disconnectWallet()" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#E63946;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'#2a2a2a\'" onmouseout="this.style.background=\'none\'">⏏️ Disconnect</button>';
+    document.body.appendChild(dd);
+    setTimeout(()=>document.addEventListener('click',function removeDD(e){if(!dd.contains(e.target)&&e.target!==btn){dd.remove();document.removeEventListener('click',removeDD);}},true),10);
+    return;
+  }
+  let eth=getEthereum();
+  if(!eth){
+    await new Promise(r=>setTimeout(r,400));
+    try{window.dispatchEvent(new Event('eip6963:requestProvider'));}catch(e){}
+    eth=getEthereum();
+  }
+  if(!eth){toast('No Web3 wallet detected. Open in a browser with MetaMask enabled.');return;}
+  try{
+    const accounts=await eth.request({method:'eth_requestAccounts'});
+    if(accounts.length>0){
+      walletAddress=accounts[0];
+      const chainId=await eth.request({method:'eth_chainId'});
+      if(chainId!=='0x2105'){
+        try{await eth.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x2105'}]});}
+        catch(e){
+          try{await eth.request({method:'wallet_addEthereumChain',params:[{chainId:'0x2105',chainName:'Base',nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18},rpcUrls:['https://mainnet.base.org'],blockExplorerUrls:['https://basescan.org']}]});}catch(e2){}
+        }
+      }
+      updateWalletUI();
+      toast('Connected · '+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4));
+      eth.on&&eth.on('accountsChanged',a=>{walletAddress=a[0]||null;updateWalletUI();});
+    }
+  }catch(e){
+    if(e&&e.code===4001)toast('Connection cancelled');
+    else toast('Could not connect: '+((e&&e.message)||'unknown error'));
+  }
+}
+function disconnectWallet(){
+  document.getElementById('wallet-dropdown')?.remove();
+  walletAddress=null;
+  myNFTData=[];
+  updateWalletUI();
+  toast('Disconnected');
+}
+function copyWallet(){
+  document.getElementById('wallet-dropdown')?.remove();
+  navigator.clipboard?.writeText(walletAddress).then(()=>toast('Address copied!'));
+}
+function updateWalletUI(){
+  const btn=document.getElementById('wallet-btn');
+  const lbl=document.getElementById('wallet-label');
+  const mob=document.getElementById('mobile-wallet-link');
+  if(walletAddress){btn.classList.add('connected');const s=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);lbl.textContent=s;if(mob)mob.textContent=s;}
+  else{btn.classList.remove('connected');lbl.textContent='Connect wallet';if(mob)mob.textContent='Connect wallet';}
+}
+let revealTimer=null;
+let mintPriceWei=ethers.BigNumber.from(0);
+let mintQty=1;
+
+function setQty(n){
+  mintQty=n;
+  document.querySelectorAll('.qty-btn').forEach((b,i)=>b.classList.toggle('active',i+1===n));
+  const btn=document.getElementById('mint-cta');
+  if(btn) btn.textContent='Mint '+n+' Pyre'+(n>1?'s':'');
+  updateTotalPrice();
+}
+
+function updateTotalPrice(){
+  const total=document.getElementById('mint-total-price');
+  if(!total)return;
+  if(mintPriceWei.isZero()){total.textContent='Free';return;}
+  const totalWei=mintPriceWei.mul(mintQty);
+  const eth=parseFloat(ethers.utils.formatEther(totalWei));
+  total.textContent=eth.toFixed(4)+' ETH';
+}
+
+async function loadPrice(){
+  try{
+    const c=getContract();
+    mintPriceWei=await c.price();
+    const eth=parseFloat(ethers.utils.formatEther(mintPriceWei));
+    const priceStr=eth===0?'Free':eth.toFixed(4)+' ETH';
+    const perEl=document.getElementById('price-per');
+    if(perEl)perEl.textContent=priceStr;
+    updateTotalPrice();
+  }catch(e){}
+  // Load chain stats for the home page
+  try{
+    const c=getContract();
+    const MAX=10000;
+    const minted=Number(await c.totalMinted());
+    const supply=Number(await c.totalSupply());
+    const burned=minted-supply;
+    const remaining=MAX-minted;
+    const remEl=document.getElementById('stat-remaining');
+    const burnEl=document.getElementById('stat-burned');
+    if(remEl)remEl.textContent=remaining.toLocaleString();
+    if(burnEl)burnEl.textContent=burned.toLocaleString();
+  }catch(e){}
+}
+
+function resetMint(){
+  mintQty=1;
+  if(revealTimer){clearTimeout(revealTimer);revealTimer=null;}
+  document.getElementById('mint-state-idle').style.display='';
+  document.getElementById('mint-state-revealed').style.display='none';
+  document.getElementById('mint-spinner').classList.remove('active');
+  const cta=document.getElementById('mint-cta');
+  if(cta){cta.disabled=false;cta.textContent='Mint 1 Pyre';}
+  document.querySelectorAll('.qty-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  // Restore canvas (may have been replaced by <img> after reveal)
+  const mintVisual=document.querySelector('.mint-visual');
+  if(mintVisual){
+    mintVisual.innerHTML=
+      '<canvas id="mint-canvas" width="300" height="300"></canvas>'+
+      '<div class="mint-spinner-overlay" id="mint-spinner">'+
+        '<div class="mint-spinner-ring"></div>'+
+        '<div class="mint-spinner-text" id="mint-spinner-text">Requesting randomness…</div>'+
+      '</div>';
+  }
+  const cv=document.getElementById('mint-canvas');
+  if(cv){
+    const ctx=cv.getContext('2d');
+    const sc=cv.width/GRID;
+    ctx.fillStyle='#6B8FA0';ctx.fillRect(0,0,cv.width,cv.height);
+    // Faded preview elements
+    makeNFT(6).forEach(s=>{
+      const h=Math.floor(s.length/2);
+      for(let i=-h;i<=h;i++){
+        let x=s.x,y=s.y;
+        if(s.dir===0)x+=i;else y+=i;
+        pp(ctx,x,y,'rgba(255,255,255,0.15)',sc);
+      }
+    });
+    ctx.fillStyle='rgba(107,143,160,0.4)';ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.font='bold '+Math.round(cv.width*0.2)+'px sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('?',cv.width/2,cv.height/2);
+  }
+}
+
+async function handleMint(){
+  if(!walletAddress){toast('Connect your wallet first');return;}
+  const cta=document.getElementById('mint-cta');
+  if(cta.disabled)return;
+  cta.disabled=true; cta.textContent='Confirm in wallet…';
+  const spinner=document.getElementById('mint-spinner');
+  const stext=document.getElementById('mint-spinner-text');
+  spinner.classList.add('active');
+  try {
+    const contract=getContract(true);
+    const totalValue=mintPriceWei.mul(mintQty);
+
+    // Snapshot baseline tokens
+    const readContract=getContract(false);
+    let knownIds=new Set();
+    try{
+      const currentIds=await readContract.tokensOfOwner(walletAddress);
+      currentIds.forEach(id=>knownIds.add(id.toNumber()));
+    }catch(e){}
+
+    // Send all mint transactions
+    stext.textContent='Confirm '+mintQty+' mint'+(mintQty>1?'s':'')+' in wallet…';
+    const txs=[];
+    for(let i=0;i<mintQty;i++){
+      stext.textContent='Confirm mint '+(i+1)+' of '+mintQty+'…';
+      const tx=await contract.requestMint({value:mintPriceWei});
+      txs.push(tx);
+      stext.textContent='Mint '+(i+1)+'/'+mintQty+' sent… waiting for more confirmations';
+    }
+    stext.textContent='Waiting for Chainlink VRF… ('+mintQty+' Pyre)';
+
+    let found=0;let pollCount=0;
+    const pollTimer=setInterval(async()=>{
+      pollCount++;
+      stext.textContent='Waiting for VRF… ('+Math.round(pollCount*8)+'s)';
+      try {
+        const ids=await readContract.tokensOfOwner(walletAddress);
+        const newIds=ids.map(i=>i.toNumber()).filter(id=>!knownIds.has(id));
+        if(newIds.length>found){
+          // Reveal the latest new token
+          const latestId=newIds[newIds.length-1];
+          found=newIds.length;
+          stext.textContent=found+'/'+mintQty+' Pyre revealed…';
+          if(found===mintQty||found===1){
+            clearInterval(pollTimer);
+            if(revealTimer){clearTimeout(revealTimer);revealTimer=null;}
+            spinner.classList.remove('active');
+            revealMintFromChain(latestId);
+          }
+        }
+      }catch(e){ console.warn('poll error:',e.message); }
+    },8000);
+
+    // Final timeout after 5 minutes
+    revealTimer=setTimeout(()=>{
+      if(found)return;
+      found=true;
+      clearInterval(pollTimer);
+      spinner.classList.remove('active');
+      cta.disabled=false; cta.textContent='Mint a Pyre';
+      toast('VRF is still processing — open My Pyres in a minute to see your token');
+      // Show a helpful message in the mint state
+      const stext2=document.getElementById('mint-spinner-text');
+      if(stext2)stext2.textContent='';
+    },300000); // 5 minutes
+
+  } catch(e) {
+    spinner.classList.remove('active');
+    cta.disabled=false; cta.textContent='Mint a Pyre';
+    if(e.code===4001)toast('Transaction cancelled');
+    else toast('Mint failed: '+(e.reason||e.message||'unknown error'));
+  }
+}
+
+async function revealMintFromChain(tokenId){
+  if(revealTimer){clearTimeout(revealTimer);revealTimer=null;}
+  try {
+    const contract=getContract();
+    const rawSticks=await contract.getSticks(tokenId);
+    const rawBlocks=await contract.getBlocks(tokenId);
+    const credits=await contract.editCredits(tokenId);
+    const sticks=rawSticks.map(formatStick);
+    const blocks=rawBlocks.map(formatBlock);
+    const nft={id:tokenId,sticks,blocks,credits:Number(credits),name:'Untitled'};
+    myNFTData=myNFTData.filter(x=>x.id!==tokenId);
+    myNFTData.unshift(nft);
+
+    // Show NFT with canvas (steel blue background matching on-chain renderer)
+    const mintVisual=document.querySelector('.mint-visual');
+    if(mintVisual){
+      const cv=makeThumb(sticks,300,blocks);
+      cv.style.cssText='width:300px;height:300px;display:block;border:0.5px solid var(--border2);border-radius:12px;image-rendering:pixelated;';
+      cv.classList.add('reveal-pop');
+      mintVisual.innerHTML='';
+      mintVisual.appendChild(cv);
+      // Also add spinner slot back (hidden)
+      const sp=document.createElement('div');
+      sp.className='mint-spinner-overlay';sp.id='mint-spinner';
+      sp.innerHTML='<div class="mint-spinner-ring"></div><div class="mint-spinner-text" id="mint-spinner-text"></div>';
+      mintVisual.appendChild(sp);
+    }
+
+    document.getElementById('mint-state-idle').style.display='none';
+    document.getElementById('mint-state-revealed').style.display='';
+    document.getElementById('reveal-title').textContent='Meet Pyre #'+tokenId;
+
+    // Update description
+    const desc=document.querySelector('#mint-state-revealed .mint-desc');
+    if(desc) desc.textContent='Minted on-chain! '+sticks.length+' sticks and '+blocks.length+' tetromino'+(blocks.length!==1?'s':'')+' — burn another Pyre to unlock edits.';
+
+    // Build element list
+    const list=document.getElementById('reveal-stick-list');
+    list.innerHTML='';
+    const TETRO_NAMES=['I','O','T','S','Z','L','J'];
+    const BLOCK_COLORS=['#E63946','#F4A261','#E9C46A','#2A9D8F','#457B9D','#C8B6FF','#FF6FC8'];
+
+    sticks.forEach((s,i)=>{
+      const d=document.createElement('div');
+      d.style.cssText='border-left:3px solid '+s.color+';padding:9px 13px;margin-bottom:6px;background:var(--bg3);border-radius:0 6px 6px 0;';
+      d.innerHTML='<div style="font-size:10px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px;">Stick '+(i+1)+'</div>'
+        +'<div class="stick-attrs"><span class="attr-pill"><span class="color-dot" style="background:'+s.color+'"></span>'+s.color+'</span>'
+        +'<span class="attr-pill">'+s.length+'px</span>'
+        +'<span class="attr-pill">'+(s.dir===0?'—':'|')+'</span></div>';
+      list.appendChild(d);
+    });
+
+    blocks.forEach((b,i)=>{
+      const col=BLOCK_COLORS[b.blockType%BLOCK_COLORS.length];
+      const d=document.createElement('div');
+      d.style.cssText='border-left:3px solid '+col+';padding:9px 13px;margin-bottom:6px;background:var(--bg3);border-radius:0 6px 6px 0;';
+      d.innerHTML='<div style="font-size:10px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px;">Block '+(i+1)+'</div>'
+        +'<div class="stick-attrs"><span class="attr-pill"><span class="color-dot" style="background:'+b.color+'"></span>'+b.color+'</span>'
+        +'<span class="attr-pill">'+TETRO_NAMES[b.blockType]+'-Block</span>'
+        +'<span class="attr-pill">'+['0°','90°','180°','270°'][b.rotation]+'</span></div>';
+      list.appendChild(d);
+    });
+
+    toast('Minted · Pyre #'+tokenId+' 🎉');
+    addHistory('🎲','Minted <strong>Pyre #'+tokenId+'</strong> — '+sticks.length+' sticks + '+blocks.length+' blocks');
+    const cta=document.getElementById('mint-cta');
+    if(cta){cta.disabled=false;cta.textContent='Mint a Pyre';}
+  } catch(e) {
+    toast('Error loading minted token: '+e.message);
+  }
+}
+
+async function handleSave(){
+  if(!walletAddress){toast('Connect your wallet first');return;}
+  if(editCredits<=0){toast('No edit credits. Burn a Pyre first.');return;}
+  if(!layoutDirty){toast('Move at least one stick before saving');return;}
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='Confirm in wallet…';
+  try {
+    const contract=getContract(true);
+    const chainSticks=editorSticks.map(toChainStick);
+    const chainBlocks=(editorBlocks||[]).map(toChainBlock);
+    const tx=await contract.saveLayout(editorTokenId,chainSticks,chainBlocks);
+    btn.textContent='Saving on-chain…';
+    await tx.wait(1);
+    // Reload credits from chain (source of truth)
+    const readContract=getContract(false);
+    const newCredits=await readContract.editCredits(editorTokenId);
+    editCredits=Number(newCredits);
+    layoutDirty=false;
+    const nft=myNFTData.find(x=>x.id===editorTokenId);
+    if(nft){nft.sticks=editorSticks.map(s=>({...s}));nft.credits=editCredits;}
+    buildEditor();
+    toast('Layout saved on-chain · '+editCredits+' credit'+(editCredits!==1?'s':'')+' remaining ✅');
+    addHistory('✏️','Saved layout for <strong>Pyre #'+editorTokenId+'</strong> on-chain');
+  } catch(e) {
+    if(e.code===4001)toast('Transaction cancelled');
+    else toast('Save failed: '+(e.reason||e.message||'unknown error'));
+    btn.disabled=false;
+    buildEditor();
+  }
+}
+async function handleSetName(){
+  if(!walletAddress){toast('Connect your wallet first');return;}
+  const input=document.getElementById('name-input');
+  const name=(input?.value||'').trim();
+  if(!name){toast('Enter a name first');return;}
+  if(name.length>32){toast('Name max 32 characters');return;}
+  try{
+    const contract=getContract(true);
+    const tx=await contract.setTokenName(editorTokenId, name);
+    toast('Setting name…');
+    await tx.wait(1);
+    const nft=myNFTData.find(x=>x.id===editorTokenId);
+    if(nft)nft.name=name;
+    toast('Name set: "'+name+'" ✅');
+    if(input)input.value='';
+  }catch(e){
+    if(e.code===4001)toast('Cancelled');
+    else toast('Error: '+(e.reason||e.message||'unknown'));
+  }
+}
+let editorTool='sticks'; // 'sticks' or 'blocks'
+let selectedBlock={blockType:0,rotation:0,color:PALETTE[0]};
+
+function setEditorTool(tool){
+  editorTool=tool;
+  const ts=document.getElementById('tab-sticks');
+  const tb=document.getElementById('tab-blocks');
+  ts.classList.toggle('active',tool==='sticks');
+  tb.classList.toggle('active',tool==='blocks');
+  document.getElementById('editor-stick-panel').style.display=tool==='sticks'?'':'none';
+  document.getElementById('editor-block-panel').style.display=tool==='blocks'?'':'none';
+}
+
+function setBlockRot(r){
+  selectedBlock.rotation=r;
+  document.querySelectorAll('.rot-btn').forEach((b,i)=>b.classList.toggle('active',i===r));
+  drawEditorCanvas();
+}
+
+function buildTetroPicker(){
+  const TETRO_NAMES=['I','O','T','S','Z','L','J'];
+  const TETRO_COLORS=['#E63946','#F4A261','#E9C46A','#2A9D8F','#457B9D','#C8B6FF','#FF6FC8'];
+  const picker=document.getElementById('tetro-picker');
+  if(!picker)return;
+  picker.innerHTML='';
+  TETRO_NAMES.forEach((name,i)=>{
+    const btn=document.createElement('button');
+    btn.className='tetro-btn'+(i===0?' active':'');
+    // Mini canvas preview
+    const cv=document.createElement('canvas');cv.width=32;cv.height=32;
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle='#fafafa';ctx.fillRect(0,0,32,32);
+    const pts=getTetroPixels(i,0,0,0);
+    const minX=Math.min(...pts.map(p=>p[0])),minY=Math.min(...pts.map(p=>p[1]));
+    const maxX=Math.max(...pts.map(p=>p[0])),maxY=Math.max(...pts.map(p=>p[1]));
+    const sc=Math.floor(28/Math.max(maxX-minX+1,maxY-minY+1));
+    const ox=Math.floor((32-(maxX-minX+1)*sc)/2),oy=Math.floor((32-(maxY-minY+1)*sc)/2);
+    ctx.fillStyle=TETRO_COLORS[i];
+    pts.forEach(([x,y])=>ctx.fillRect(ox+(x-minX)*sc,oy+(y-minY)*sc,sc-1,sc-1));
+    cv.style.cssText='display:block;image-rendering:pixelated;';
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:9px;color:#888;text-align:center;margin-top:1px;';lbl.textContent=name;
+    btn.appendChild(cv);btn.appendChild(lbl);
+    btn.onclick=()=>{
+      selectedBlock.blockType=i;
+      selectedBlock.color=TETRO_COLORS[i];
+      document.querySelectorAll('.tetro-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+      // Update color picker selection
+      document.querySelectorAll('.bcp-dot').forEach((d,j)=>d.classList.toggle('active',PALETTE[j]===TETRO_COLORS[i]));
+      drawEditorCanvas();
+    };
+    picker.appendChild(btn);
+  });
+
+  // Block color picker
+  const bcp=document.getElementById('block-color-picker');
+  if(bcp){
+    bcp.innerHTML='';
+    PALETTE.forEach((c,i)=>{
+      const d=document.createElement('div');
+      d.className='bcp-dot pal-dot'+(c===selectedBlock.color?' active':'');
+      d.style.cssText='width:18px;height:18px;border-radius:3px;cursor:pointer;background:'+c+';border:2px solid '+(c===selectedBlock.color?'#111':'transparent')+';';
+      d.onclick=()=>{
+        selectedBlock.color=c;
+        document.querySelectorAll('.bcp-dot').forEach((x,j)=>{
+          x.style.borderColor=PALETTE[j]===c?'#111':'transparent';
+        });
+      };
+      bcp.appendChild(d);
+    });
+  }
+}
+
+// Handle canvas click in block mode – add a new block
+function handleEditorBlockClick(gridX, gridY){
+  if(!editCredits&&editCredits!==undefined){
+    // Still allow placing in preview, actual save needs credits
+  }
+  editorBlocks.push({
+    color:     selectedBlock.color,
+    blockType: selectedBlock.blockType,
+    rotation:  selectedBlock.rotation,
+    x:         Math.max(0,Math.min(GRID-4,gridX)),
+    y:         Math.max(0,Math.min(GRID-4,gridY))
+  });
+  layoutDirty=true;
+  buildEditor();
+}
+
+function handleBurn(){ showPage('burn'); }
+
+// ── Masterpiece pixel art drawings ──────────────────────────────────────
+const G24=24,SC8=8,BG_NPC='#6B8FA0';
+const NPC={bk:'#252525',mg:'#6B6B6B',lg:'#C8C8C8',wh:'#F0F0F0',tn:'#D4B87A',dt:'#BEA865',lv:'#C4B5D0',pu:'#9080A0',db:'#4A6B80',bg:'#B5C4CC',br:'#8A7060',cr:'#E8E0D0',dk:'#1C1C1C',gr:'#A0A0A0',be:'#D0C0A8',st:'#5A7A90'};
+function npcCv(){const cv=document.createElement('canvas');cv.width=G24*SC8;cv.height=G24*SC8;const ctx=cv.getContext('2d');ctx.fillStyle=BG_NPC;ctx.fillRect(0,0,cv.width,cv.height);return{cv,ctx};}
+function pp24(ctx,x,y,c){if(x<0||x>=G24||y<0||y>=G24)return;ctx.fillStyle=c;ctx.fillRect(x*SC8,y*SC8,SC8,SC8);}
+function row24(ctx,x,y,w,c){for(let i=0;i<w;i++)pp24(ctx,x+i,y,c);}
+function col24(ctx,x,y,h,c){for(let i=0;i<h;i++)pp24(ctx,x,y+i,c);}
+function rect24(ctx,x,y,w,h,c){for(let dy=0;dy<h;dy++)row24(ctx,x,y+dy,w,c);}
+
+function drawMohawk(){
+  const{cv,ctx}=npcCv();
+  col24(ctx,11,1,4,NPC.dk);col24(ctx,12,0,5,NPC.dk);col24(ctx,13,1,4,NPC.dk);
+  pp24(ctx,10,2,NPC.dk);pp24(ctx,14,2,NPC.dk);
+  rect24(ctx,9,5,6,8,NPC.lg);rect24(ctx,8,7,8,5,NPC.lg);
+  rect24(ctx,13,6,3,6,NPC.mg);
+  rect24(ctx,9,8,2,2,NPC.dk);rect24(ctx,13,8,2,2,NPC.dk);
+  pp24(ctx,9,8,NPC.mg);pp24(ctx,13,8,NPC.mg);
+  col24(ctx,12,10,2,NPC.mg);
+  row24(ctx,10,13,4,NPC.dk);
+  rect24(ctx,11,13,2,3,NPC.lg);
+  rect24(ctx,8,16,8,6,NPC.bg);
+  pp24(ctx,8,9,NPC.lg);pp24(ctx,15,9,NPC.lg);
+  pp24(ctx,8,10,NPC.lg);pp24(ctx,15,10,NPC.lg);
+  row24(ctx,9,16,2,NPC.wh);row24(ctx,13,16,2,NPC.wh);
+  return cv;
+}
+
+function drawBeanie(){
+  const{cv,ctx}=npcCv();
+  rect24(ctx,8,3,8,5,NPC.dt);row24(ctx,8,7,8,NPC.br);
+  pp24(ctx,9,3,NPC.cr);pp24(ctx,14,3,NPC.cr);
+  rect24(ctx,9,7,6,8,NPC.tn);rect24(ctx,8,9,8,5,NPC.tn);
+  rect24(ctx,12,8,3,5,NPC.dt);
+  rect24(ctx,9,9,2,2,NPC.dk);rect24(ctx,13,9,2,2,NPC.dk);
+  pp24(ctx,9,9,NPC.wh);pp24(ctx,13,9,NPC.wh);
+  pp24(ctx,12,11,NPC.dt);
+  rect24(ctx,9,13,6,2,NPC.lg);rect24(ctx,8,12,8,2,NPC.lg);
+  row24(ctx,9,15,6,NPC.gr);
+  rect24(ctx,11,14,2,2,NPC.tn);
+  rect24(ctx,8,16,8,6,NPC.bg);
+  pp24(ctx,8,10,NPC.tn);pp24(ctx,15,10,NPC.tn);
+  return cv;
+}
+
+function drawTower(){
+  const{cv,ctx}=npcCv();
+  row24(ctx,0,22,24,NPC.st);row24(ctx,0,23,24,NPC.db);
+  rect24(ctx,8,4,8,19,NPC.bg);rect24(ctx,12,4,4,19,NPC.mg);
+  col24(ctx,11,1,3,NPC.dk);col24(ctx,12,0,4,NPC.dk);
+  [6,9,12,15,18].forEach(wy=>{rect24(ctx,9,wy,2,2,NPC.dt);pp24(ctx,9,wy,NPC.cr);});
+  [6,9,12,15,18].forEach(wy=>{rect24(ctx,13,wy,2,2,NPC.mg);});
+  row24(ctx,8,4,8,NPC.dk);row24(ctx,9,3,6,NPC.dk);
+  rect24(ctx,6,21,12,2,NPC.mg);row24(ctx,6,21,12,NPC.dk);
+  row24(ctx,0,23,24,NPC.dk);
+  return cv;
+}
+
+function drawNPCFace(){
+  const{cv,ctx}=npcCv();
+  rect24(ctx,8,4,8,13,NPC.lv);rect24(ctx,7,6,10,9,NPC.lv);
+  rect24(ctx,13,5,3,11,NPC.pu);
+  rect24(ctx,8,3,8,3,NPC.dk);row24(ctx,7,5,9,NPC.dk);col24(ctx,7,6,7,NPC.dk);
+  rect24(ctx,9,8,3,3,NPC.wh);rect24(ctx,13,8,3,3,NPC.wh);
+  pp24(ctx,10,9,NPC.dk);pp24(ctx,14,9,NPC.dk);
+  pp24(ctx,9,8,NPC.cr);pp24(ctx,13,8,NPC.cr);
+  col24(ctx,12,11,2,NPC.pu);
+  row24(ctx,10,14,4,NPC.dk);pp24(ctx,9,14,NPC.pu);pp24(ctx,14,14,NPC.pu);
+  pp24(ctx,7,9,NPC.lv);pp24(ctx,16,9,NPC.lv);pp24(ctx,7,10,NPC.lv);pp24(ctx,16,10,NPC.lv);
+  rect24(ctx,11,17,2,2,NPC.lv);
+  rect24(ctx,7,19,10,5,NPC.bg);row24(ctx,10,19,4,NPC.wh);
+  return cv;
+}
+
+function drawShades(){
+  const{cv,ctx}=npcCv();
+  [8,10,12,14].forEach((hx,s)=>{col24(ctx,hx,2+Math.abs(s-2),5-Math.abs(s-2),NPC.dk);});
+  rect24(ctx,9,7,6,8,NPC.mg);rect24(ctx,8,8,8,6,NPC.mg);rect24(ctx,13,8,3,6,NPC.dk);
+  rect24(ctx,9,9,3,2,NPC.dk);rect24(ctx,13,9,3,2,NPC.dk);
+  row24(ctx,12,9,1,NPC.dk);pp24(ctx,8,9,NPC.dk);pp24(ctx,16,9,NPC.dk);
+  pp24(ctx,10,9,NPC.lg);pp24(ctx,11,9,NPC.lg);pp24(ctx,14,9,NPC.lg);pp24(ctx,15,9,NPC.lg);
+  col24(ctx,12,11,2,NPC.dk);
+  row24(ctx,11,13,3,NPC.dk);pp24(ctx,14,13,NPC.mg);
+  rect24(ctx,11,15,2,2,NPC.mg);
+  rect24(ctx,8,17,8,5,NPC.dk);
+  row24(ctx,9,17,2,NPC.lg);row24(ctx,13,17,2,NPC.lg);
+  pp24(ctx,8,10,NPC.mg);pp24(ctx,15,10,NPC.mg);
+  return cv;
+}
+
+function drawHouse(){
+  const{cv,ctx}=npcCv();
+  row24(ctx,0,21,24,NPC.mg);row24(ctx,0,22,24,NPC.dk);
+  rect24(ctx,4,12,16,10,NPC.cr);rect24(ctx,14,12,6,10,NPC.lg);
+  for(let r=0;r<6;r++){row24(ctx,4+r,6+r,16-r*2,NPC.dt);}
+  for(let r=0;r<6;r++){pp24(ctx,4+r,6+r,NPC.dk);pp24(ctx,19-r,6+r,NPC.dk);}
+  row24(ctx,10,6,4,NPC.dk);
+  rect24(ctx,6,3,3,5,NPC.mg);row24(ctx,6,3,3,NPC.dk);pp24(ctx,7,2,NPC.lg);
+  rect24(ctx,10,15,4,7,NPC.db);pp24(ctx,13,18,NPC.cr);row24(ctx,10,15,4,NPC.dk);
+  rect24(ctx,5,14,4,4,NPC.tn);pp24(ctx,5,14,NPC.cr);pp24(ctx,6,14,NPC.cr);
+  rect24(ctx,15,14,4,4,NPC.tn);pp24(ctx,15,14,NPC.cr);pp24(ctx,16,14,NPC.cr);
+  row24(ctx,4,12,16,NPC.dk);col24(ctx,4,12,10,NPC.dk);col24(ctx,19,12,10,NPC.dk);
+  return cv;
+}
+
+function drawBlonde(){
+  const{cv,ctx}=npcCv();
+  rect24(ctx,7,2,10,7,NPC.dt);rect24(ctx,6,4,12,5,NPC.dt);
+  col24(ctx,6,4,4,NPC.dt);col24(ctx,17,4,4,NPC.dt);
+  rect24(ctx,8,3,8,3,NPC.br);
+  rect24(ctx,8,8,8,8,NPC.tn);rect24(ctx,7,9,10,6,NPC.tn);rect24(ctx,13,9,3,6,NPC.dt);
+  rect24(ctx,9,9,2,2,NPC.dk);rect24(ctx,13,9,2,2,NPC.dk);
+  pp24(ctx,9,9,NPC.wh);pp24(ctx,13,9,NPC.wh);
+  pp24(ctx,12,11,NPC.dt);
+  row24(ctx,10,14,4,NPC.dk);pp24(ctx,9,13,NPC.dk);pp24(ctx,14,13,NPC.dk);
+  row24(ctx,10,15,4,NPC.wh);
+  rect24(ctx,11,16,2,2,NPC.tn);
+  rect24(ctx,7,18,10,5,NPC.pu);row24(ctx,9,18,6,NPC.lv);
+  pp24(ctx,11,17,NPC.lv);pp24(ctx,12,17,NPC.lv);
+  return cv;
+}
+
+function drawPunkGray(){
+  const{cv,ctx}=npcCv();
+  // flat top hair
+  rect24(ctx,8,4,8,4,NPC.dk);row24(ctx,7,7,9,NPC.dk);
+  col24(ctx,7,8,5,NPC.dk);col24(ctx,16,8,5,NPC.dk);
+  rect24(ctx,8,7,8,9,NPC.gr);rect24(ctx,7,9,10,6,NPC.gr);rect24(ctx,13,8,3,6,NPC.mg);
+  rect24(ctx,9,10,2,2,NPC.dk);rect24(ctx,13,10,2,2,NPC.dk);
+  pp24(ctx,10,10,NPC.lg);pp24(ctx,14,10,NPC.lg);
+  col24(ctx,12,12,2,NPC.dk);
+  row24(ctx,10,14,4,NPC.dk);pp24(ctx,10,15,NPC.wh);pp24(ctx,13,15,NPC.wh);
+  rect24(ctx,11,16,2,2,NPC.gr);
+  rect24(ctx,8,18,8,5,NPC.mg);row24(ctx,9,18,2,NPC.gr);row24(ctx,13,18,2,NPC.gr);
+  return cv;
+}
+
+const MASTERPIECES=[
+  {cv:drawMohawk,  label:'Mohawk Punk', id:'#0001'},
+  {cv:drawBeanie,  label:'Beanie OG',   id:'#0042'},
+  {cv:drawTower,   label:'City Tower',  id:'#0137'},
+  {cv:drawNPCFace, label:'NPC Face',    id:'#0218'},
+  {cv:drawShades,  label:'Shades Punk', id:'#0305'},
+  {cv:drawHouse,   label:'Pixel House', id:'#0411'},
+  {cv:drawBlonde,  label:'Blonde Punk', id:'#0533'},
+  {cv:drawPunkGray,label:'Gray Punk',   id:'#0667'},
+];
+
+function buildHero(){
+  const wrap=document.getElementById('hero-ticker');if(!wrap)return;wrap.innerHTML='';
+  MASTERPIECES.forEach(m=>{
+    const cv=m.cv();
+    cv.style.cssText='display:block;width:160px;height:160px;image-rendering:pixelated;';
+    const card=document.createElement('div');card.className='ticker-card';
+    const footer=document.createElement('div');footer.className='ticker-footer';
+    footer.innerHTML='<span class="ticker-id">'+m.id+'</span><span class="ticker-label">'+m.label+'</span>';
+    card.appendChild(cv);card.appendChild(footer);wrap.appendChild(card);
+  });
+}
+const homeGalleryData=[];
+
+function buildHomeGallery(){
+  const grid=document.getElementById('home-gallery');if(!grid)return;grid.innerHTML='';
+  const pieces=[
+    {draw:drawMohawk,  label:'Mohawk Punk',  id:'#0001'},
+    {draw:drawBeanie,  label:'Beanie OG',    id:'#0042'},
+    {draw:drawTower,   label:'City Tower',   id:'#0137'},
+    {draw:drawNPCFace, label:'NPC Face',     id:'#0218'},
+    {draw:drawShades,  label:'Shades Punk',  id:'#0305'},
+    {draw:drawHouse,   label:'Pixel House',  id:'#0411'},
+    {draw:drawBlonde,  label:'Blonde Punk',  id:'#0533'},
+    {draw:drawPunkGray,label:'Gray Punk',    id:'#0667'},
+  ];
+  pieces.forEach(m=>{
+    const card=document.createElement('div');card.className='mp-card';
+    const cv=m.draw();cv.style.cssText='display:block;width:100%;image-rendering:pixelated;';
+    const info=document.createElement('div');info.className='mp-card-info';
+    info.innerHTML='<div class="mp-card-id">'+m.id+'</div>'
+      +'<div class="mp-card-label">'+m.label+'</div>'
+      +'<div class="mp-card-stage">Masterpiece</div>';
+    card.appendChild(cv);card.appendChild(info);grid.appendChild(card);
+  });
+}
+
+// ── EVOLUTION SECTION ──────────────────────────────────────────────────
+function buildHomeEvo(){
+  const el=document.getElementById('home-evo');if(!el)return;el.innerHTML='';
+  const STAGES=[
+    {name:'Line',        burns:'0 burns',  count:3,  col:'#444'},
+    {name:'Sketch',      burns:'1 burn',   count:5,  col:'#6B6B6B'},
+    {name:'Study',       burns:'3 burns',  count:9,  col:'#6B8FA0'},
+    {name:'Painting',    burns:'7 burns',  count:15, col:'#D4B87A'},
+    {name:'Masterpiece', burns:'15 burns', count:null,col:'#C4B5D0'},
+  ];
+
+  // Two rows: one for punk evolution, one for random seed
+  [
+    {title:'Mohawk Punk evolves →', masterDraw:drawMohawk, seed:42},
+    {title:'Random Pyre evolves →', masterDraw:null,       seed:137},
+  ].forEach(row=>{
+    const rowWrap=document.createElement('div');
+    const lbl=document.createElement('div');lbl.className='evo-label';lbl.textContent=row.title;
+    const cards=document.createElement('div');cards.className='evo-row';
+    STAGES.forEach((st,i)=>{
+      const item=document.createElement('div');item.className='evo-item';
+      const wrap=document.createElement('div');wrap.className='evo-canvas-wrap';
+      let cv;
+      if(st.name==='Masterpiece' && row.masterDraw){
+        cv=row.masterDraw();
+      } else {
+        cv=document.createElement('canvas');
+        const sc=Math.floor(160/GRID);
+        cv.width=GRID*sc;cv.height=GRID*sc;
+        const ctx=cv.getContext('2d');
+        drawNFT(ctx,makeNFT(st.count,[row.seed]),Math.floor(160/GRID),(row.seed%2===0?[]:[]));
+      }
+      cv.style.cssText='display:block;width:100%;image-rendering:pixelated;';
+      wrap.appendChild(cv);
+      const info=document.createElement('div');info.className='evo-info';
+      info.innerHTML='<div class="evo-stage" style="color:'+st.col+'">'+st.name+'</div>'
+        +'<div class="evo-burns">'+st.burns+'</div>';
+      const bar=document.createElement('div');bar.className='evo-bar';
+      bar.style.cssText='background:'+st.col+';width:'+((i+1)*20)+'%;';
+      info.appendChild(bar);
+      item.appendChild(wrap);item.appendChild(info);
+      cards.appendChild(item);
+    });
+    rowWrap.appendChild(lbl);rowWrap.appendChild(cards);
+    el.appendChild(rowWrap);
+  });
+}
+
+// Seeded makeNFT – see main makeNFT above
+
+// ── BUILDING BLOCKS SECTION ────────────────────────────────────────────
+function buildBlocksSection(){
+  const el=document.getElementById('home-blocks');if(!el)return;el.innerHTML='';
+
+  // Colors
+  const colorWrap=document.createElement('div');
+  colorWrap.innerHTML='<div class="blocks-title">16 NPC Colors</div>';
+  const colorGrid=document.createElement('div');colorGrid.className='color-grid';
+  const COLOR_NAMES=['Near Black','Mid Gray','Light Gray','Off White','Warm Tan','Dark Tan','Lavender','Purple','Steel Blue','Blue-Gray','Brown','Cream','Dark','Gray','Beige','Steel'];
+  PALETTE.forEach((c,i)=>{
+    const dot=document.createElement('div');dot.className='color-swatch';
+    dot.style.cssText='background:'+c+';';
+    dot.title=COLOR_NAMES[i]||c;
+    colorGrid.appendChild(dot);
+  });
+  colorWrap.appendChild(colorGrid);
+
+  // Tetrominos
+  const tetWrap=document.createElement('div');
+  tetWrap.innerHTML='<div class="blocks-title">7 Tetromino Types × 4 Rotations</div>';
+  const tetGrid=document.createElement('div');tetGrid.className='tetro-showcase';
+  const NAMES=['I','O','T','S','Z','L','J'];
+  const TETROS_FULL=[
+    [[[0,0],[1,0],[2,0],[3,0]],[[0,0],[0,1],[0,2],[0,3]]],
+    [[[0,0],[1,0],[0,1],[1,1]]],
+    [[[0,0],[1,0],[2,0],[1,1]],[[0,0],[0,1],[1,1],[0,2]],[[1,0],[0,1],[1,1],[2,1]],[[1,0],[0,1],[1,1],[1,2]]],
+    [[[1,0],[2,0],[0,1],[1,1]],[[0,0],[0,1],[1,1],[1,2]]],
+    [[[0,0],[1,0],[1,1],[2,1]],[[1,0],[0,1],[1,1],[0,2]]],
+    [[[0,0],[0,1],[0,2],[1,2]],[[0,0],[1,0],[2,0],[0,1]],[[0,0],[1,0],[1,1],[1,2]],[[2,0],[0,1],[1,1],[2,1]]],
+    [[[1,0],[1,1],[0,2],[1,2]],[[0,0],[0,1],[1,1],[2,1]],[[0,0],[1,0],[0,1],[0,2]],[[0,0],[1,0],[2,0],[2,1]]],
+  ];
+  TETROS_FULL.forEach((rots,ti)=>{
+    const typeWrap=document.createElement('div');typeWrap.className='tetro-type';
+    const typeLbl=document.createElement('div');typeLbl.className='tetro-type-name';typeLbl.textContent=NAMES[ti];
+    const rotRow=document.createElement('div');rotRow.className='tetro-rot-row';
+    rots.forEach((shape,ri)=>{
+      const cv=document.createElement('canvas');cv.width=48;cv.height=48;
+      const ctx=cv.getContext('2d');
+      ctx.fillStyle=BG_NPC;ctx.fillRect(0,0,48,48);
+      const col=PALETTE[(ti*3+ri*2)%16];
+      const xs=shape.map(([x])=>x),ys=shape.map(([,y])=>y);
+      const mx=Math.max(...xs),my=Math.max(...ys);
+      const sc=Math.floor(8/(Math.max(mx,my)+2));
+      const ox=Math.floor((48-(mx+1)*sc*2)/2);
+      const oy=Math.floor((48-(my+1)*sc*2)/2);
+      shape.forEach(([dx,dy])=>{ctx.fillStyle=col;ctx.fillRect(ox+dx*sc*2,oy+dy*sc*2,sc*2-1,sc*2-1);});
+      cv.style.cssText='display:block;image-rendering:pixelated;border-radius:4px;border:0.5px solid var(--border2);';
+      rotRow.appendChild(cv);
+    });
+    typeWrap.appendChild(typeLbl);typeWrap.appendChild(rotRow);
+    tetGrid.appendChild(typeWrap);
+  });
+  tetWrap.appendChild(tetGrid);
+
+  // Sticks
+  const sticksWrap=document.createElement('div');
+  sticksWrap.innerHTML='<div class="blocks-title">2 Stick Directions</div>';
+  const sticksRow=document.createElement('div');sticksRow.className='sticks-showcase';
+  [['—','Horizontal'],[' | ','Vertical']].forEach(([sym,lbl])=>{
+    const cv=document.createElement('canvas');cv.width=48;cv.height=48;
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle=BG_NPC;ctx.fillRect(0,0,48,48);
+    ctx.fillStyle=PALETTE[4];
+    if(lbl==='Horizontal') ctx.fillRect(8,22,32,4);
+    else ctx.fillRect(22,8,4,32);
+    cv.style.cssText='display:block;image-rendering:pixelated;border-radius:4px;border:0.5px solid var(--border2);';
+    const d=document.createElement('div');d.className='stick-demo';
+    d.innerHTML='<div class="stick-sym">'+sym+'</div>';
+    d.appendChild(cv);
+    const l=document.createElement('div');l.className='stick-lbl';l.textContent=lbl;
+    d.appendChild(l);
+    sticksRow.appendChild(d);
+  });
+  sticksWrap.appendChild(sticksRow);
+
+  el.appendChild(colorWrap);
+  el.appendChild(tetWrap);
+  el.appendChild(sticksWrap);
+}
+
+function St(color,length,x,y,dir){return {color,length,x,y,dir};}
+const ARTWORKS=[
+  {name:'Heart', sticks:[St('#E63946',5,20,20,0),St('#E63946',5,30,20,0),St('#FF6B6B',3,18,21,1),St('#FF6B6B',3,32,21,1),St('#FF6B6B',3,23,21,1),St('#FF6B6B',3,27,21,1),St('#E63946',9,21,25,2),St('#E63946',9,29,25,3)]},
+  {name:'Diamond', sticks:[St('#4D96FF',9,21,21,2),St('#4D96FF',9,29,21,3),St('#378ADD',9,29,29,2),St('#378ADD',9,21,29,3)]},
+  {name:'House', sticks:[St('#F4A261',13,25,30,0),St('#F4A261',13,25,22,0),St('#F4A261',9,19,26,1),St('#F4A261',9,31,26,1),St('#E63946',9,21,18,2),St('#E63946',9,29,18,3),St('#2A9D8F',5,25,28,1)]},
+  {name:'Star', sticks:[St('#FFE66D',13,25,25,0),St('#FFE66D',13,25,25,1),St('#E9C46A',11,25,25,2),St('#E9C46A',11,25,25,3)]},
+  {name:'Smiley', sticks:[St('#111111',3,21,22,1),St('#111111',3,29,22,1),St('#E63946',5,25,31,0),St('#E63946',4,22,29,2),St('#E63946',4,28,29,3)]},
+  {name:'Arrow', sticks:[St('#2A9D8F',15,25,25,3),St('#2A9D8F',7,29,18,0),St('#2A9D8F',7,31,20,1)]},
+  {name:'Flower', sticks:[St('#6BCB77',9,25,32,1),St('#FF6FC8',5,25,22,0),St('#FF6FC8',5,25,22,1),St('#FF6FC8',5,25,22,2),St('#FF6FC8',5,25,22,3),St('#FFE66D',3,25,22,0)]},
+  {name:'Cross', sticks:[St('#E63946',13,25,25,1),St('#E63946',9,25,25,0)]},
+  {name:'Check', sticks:[St('#2A9D8F',5,20,26,2),St('#2A9D8F',11,28,22,3)]},
+];
+
+let galleryData=[];
+function buildGallery(){
+  if(galleryData.length===0){
+    let id=1;
+    // Curated masterpieces
+    const curated=[
+      {draw:drawMohawk,  name:'Mohawk Punk',  stage:'Masterpiece'},
+      {draw:drawBeanie,  name:'Beanie OG',    stage:'Masterpiece'},
+      {draw:drawNPCFace, name:'NPC Face',     stage:'Masterpiece'},
+      {draw:drawShades,  name:'Shades Punk',  stage:'Masterpiece'},
+      {draw:drawHouse,   name:'Pixel House',  stage:'Masterpiece'},
+      {draw:drawBlonde,  name:'Blonde Punk',  stage:'Masterpiece'},
+    ];
+    curated.forEach(c=>galleryData.push({id:id++, masterDraw:c.draw, name:c.name, stage:c.stage, art:true}));
+    // Random generated at various stages
+    const stages=[
+      {min:3,max:4,s:'Line',count:4},
+      {min:5,max:7,s:'Sketch',count:5},
+      {min:8,max:12,s:'Study',count:5},
+      {min:13,max:19,s:'Painting',count:4},
+    ];
+    stages.forEach(({min,max,s,count})=>{
+      for(let i=0;i<count;i++){
+        const seed=rand(1,9999);
+        const n=rand(min,max);
+        galleryData.push({id:id++, seed, count:n, stage:s, art:false});
+      }
+    });
+  }
+  renderGallery(currentFilter==='art'
+    ? galleryData.filter(d=>d.art)
+    : galleryData
+  );
+}
+
+function renderGallery(data){
+  const grid=document.getElementById('gallery-grid');grid.innerHTML='';
+  data.forEach(item=>{
+    const card=document.createElement('div');card.className='nft-card';
+    let cv;
+    if(item.masterDraw){
+      cv=item.masterDraw();
+    } else {
+      cv=document.createElement('canvas');
+      cv.width=GRID*8;cv.height=GRID*8;
+      drawNFT(cv.getContext('2d'),makeNFT(item.count,[item.seed]),8,[]);
+    }
+    cv.style.cssText='display:block;width:100%;image-rendering:pixelated;';
+    const info=document.createElement('div');info.className='nft-footer';
+    const stageCol={Line:'#444',Sketch:'#6B6B6B',Study:'#6B8FA0',Painting:'#D4B87A',Masterpiece:'#C4B5D0'};
+    info.innerHTML='<span class="nft-footer-id">#'+String(item.id).padStart(4,'0')+'</span>'
+      +'<span style="font-size:10px;color:'+stageCol[item.stage]+';font-weight:600;letter-spacing:0.5px;text-transform:uppercase;">'+item.stage+'</span>';
+    card.appendChild(cv);card.appendChild(info);
+    grid.appendChild(card);
+  });
+}
+let currentFilter='all';
+function filterGallery(btn,f){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  currentFilter=f;
+  buildGallery();
+  let d=galleryData;
+  if(f==='art')d=galleryData.filter(x=>x.art);
+  else if(f==='3')d=galleryData.filter(x=>!x.art&&x.sticks.length===3);
+  else if(f==='6')d=galleryData.filter(x=>!x.art&&x.sticks.length===6);
+  else if(f==='9')d=galleryData.filter(x=>!x.art&&x.sticks.length>=9);
+  renderGallery(d);
+}
+let myNFTData=[];
+let nextMintId=1;
+let myNFTsLoaded=false;
+
+async function loadMyNFTs(){
+  if(!walletAddress) return;
+  try {
+    const contract=getContract();
+    console.log('loadMyNFTs: fetching tokens for',walletAddress);
+
+    // Single call — no block scanning needed thanks to ERC721Enumerable
+    const ids=await contract.tokensOfOwner(walletAddress);
+    console.log('loadMyNFTs: token ids',ids.map(i=>i.toNumber()));
+
+    const owned=[];
+    for(const tokenId of ids){
+      try{
+        const rawSticks=await contract.getSticks(tokenId.toNumber());
+        const rawBlocks=await contract.getBlocks(tokenId.toNumber());
+        const credits=await contract.editCredits(tokenId.toNumber());
+        const name=await contract.tokenName(tokenId.toNumber());
+        console.log('Token',tokenId.toNumber(),'→',rawSticks.length,'sticks,',rawBlocks.length,'blocks, credits:',Number(credits));
+        owned.push({
+          id:      tokenId.toNumber(),
+          sticks:  rawSticks.map(formatStick),
+          blocks:  rawBlocks.map(formatBlock),
+          credits: Number(credits),
+          name:    name||'Untitled'
+        });
+      }catch(e){ console.warn('Token',tokenId.toNumber(),'error:',e.message); }
+    }
+    owned.sort((a,b)=>a.id-b.id);
+    myNFTData=owned;
+    myNFTsLoaded=true;
+    console.log('loadMyNFTs: done,',owned.length,'NFTs loaded');
+  }catch(e){ console.error('loadMyNFTs error:',e); }
+}
+
+function getStage(n){
+  if(n>=71)return'Masterpiece';
+  if(n>=36)return'Painting';
+  if(n>=18)return'Study';
+  if(n>=9)return'Sketch';
+  return'Line';
+}
+
+async function buildMyNFTs(){
+  const wrap=document.getElementById('mynft-content');
+  if(!walletAddress){
+    wrap.innerHTML='<div class="connect-prompt"><h2>Your collection awaits.</h2><p>Connect your wallet to see the Pyres you own.</p><button class="btn-primary" onclick="handleWalletClick()">Connect wallet</button></div>';
+    return;
+  }
+  wrap.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">Loading your Pyre from Ethereum Sepolia…</div>';
+  await loadMyNFTs();
+
+  // Fetch chain stats
+  let totalMinted=0,totalSupply=0,totalBurned=0;
+  try{
+    const c=getContract();
+    totalMinted=Number(await c.totalMinted());
+    totalSupply=Number(await c.totalSupply());
+    totalBurned=totalMinted-totalSupply;
+  }catch(e){}
+
+  if(myNFTData.length===0){
+    wrap.innerHTML='<div class="connect-prompt"><h2>No Pyres yet.</h2><p>Mint your first Pyre to start your collection.</p><button class="btn-primary" onclick="showPage(\'mint\')">Mint a Pyre</button></div>';
+    return;
+  }
+
+  const editable=myNFTData.filter(x=>x.credits>0);
+  const totalElements=myNFTData.reduce((s,x)=>(x.sticks.length||0)+(x.blocks||[]).length+s,0);
+
+  wrap.innerHTML=
+    // Stats bar
+    '<div class="mynft-stats">'+
+      '<div class="mynft-stat"><div class="mynft-stat-val">'+myNFTData.length+'</div><div class="mynft-stat-lbl">Owned</div></div>'+
+      '<div class="mynft-stat"><div class="mynft-stat-val">'+editable.length+'</div><div class="mynft-stat-lbl">Editable</div></div>'+
+      '<div class="mynft-stat"><div class="mynft-stat-val">'+totalElements+'</div><div class="mynft-stat-lbl">Elements</div></div>'+
+      '<div class="mynft-stat"><div class="mynft-stat-val">'+totalBurned+'</div><div class="mynft-stat-lbl">Burned Total</div></div>'+
+    '</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">'+
+      '<p style="font-size:13px;color:var(--text2);">'+myNFTData.length+' Pyre · '+editable.length+' editable</p>'+
+      '<button class="btn-outline" style="font-size:13px;padding:7px 16px;" onclick="showPage(\'burn\')">Burn Burn &amp; mergeamp; forge →</button>'+
+    '</div>'+
+    '<div class="mynft-grid" id="mynft-grid"></div>'+
+    '<div class="history-wrap"><div class="history-label">Activity</div><div class="history-list" id="history-list"></div></div>';
+
+  // Render NFT cards
+  const grid=document.getElementById('mynft-grid');
+  myNFTData.forEach(item=>{
+    const card=document.createElement('div');
+    card.className='mynft-card'+(item.credits>0?' editable':'');
+
+    // Editable badge
+    if(item.credits>0){
+      const badge=document.createElement('div');
+      badge.className='edit-badge';
+      badge.textContent='✏️ '+item.credits+' edit'+(item.credits>1?'s':'');
+      card.appendChild(badge);
+    }
+
+    const cv=makeThumb(item.sticks,200,item.blocks||[]);
+    cv.style.cssText='display:block;width:100%;image-rendering:pixelated;';
+    const footer=document.createElement('div');footer.className='mynft-footer';
+    const stage=getStage((item.sticks.length||0)+(item.blocks||[]).length);
+    const total=(item.sticks.length||0)+(item.blocks||[]).length;
+    footer.innerHTML='<div class="mynft-info"><h4>'+(item.name&&item.name!=='Untitled'?item.name:'Pyre')+' #'+item.id+'</h4>'
+      +'<span>'+stage+' · '+total+' elements</span></div>'
+      +'<button class="edit-btn" onclick="openEditor('+item.id+')" style="'+(item.credits>0?'border-color:var(--accent);color:var(--accent);':'')+'">edit</button>';
+    card.appendChild(cv);card.appendChild(footer);
+    grid.appendChild(card);
+  });
+
+  // Render history from localStorage
+  renderHistory();
+}
+
+// ── Activity history (stored in localStorage) ─────────────────────────
+function addHistory(icon, text){
+  const h=JSON.parse(localStorage.getItem('pyre_history')||'[]');
+  h.unshift({icon, text, time:Date.now()});
+  if(h.length>20)h.pop();
+  localStorage.setItem('pyre_history', JSON.stringify(h));
+}
+
+function renderHistory(){
+  const list=document.getElementById('history-list');
+  if(!list)return;
+  const h=JSON.parse(localStorage.getItem('pyre_history')||'[]');
+  if(h.length===0){list.innerHTML='<div style="font-size:12px;color:var(--text3);padding:10px 0;">No activity yet.</div>';return;}
+  list.innerHTML='';
+  h.forEach(item=>{
+    const div=document.createElement('div');div.className='history-item';
+    const ago=timeAgo(item.time);
+    div.innerHTML='<div class="history-icon">'+item.icon+'</div>'
+      +'<div class="history-text">'+item.text+'</div>'
+      +'<div class="history-time">'+ago+'</div>';
+    list.appendChild(div);
+  });
+}
+
+function timeAgo(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'just now';
+  if(s<3600)return Math.floor(s/60)+'m ago';
+  if(s<86400)return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+
+// ---- Burn & merge selection flow ----
+let burnKeepId=null, burnBurnId=null;
+async function buildBurn(){
+  const wrap=document.getElementById('burn-content');
+  if(!walletAddress){wrap.innerHTML='<div class="connect-prompt"><h2>Connect to burn.</h2><p>Connect your wallet to choose which Pyre to keep and which to burn.</p><button class="btn-primary" onclick="handleWalletClick()">Connect wallet</button></div>';return;}
+  // Load NFTs if not yet loaded
+  if(myNFTData.length===0){
+    wrap.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">Loading your Pyre…</div>';
+    await loadMyNFTs();
+  }
+  if(myNFTData.length<2){wrap.innerHTML='<div class="connect-prompt"><h2>You need at least two Pyres.</h2><p>Burning merges one Pyre into another, so you need two or more. Mint a few first.</p><button class="btn-primary" onclick="showPage(\'mint\')">Mint a Pyre</button></div>';return;}
+  wrap.innerHTML=
+    '<div class="burn-select-grid">'+
+      '<div class="burn-col keep"><h4>Keep this one</h4><div class="burn-col-sub">Gains the sticks + 1 edit</div><div class="burn-pick-grid" id="keep-grid"></div></div>'+
+      '<div class="burn-col burn"><h4>Burn this one</h4><div class="burn-col-sub">Gone forever, sticks move over</div><div class="burn-pick-grid" id="burn-grid"></div></div>'+
+    '</div>'+
+    '<div id="burn-confirm-area"></div>';
+  renderBurnPicks();
+}
+
+function renderBurnPicks(){
+  const keepGrid=document.getElementById('keep-grid');
+  const burnGrid=document.getElementById('burn-grid');
+  keepGrid.innerHTML='';burnGrid.innerHTML='';
+  myNFTData.forEach(item=>{
+    keepGrid.appendChild(makeBurnPick(item,'keep'));
+    burnGrid.appendChild(makeBurnPick(item,'burn'));
+  });
+  renderBurnConfirm();
+}
+
+function makeBurnPick(item,role){
+  const div=document.createElement('div');
+  div.className='burn-pick';
+  const isKeep=role==='keep'&&burnKeepId===item.id;
+  const isBurn=role==='burn'&&burnBurnId===item.id;
+  if(isKeep)div.classList.add('sel-keep');
+  if(isBurn)div.classList.add('sel-burn');
+  // disable the same token in the opposite column
+  const disabled=(role==='keep'&&burnBurnId===item.id)||(role==='burn'&&burnKeepId===item.id);
+  if(disabled)div.classList.add('disabled');
+  const c=makeThumb(item.sticks,140,item.blocks||[]);c.style.cssText='width:100%;image-rendering:pixelated;display:block;';
+  div.appendChild(c);
+  const lbl=document.createElement('div');lbl.className='pick-label';
+  const total=(item.sticks.length)+(item.blocks||[]).length;
+  lbl.textContent='#'+item.id+' · '+total+' elements';
+  div.appendChild(lbl);
+  if(isKeep||isBurn){const tag=document.createElement('div');tag.className='pick-tag';tag.textContent=isKeep?'KEEP':'BURN';div.appendChild(tag);}
+  if(!disabled){
+    div.onclick=()=>{
+      if(role==='keep')burnKeepId=(burnKeepId===item.id?null:item.id);
+      else burnBurnId=(burnBurnId===item.id?null:item.id);
+      renderBurnPicks();
+    };
+  }
+  return div;
+}
+
+function renderBurnConfirm(){
+  const area=document.getElementById('burn-confirm-area');
+  if(!area)return;
+  if(burnKeepId===null||burnBurnId===null){area.innerHTML='';return;}
+  const keep=myNFTData.find(x=>x.id===burnKeepId);
+  const burn=myNFTData.find(x=>x.id===burnBurnId);
+  const mergedSticks=keep.sticks.concat(burn.sticks);
+  const mergedBlocks=(keep.blocks||[]).concat(burn.blocks||[]);
+  const keepTotal=(keep.sticks.length)+(keep.blocks||[]).length;
+  const burnTotal=(burn.sticks.length)+(burn.blocks||[]).length;
+  const newTotal=keepTotal+burnTotal;
+  area.innerHTML='<div class="burn-confirm"><canvas class="burn-preview-canvas" id="burn-preview" width="150" height="150"></canvas><div class="burn-confirm-text">'
+    +'<h4>Pyre #'+keep.id+' will hold '+newTotal+' elements</h4>'
+    +'<p>Burning #'+burn.id+' moves its '+burnTotal+' elements into #'+keep.id+' and unlocks one edit. #'+burn.id+' is destroyed permanently.</p>'
+    +'<button class="burn-go" onclick="confirmBurn()">Burn #'+burn.id+' → keep #'+keep.id+'</button>'
+    +'</div></div>';
+  const cv=document.getElementById('burn-preview');
+  drawNFT(cv.getContext('2d'),mergedSticks,150/GRID,mergedBlocks);
+}
+
+async function confirmBurn(){
+  const keep=myNFTData.find(x=>x.id===burnKeepId);
+  const burn=myNFTData.find(x=>x.id===burnBurnId);
+  const burnGoBtn=document.querySelector('.burn-go');
+  if(burnGoBtn){burnGoBtn.disabled=true;burnGoBtn.textContent='Confirm in wallet…';}
+  try {
+    const contract=getContract(true);
+    const tx=await contract.mergeBurn(burnKeepId,burnBurnId);
+    if(burnGoBtn)burnGoBtn.textContent='Burning on-chain…';
+    await tx.wait(1);
+    // Reload from chain to get accurate sticks + credits
+    const readContract=getContract(false);
+    const rawSticks=await readContract.getSticks(keep.id);
+    const credits=await readContract.editCredits(keep.id);
+    keep.sticks=rawSticks.map(formatStick);
+    keep.credits=Number(credits);
+    myNFTData=myNFTData.filter(x=>x.id!==burnBurnId);
+    const keptId=keep.id;
+    burnKeepId=null;burnBurnId=null;
+    toast('Burned #'+burn.id+' · Pyre #'+keptId+' now has '+keep.sticks.length+' sticks + 1 edit ✅');
+    addHistory('🔥','Burned <strong>Pyre #'+burn.id+'</strong> into <strong>Pyre #'+keptId+'</strong> — unlocked 1 edit');
+    buildBurn();
+    // Show in-page success banner with edit button
+    setTimeout(()=>{
+      const wrap=document.getElementById('burn-content');
+      if(wrap){
+        const banner=document.createElement('div');
+        banner.style.cssText='background:#edfaf5;border:0.5px solid #b8e6d6;border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;';
+        banner.innerHTML='<div><div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:4px;">Merge complete! 🎉</div><div style="font-size:13px;color:var(--text2);">Pyre #'+keptId+' now has '+keep.sticks.length+' sticks and 1 edit credit.</div></div><button onclick="openEditor('+keptId+')" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Edit now →</button>';
+        wrap.prepend(banner);
+      }
+    },400);
+  } catch(e) {
+    if(burnGoBtn){burnGoBtn.disabled=false;burnGoBtn.textContent='Burn #'+burnBurnId+' → keep #'+burnKeepId;}
+    if(e.code===4001)toast('Transaction cancelled');
+    else toast('Burn failed: '+(e.reason||e.message||'unknown error'));
+  }
+}
+let editorSticks=makeNFT(3);let editorBlocks=[];let selectedIdx=0;
+const EDITOR_SCALE=20; // matches on-chain SVG (24×20 = 480px)
+let editorCanvasReady=false;
+let editCredits=0;
+let layoutDirty=false;
+let editorTokenId=42;
+
+function openEditor(id){
+  const nft=myNFTData.find(x=>x.id===id);
+  if(!nft){ toast('NFT not found – open My Pyres first'); return; }
+  editorTokenId=id;
+  editorSticks=nft.sticks.map(s=>({
+    color:  typeof s.color==='string' ? s.color : (PALETTE[Number(s.color)]||PALETTE[0]),
+    length: Number(s.length), x: Number(s.x), y: Number(s.y), dir: Number(s.dir)
+  }));
+  editorBlocks=(nft.blocks||[]).map(b=>({
+    color:     typeof b.color==='string' ? b.color : (PALETTE[Number(b.color)]||PALETTE[0]),
+    blockType: Number(b.blockType), rotation: Number(b.rotation),
+    x: Number(b.x), y: Number(b.y)
+  }));
+  editCredits=nft.credits||0;
+  selectedIdx=0;
+  layoutDirty=false;
+  editorCanvasReady=false;
+  showPage('editor');
+  setTimeout(()=>{
+    const inp=document.getElementById('name-input');
+    if(inp&&nft.name&&nft.name!=='Untitled')inp.placeholder=nft.name;
+  },100);
+}
+
+function renderEditStatus(){
+  const el=document.getElementById('edit-status');
+  if(!el)return;
+  if(editCredits>0){
+    el.className='edit-status has-credit';
+    el.innerHTML='<span class="credit-num">'+editCredits+'</span><span class="credit-text"><b>edit '+(editCredits===1?'credit':'credits')+' available.</b> Rearrange your sticks, then save once. Saving uses one credit.</span>';
+  }else{
+    el.className='edit-status no-credit';
+    el.innerHTML='<span class="credit-num">0</span><span class="credit-text">No edit credits. This layout is locked. Burn another Pyre to unlock one edit.</span>';
+  }
+}
+
+function updateSaveButton(){
+  const btn=document.getElementById('save-btn');
+  if(!btn)return;
+  if(editCredits>0){
+    btn.classList.remove('locked');
+    btn.textContent=layoutDirty?'Save layout · uses 1 credit':'Save layout on-chain';
+  }else{
+    btn.classList.add('locked');
+    btn.textContent='Locked — burn to edit';
+  }
+}
+
+function drawEditorCanvas(){
+  const cv=document.getElementById('editor-canvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  drawNFT(ctx,editorSticks,EDITOR_SCALE,editorBlocks);
+  const s=editorSticks[selectedIdx];
+  if(s){
+    ctx.strokeStyle='rgba(0,0,0,0.5)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([3,3]);
+    const pad=2;
+    const minx=(s.x-Math.ceil(s.length/2)-pad)*EDITOR_SCALE;
+    const miny=(s.y-Math.ceil(s.length/2)-pad)*EDITOR_SCALE;
+    const sz=(s.length+pad*2+1)*EDITOR_SCALE;
+    ctx.strokeRect(minx,miny,sz,sz);
+    ctx.setLineDash([]);
+  }
+}
+
+function buildEditor(){
+  const titleLbl=document.getElementById('editor-title-label');
+  if(titleLbl)titleLbl.textContent='Editor — Pyre #'+editorTokenId;
+  drawEditorCanvas();
+  renderEditStatus();
+  updateSaveButton();
+  const locked=editCredits<=0;
+  const hint=document.getElementById('editor-hint');
+  if(hint)hint.textContent=locked?'Layout locked — burn to unlock edits':'Click/drag sticks and blocks to move · Tetrix tab to place blocks';
+  const list=document.getElementById('editor-stick-list');
+  if(!list)return;
+  list.innerHTML='';
+  editorSticks.forEach((s,i)=>{
+    const card=document.createElement('div');
+    card.className='editor-stick-card'+(i===selectedIdx?' active':'');
+    card.style.borderColor=i===selectedIdx?s.color:'var(--border2)';
+    card.style.opacity=locked?'0.55':'1';
+    card.innerHTML='<div class="stick-label">Stick '+(i+1)+(i===selectedIdx?' · selected':'')+'</div>'
+      +'<div class="stick-attrs"><span class="attr-pill"><span class="color-dot" style="background:'+s.color+'"></span></span>'
+      +'<span class="attr-pill">'+s.length+'px</span>'
+      +'<span class="attr-pill">'+DIR_NAMES[s.dir]+'</span></div>';
+    card.onclick=()=>{selectedIdx=i;buildEditor();};
+    list.appendChild(card);
+  });
+  const ctrl=document.getElementById('editor-controls');
+  if(ctrl){
+    if(locked){ ctrl.innerHTML=''; }
+    else{
+      const s=editorSticks[selectedIdx];
+      ctrl.innerHTML='<div class="stick-label" style="margin-bottom:8px;">Direction</div><div style="display:flex;gap:6px;">'
+        +DIR_NAMES.map((d,di)=>'<button class="dir-btn'+(s&&s.dir===di?' active':'')+'" onclick="setDir('+di+')">'+d+'</button>').join('')+'</div>';
+    }
+  }
+  if(!editorCanvasReady)initEditorCanvas();
+}
+
+
+function stickHitTest(px,py){
+  for(let k=editorSticks.length-1;k>=0;k--){
+    const s=editorSticks[k];
+    const h=Math.ceil(s.length/2)+1;
+    if(px>=s.x-h&&px<=s.x+h&&py>=s.y-h&&py<=s.y+h)return k;
+  }
+  return -1;
+}
+
+function blockHitTest(px,py){
+  for(let k=editorBlocks.length-1;k>=0;k--){
+    const pts=getTetroPixels(editorBlocks[k].blockType,editorBlocks[k].rotation,editorBlocks[k].x,editorBlocks[k].y);
+    for(const [bx,by] of pts){
+      if(Math.abs(px-bx)<=1&&Math.abs(py-by)<=1)return k;
+    }
+  }
+  return -1;
+}
+
+// Drag state: {kind:'stick'|'block', idx, offX, offY}
+let dragState=null;
+
+function initEditorCanvas(){
+  const cv=document.getElementById('editor-canvas');
+  if(!cv)return;
+  editorCanvasReady=true;
+
+  function getGridPos(e){
+    const rect=cv.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+    const scaleX=cv.width/rect.width, scaleY=cv.height/rect.height;
+    return {x:Math.round(cx*scaleX/EDITOR_SCALE),y:Math.round(cy*scaleY/EDITOR_SCALE)};
+  }
+
+  function start(e){
+    if(editCredits<=0)return;
+    const p=getGridPos(e);
+
+    // Try block hit first (blocks are on top visually)
+    const bHit=blockHitTest(p.x,p.y);
+    if(bHit>=0){
+      const b=editorBlocks[bHit];
+      dragState={kind:'block',idx:bHit,offX:p.x-b.x,offY:p.y-b.y};
+      cv.style.cursor='grabbing';
+      e.preventDefault();
+      return;
+    }
+
+    // Then try stick hit
+    const sHit=stickHitTest(p.x,p.y);
+    if(sHit>=0){
+      selectedIdx=sHit;
+      dragState={kind:'stick',idx:sHit,offX:p.x-editorSticks[sHit].x,offY:p.y-editorSticks[sHit].y};
+      cv.style.cursor='grabbing';
+      buildEditor();
+      e.preventDefault();
+    }
+  }
+
+  function move(e){
+    if(!dragState)return;
+    const p=getGridPos(e);
+    if(dragState.kind==='stick'){
+      const s=editorSticks[dragState.idx];
+      s.x=Math.max(0,Math.min(GRID-1,p.x-dragState.offX));
+      s.y=Math.max(0,Math.min(GRID-1,p.y-dragState.offY));
+    } else {
+      const b=editorBlocks[dragState.idx];
+      b.x=Math.max(0,Math.min(GRID-1,p.x-dragState.offX));
+      b.y=Math.max(0,Math.min(GRID-1,p.y-dragState.offY));
+    }
+    layoutDirty=true;
+    drawEditorCanvas();
+    e.preventDefault();
+  }
+
+  function end(){
+    dragState=null;
+    cv.style.cursor=editCredits>0?'grab':'not-allowed';
+    buildEditor();
+  }
+
+  cv.style.cursor=editCredits>0?'grab':'not-allowed';
+  cv.addEventListener('mousedown',start);
+  window.addEventListener('mousemove',move);
+  window.addEventListener('mouseup',end);
+  cv.addEventListener('touchstart',start,{passive:false});
+  window.addEventListener('touchmove',move,{passive:false});
+  window.addEventListener('touchend',end);
+}
+
+function setDir(di){ if(editCredits<=0)return; editorSticks[selectedIdx].dir=di; layoutDirty=true; buildEditor(); }
+
+buildHero();buildHomeGallery();buildHomeEvo();buildBlocksSection();loadPrice();
+</script>
+</body>
+</html>
