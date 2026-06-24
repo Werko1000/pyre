@@ -1013,13 +1013,17 @@ async function handleMint(){
     const pollTimer=setInterval(async()=>{
       pollCount++;
       stext.textContent='Waiting for VRF… ('+Math.round(pollCount*8)+'s)';
+      console.log('🔍 Poll #'+pollCount+' — knownIds:', [...knownIds]);
       try {
         const ids=await readContract.tokensOfOwner(walletAddress);
-        const newIds=ids.map(i=>i.toNumber()).filter(id=>!knownIds.has(id));
+        const allIds=ids.map(i=>i.toNumber());
+        console.log('📦 tokensOfOwner:', allIds);
+        const newIds=allIds.filter(id=>!knownIds.has(id));
+        console.log('🆕 newIds:', newIds);
         if(newIds.length>found){
-          // Reveal the latest new token
           const latestId=newIds[newIds.length-1];
           found=newIds.length;
+          console.log('✅ New Pyre found! tokenId:', latestId);
           stext.textContent=found+'/'+mintQty+' Pyre revealed…';
           if(found===mintQty||found===1){
             clearInterval(pollTimer);
@@ -1028,7 +1032,7 @@ async function handleMint(){
             revealMintFromChain(latestId);
           }
         }
-      }catch(e){ console.warn('poll error:',e.message); }
+      }catch(e){ console.warn('❌ poll error:',e.message); }
     },8000);
 
     // Final timeout after 5 minutes
