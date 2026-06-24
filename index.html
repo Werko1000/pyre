@@ -9,9 +9,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700;1,900&display=swap');
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
-  --bg:#fff; --bg2:#fafafa; --bg3:#f5f5f5; --bg4:#efefef;
-  --border:#ccc; --border2:#aaa; --border3:#888;
-  --text:#000; --text2:#222; --text3:#555;
+  --bg:#111; --bg2:#161616; --bg3:#1c1c1c; --bg4:#222;
+  --border:#222; --border2:#333; --border3:#444;
+  --text:#fff; --text2:#aaa; --text3:#555;
   --accent:#6B8FA0; --accent2:#4A7A8C;
   --serif:'Playfair Display',Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -23,7 +23,7 @@
   --c13:#6BCB77;--c14:#4D96FF;--c15:#FF6FC8;--c16:#111111;
 }
 html { scroll-behavior:smooth; }
-body { font-family:var(--sans); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; font-size:15px; }
+body { font-family:var(--sans); background:#111; color:#fff; -webkit-font-smoothing:antialiased; font-size:15px; }
 
 /* NAV */
 nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; top:0; z-index:100; }
@@ -312,57 +312,168 @@ footer { border-top:1px solid var(--border); }
   .nft-grid,.masterpiece-grid { grid-template-columns:1fr; }
 }
 .qty-wrap,.qty-label,.qty-btns,.qty-btn{} 
+
+/* ── NPC-INSPIRED NAV & MENU ─────────────────────────────────────────── */
+.nav-minimal { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:20px 28px; }
+.nav-logo { font-family:var(--serif); font-style:italic; font-size:28px; font-weight:700; cursor:pointer; color:#fff; letter-spacing:-0.5px; }
+.hamburger { background:rgba(30,30,30,0.9); border:1px solid #333; width:48px; height:48px; border-radius:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; }
+.hamburger span { display:block; width:20px; height:1.5px; background:#fff; }
+.menu-overlay { position:fixed; inset:0; background:#0d0d0d; z-index:300; display:none; flex-direction:column; }
+.menu-overlay.open { display:flex; }
+.menu-overlay-inner { display:flex; flex-direction:column; height:100%; padding:24px 32px 32px; }
+.menu-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:48px; }
+.menu-logo { font-family:var(--serif); font-style:italic; font-size:28px; font-weight:700; color:#fff; cursor:pointer; }
+.menu-close { background:rgba(30,30,30,0.9); border:1px solid #333; width:48px; height:48px; border-radius:12px; cursor:pointer; color:#fff; font-size:18px; display:flex; align-items:center; justify-content:center; }
+.menu-nav { display:flex; flex-direction:column; gap:4px; flex:1; }
+.menu-nav a { font-size:clamp(40px,8vw,80px); font-weight:700; color:#fff; cursor:pointer; letter-spacing:-2px; line-height:1.1; transition:color 0.1s; display:block; border-bottom:1px solid #1a1a1a; padding:8px 0; }
+.menu-nav a:hover { color:var(--accent); }
+.menu-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:24px; border-top:1px solid #222; }
+.menu-wallet { background:transparent; border:1px solid #333; padding:10px 20px; color:#aaa; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:8px; }
+.menu-wallet:hover { border-color:#fff; color:#fff; }
+.menu-links { display:flex; gap:20px; }
+.menu-links a { font-size:13px; color:#555; text-decoration:none; }
+.menu-links a:hover { color:#fff; }
+
+/* ── HERO FULLSCREEN ─────────────────────────────────────────────────── */
+.hero-full { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr auto; padding:120px 48px 40px; gap:40px; position:relative; align-items:center; }
+.hero-text-wrap { display:flex; flex-direction:column; justify-content:center; }
+.hero-eyebrow { font-size:11px; letter-spacing:3px; color:#444; font-family:var(--mono); margin-bottom:28px; text-transform:uppercase; }
+.hero-mega { font-size:clamp(60px,10vw,120px); font-weight:900; line-height:0.88; letter-spacing:-4px; color:#fff; }
+.hero-accent { color:var(--accent); }
+.hero-nft-wrap { display:flex; align-items:center; justify-content:center; }
+.hero-nft-wrap canvas { width:min(400px,90%); height:min(400px,90%); image-rendering:pixelated; border:1px solid #222; }
+.hero-cta-row { grid-column:1/-1; display:flex; align-items:center; gap:28px; border-top:1px solid #1a1a1a; padding-top:28px; }
+.btn-hero-mint { font-size:14px; font-weight:700; padding:14px 36px; background:#fff; color:#000; border:none; cursor:pointer; transition:all 0.15s; letter-spacing:0.5px; }
+.btn-hero-mint:hover { background:var(--accent); color:#fff; }
+.hero-sub-text { font-size:12px; color:#444; font-family:var(--mono); }
+.scroll-indicator { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; color:#333; font-size:10px; letter-spacing:3px; font-family:var(--mono); }
+
+/* ── FIX WHITE ELEMENTS FOR DARK BG ─────────────────────────────────── */
+.stats-bar { background:#111; border-bottom:1px solid #1a1a1a; }
+.stats-inner { border-color:#1a1a1a; }
+.stat { border-color:#1a1a1a; }
+.stat-val { color:#fff; }
+.stat-lbl { color:#555; }
+.manifesto { background:#111; }
+.manifesto h2 { color:#fff; }
+.manifesto p { color:#888; }
+.manifesto-right { border-color:#1a1a1a; }
+.manifesto-fact { border-color:#1a1a1a; }
+.fact-val { color:#fff; }
+.fact-desc { color:#666; }
+.how { background:#111; }
+.how-step { border-color:#1a1a1a; }
+.how-step h3 { color:#fff; }
+.how-step p { color:#888; }
+.section-inner { background:#111; }
+.nft-card { background:#111; border-color:#1a1a1a; }
+.nft-footer { background:#0d0d0d; border-color:#1a1a1a; }
+.nft-footer-id { color:#fff; }
+.mp-card { background:#111; border-color:#1a1a1a; }
+.mp-card-info { background:#0d0d0d; border-color:#1a1a1a; }
+.mp-card-id { color:#fff; }
+.footer-inner { background:#0d0d0d; border-color:#1a1a1a; }
+.footer-logo { color:#fff; }
+.footer-note { color:#444; }
+footer { background:#0d0d0d; }
+.connect-prompt h2 { color:#fff; }
+.connect-prompt p { color:#888; }
+.mint-rows { background:#161616; border-color:#222; }
+.mint-row { border-color:#222; }
+.mint-row .lbl { color:#555; }
+.mint-row .val { color:#fff; }
+.burn-confirm { background:#161616; border-color:#222; }
+.burn-confirm-text h4 { color:#fff; }
+.burn-confirm-text p { color:#888; }
+.mynft-stat { background:#161616; }
+.mynft-stat-val { color:#fff; }
+.history-item { background:#161616; border-color:#222; }
+.history-text { color:#888; }
+.history-text strong { color:#fff; }
+.editor-canvas-area canvas { border-color:#222; }
+.editor-stick-card { background:#161616; border-color:#222; }
+.tetro-btn { background:#161616; }
+.rot-btn { background:#161616; border-color:#222; color:#888; }
+.burn-card { background:rgba(107,143,160,0.05); }
+.how-step-num { color:var(--accent); }
+.reveal-title { color:#fff; }
+.mint-desc { color:#888; }
+.mynft-info h4 { color:#fff; }
+.mynft-info span { color:#555; }
+.mynft-footer { background:#161616; border-color:#222; }
+
+@media(max-width:768px){
+  .hero-full { grid-template-columns:1fr; padding:100px 24px 32px; }
+  .hero-nft-wrap { order:-1; }
+  .hero-mega { font-size:clamp(48px,14vw,80px); }
+  .menu-nav a { font-size:clamp(32px,8vw,60px); }
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <div class="nav-logo" onclick="showPage('home')">
-      <span class="logo-s">P</span><span class="logo-t">y</span><span class="logo-i">r</span><span class="logo-x">e</span><span class="logo-dot">.</span>
+<!-- Fullscreen Menu Overlay -->
+<div id="menu-overlay" class="menu-overlay">
+  <div class="menu-overlay-inner">
+    <div class="menu-top">
+      <div class="menu-logo" onclick="closeMenu();showPage('home')">Pyre.</div>
+      <button class="menu-close" onclick="closeMenu()">✕</button>
     </div>
-    <div class="nav-links">
-      <a onclick="showPage('home')">home</a>
-      <a onclick="showPage('mint')">mint</a>
-      <a onclick="showPage('gallery')">gallery</a>
-      <a onclick="showPage('mynfts')">my pyres</a>
-      <a onclick="showPage('burn')">burn</a>
-      <a onclick="showPage('editor')">editor</a>
-      <button class="btn-wallet" id="wallet-btn" onclick="handleWalletClick()">
+    <nav class="menu-nav">
+      <a onclick="closeMenu();showPage('mint')">mint</a>
+      <a onclick="closeMenu();showPage('gallery')">gallery</a>
+      <a onclick="closeMenu();showPage('mynfts')">my pyres</a>
+      <a onclick="closeMenu();showPage('burn')">burn & merge</a>
+      <a onclick="closeMenu();showPage('editor')">editor</a>
+    </nav>
+    <div class="menu-bottom">
+      <button class="menu-wallet" id="menu-wallet-btn" onclick="handleWalletClick()">
         <span class="wallet-dot"></span>
-        <span id="wallet-label">Connect wallet</span>
+        <span id="wallet-label">connect wallet</span>
       </button>
-      <div class="wallet-dropdown" id="wallet-dropdown" style="display:none;">
-        <div class="wallet-dropdown-addr" id="wallet-dropdown-addr"></div>
-        <button class="wallet-dropdown-item" onclick="disconnectWallet()">Disconnect</button>
+      <div class="menu-links">
+        <a href="https://twitter.com/pyrewtf" target="_blank">X</a>
+        <a href="https://sepolia.etherscan.io/address/0x26639D1eCa23C62520ff9ff14F314481571685c9" target="_blank">Etherscan</a>
       </div>
     </div>
-    <button class="nav-menu-btn" onclick="toggleMobileNav()" aria-label="Menu">&#9776;</button>
   </div>
-  <div class="mobile-nav" id="mobile-nav">
-    <a onclick="showPage('home');toggleMobileNav()">home</a>
-    <a onclick="showPage('mint');toggleMobileNav()">mint</a>
-    <a onclick="showPage('gallery');toggleMobileNav()">gallery</a>
-    <a onclick="showPage('mynfts');toggleMobileNav()">my pyres</a>
-    <a onclick="showPage('burn');toggleMobileNav()">burn</a>
-    <a onclick="showPage('editor');toggleMobileNav()">editor</a>
-    <a onclick="handleWalletClick();toggleMobileNav()" id="mobile-wallet-link">Connect wallet</a>
+</div>
+
+<nav class="nav-minimal">
+  <div class="nav-logo" onclick="showPage('home')">Pyre.</div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="btn-wallet" id="wallet-btn" onclick="handleWalletClick()" style="display:none;">
+      <span class="wallet-dot"></span>
+      <span id="wallet-label-nav">●</span>
+    </button>
+    <div class="wallet-dropdown" id="wallet-dropdown" style="display:none;">
+      <div class="wallet-dropdown-addr" id="wallet-dropdown-addr"></div>
+      <button class="wallet-dropdown-item" onclick="disconnectWallet()">Disconnect</button>
+    </div>
+    <button class="hamburger" onclick="openMenu()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
 <div id="page-home" class="page active">
-  <div class="hero">
-    <div class="hero-inner">
+  <section class="hero-full">
+    <div class="hero-text-wrap">
       <div class="hero-eyebrow">on-chain pixel art · ethereum · cc0</div>
-      <div class="hero-title">Burn every<br><span>thing.</span></div>
-      <div class="hero-sub">Two tokens enter. One survives — carrying everything. Arrange it pixel by pixel. Save it to the chain. No servers. No IPFS. Forever.</div>
-      <div class="hero-actions">
-        <button class="btn-primary" onclick="showPage('mint')">Mint a Pyre</button>
-        <button class="btn-outline" onclick="showPage('gallery')">View collection →</button>
-      </div>
-      <div class="hero-ticker" id="hero-ticker"></div>
+      <h1 class="hero-mega">Burn<br>every<br><span class="hero-accent">thing.</span></h1>
     </div>
-  </div>
+    <div class="hero-nft-wrap">
+      <canvas id="hero-nft-canvas" width="480" height="480"></canvas>
+    </div>
+    <div class="hero-cta-row">
+      <button class="btn-hero-mint" onclick="showPage('mint')">Mint a Pyre</button>
+      <div class="hero-sub-text">10,000 supply · 0.01 ETH · CC0</div>
+    </div>
+    <div class="scroll-indicator">
+      <span>SCROLL</span>
+      <svg width="12" height="20" viewBox="0 0 12 20"><path d="M6 0v16M1 11l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    </div>
+  </section>
   <div class="stats-bar">
     <div class="stats-inner">
       <div class="stat"><div class="stat-val" id="stat-remaining">10,000</div><div class="stat-lbl">Remaining</div></div>
@@ -884,6 +995,18 @@ function copyWallet(){
   document.getElementById('wallet-dropdown')?.remove();
   navigator.clipboard?.writeText(walletAddress).then(()=>toast('Address copied!'));
 }
+function openMenu(){document.getElementById('menu-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');document.body.style.overflow='';}
+function toggleMobileNav(){}
+
+function buildHeroNFT(){
+  const cv=document.getElementById('hero-nft-canvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  // Draw one of our masterpiece drawings
+  drawNFT(ctx,makeNFT(8,[42]),480/GRID,[]);
+}
+
 function updateWalletUI(){
   const btn=document.getElementById('wallet-btn');
   const lbl=document.getElementById('wallet-label');
@@ -2132,7 +2255,7 @@ function initEditorCanvas(){
 
 function setDir(di){ if(editCredits<=0)return; editorSticks[selectedIdx].dir=di; layoutDirty=true; buildEditor(); }
 
-buildHero();buildHomeGallery();buildHomeEvo();buildBlocksSection();loadPrice();
+buildHero();buildHomeGallery();buildHomeEvo();buildBlocksSection();buildHeroNFT();loadPrice();
 </script>
 </body>
 </html>
