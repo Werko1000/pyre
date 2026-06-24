@@ -439,7 +439,7 @@ footer { background:#0d0d0d; }
     <div class="menu-bottom">
       <button class="menu-wallet" id="menu-wallet-btn" onclick="handleWalletClick()">
         <span class="wallet-dot"></span>
-        <span id="wallet-label">connect wallet</span>
+        <span id="menu-wallet-label">connect wallet</span>
       </button>
       <div class="menu-links">
         <a href="https://twitter.com/pyrewtf" target="_blank">X</a>
@@ -1037,9 +1037,20 @@ function buildHeroNFT(){
 function updateWalletUI(){
   const btn=document.getElementById('wallet-btn');
   const lbl=document.getElementById('wallet-label');
+  const menuLbl=document.getElementById('menu-wallet-label');
   const mob=document.getElementById('mobile-wallet-link');
-  if(walletAddress){btn.classList.add('connected');const s=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);lbl.textContent=s;if(mob)mob.textContent=s;}
-  else{btn.classList.remove('connected');lbl.textContent='Connect wallet';if(mob)mob.textContent='Connect wallet';}
+  if(walletAddress){
+    btn.classList.add('connected');
+    const s=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
+    if(lbl)lbl.textContent=s;
+    if(menuLbl)menuLbl.textContent=s;
+    if(mob)mob.textContent=s;
+  }else{
+    btn.classList.remove('connected');
+    if(lbl)lbl.textContent='Connect wallet';
+    if(menuLbl)menuLbl.textContent='connect wallet';
+    if(mob)mob.textContent='Connect wallet';
+  }
 }
 let revealTimer=null;
 let mintPriceWei=ethers.BigNumber.from(0);
@@ -2084,24 +2095,50 @@ let editCredits=0;
 let layoutDirty=false;
 let editorTokenId=42;
 
-function openEditor(id){
+async function openEditor(id){
   const nft=myNFTData.find(x=>x.id===id);
   if(!nft){ toast('NFT not found – open My Pyres first'); return; }
   editorTokenId=id;
-  editorSticks=nft.sticks.map(s=>({
-    color:  typeof s.color==='string' ? s.color : (PALETTE[Number(s.color)]||PALETTE[0]),
-    length: Number(s.length), x: Number(s.x), y: Number(s.y), dir: Number(s.dir)
-  }));
-  editorBlocks=(nft.blocks||[]).map(b=>({
-    color:     typeof b.color==='string' ? b.color : (PALETTE[Number(b.color)]||PALETTE[0]),
-    blockType: Number(b.blockType), rotation: Number(b.rotation),
-    x: Number(b.x), y: Number(b.y)
-  }));
-  editCredits=nft.credits||0;
+  showPage('editor');
+
+  // Always reload from chain to get latest sticks (especially after burns)
+  try{
+    const contract=getContract(false);
+    const [rawSticks,rawBlocks,credits]=await Promise.all([
+      contract.getSticks(id),
+      contract.getBlocks(id),
+      contract.editCredits(id)
+    ]);
+    editorSticks=rawSticks.map(s=>({
+      color: PALETTE[Number(s[0])]||PALETTE[0],
+      length:Number(s[1]), x:Number(s[2]), y:Number(s[3]), dir:Number(s[4])
+    }));
+    editorBlocks=rawBlocks.map(b=>({
+      color:    PALETTE[Number(b[0])]||PALETTE[0],
+      blockType:Number(b[1]), rotation:Number(b[2]),
+      x:Number(b[3]), y:Number(b[4])
+    }));
+    editCredits=Number(credits);
+    // Update myNFTData cache
+    nft.sticks=editorSticks; nft.blocks=editorBlocks; nft.credits=editCredits;
+  }catch(e){
+    // Fallback to cached data
+    editorSticks=nft.sticks.map(s=>({
+      color:  typeof s.color==='string' ? s.color : (PALETTE[Number(s.color)]||PALETTE[0]),
+      length: Number(s.length), x: Number(s.x), y: Number(s.y), dir: Number(s.dir)
+    }));
+    editorBlocks=(nft.blocks||[]).map(b=>({
+      color:     typeof b.color==='string' ? b.color : (PALETTE[Number(b.color)]||PALETTE[0]),
+      blockType: Number(b.blockType), rotation: Number(b.rotation),
+      x: Number(b.x), y: Number(b.y)
+    }));
+    editCredits=nft.credits||0;
+  }
+
   selectedIdx=0;
   layoutDirty=false;
   editorCanvasReady=false;
-  showPage('editor');
+  buildEditor();
   setTimeout(()=>{
     const inp=document.getElementById('name-input');
     if(inp&&nft.name&&nft.name!=='Untitled')inp.placeholder=nft.name;
