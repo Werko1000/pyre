@@ -613,7 +613,7 @@ const GRID=24;
 // ── Contract config ──────────────────────────────────────────────────────────
 const CONTRACT_ADDRESS = "0x4CCB74c3188A4e463001352603ea82a2CF0BAC7d";
 const CHAIN_ID_HEX = "0xaa36a7"; // Ethereum Sepolia = 11155111
-const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/9t2l29UXveRJxvspv3swk";
+const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_KEY";
 
 const ABI = [
   "function requestMint() payable returns (uint256)",
@@ -852,10 +852,16 @@ async function handleWalletClick(){
     if(accounts.length>0){
       walletAddress=accounts[0];
       const chainId=await eth.request({method:'eth_chainId'});
-      if(chainId!=='0x2105'){
-        try{await eth.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x2105'}]});}
-        catch(e){
-          try{await eth.request({method:'wallet_addEthereumChain',params:[{chainId:'0x2105',chainName:'Base',nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18},rpcUrls:['https://mainnet.base.org'],blockExplorerUrls:['https://basescan.org']}]});}catch(e2){}
+      if(chainId!==CHAIN_ID_HEX){
+        try{await eth.request({method:'wallet_switchEthereumChain',params:[{chainId:CHAIN_ID_HEX}]});
+        }catch(e){
+          try{await eth.request({method:'wallet_addEthereumChain',params:[{
+            chainId:CHAIN_ID_HEX,
+            chainName:'Ethereum Sepolia',
+            nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18},
+            rpcUrls:['https://rpc.sepolia.org','https://rpc2.sepolia.org'],
+            blockExplorerUrls:['https://sepolia.etherscan.io']
+          }]});}catch(e2){}
         }
       }
       updateWalletUI();
