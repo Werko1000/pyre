@@ -2,11 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PYRE — On-chain pixel art</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PYRE — On-chain Pixel Art</title>
+<meta name="description" content="On-chain generative pixel art on Ethereum. Mint. Burn. Edit. Forever.">
+<meta name="color-scheme" content="dark only">
+<meta name="theme-color" content="#1a1a1a">
+<meta property="og:title" content="PYRE — On-chain Pixel Art">
+<meta property="og:description" content="Mint sticks and Tetrominos. Burn to combine. Edit to arrange. 100% on-chain. CC0.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@pyrewtf">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236B8FA0'/><rect x='20' y='45' width='40' height='8' fill='%23F0F0F0'/><rect x='30' y='25' width='8' height='40' fill='%23C4B5D0'/><rect x='55' y='35' width='8' height='8' fill='%23D4B87A'/><rect x='65' y='35' width='8' height='8' fill='%23D4B87A'/><rect x='55' y='45' width='8' height='8' fill='%23D4B87A'/><rect x='65' y='55' width='8' height='8' fill='%23D4B87A'/></svg>">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sigmar&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700;1,900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --bg:#1a1a1a;--bg2:#222;--bg3:#2a2a2a;--bg4:#333;
@@ -23,17 +33,29 @@
   --c13:#6BCB77;--c14:#4D96FF;--c15:#FF6FC8;--c16:#111111;
 }
 html{scroll-behavior:smooth;}
-body{font-family:var(--sans);font-size:15px;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;}
+body{font-family:var(--sans);font-size:15px;background:#1a1a1a;color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;}
+
+/* GRAIN */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:0.045;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size:256px 256px;}
+
+/* LIQUID GLASS */
+.glass-text{position:relative;display:inline-block;}
+.glass-text::before{content:attr(data-text);position:absolute;inset:0;
+  filter:url(#liquidGlass);color:#fff;opacity:0.12;pointer-events:none;}
 
 /* NAV — Steel Blue */
 nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:100;}
 .nav-inner{max-width:var(--max);margin:0 auto;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:var(--serif);font-style:italic;font-size:22px;font-weight:700;cursor:pointer;color:#fff;letter-spacing:-0.5px;}
+.nav-logo{font-family:"Sigmar",var(--serif);font-size:22px;font-weight:400;cursor:pointer;color:#fff;letter-spacing:0;}
 .logo-s,.logo-t,.logo-i,.logo-x,.logo-dot{color:#fff;}
-.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links{display:none;gap:28px;align-items:center;}
 .nav-links a{font-size:14px;color:rgba(255,255,255,0.75);text-decoration:none;cursor:pointer;transition:color 0.15s;}
 .nav-links a:hover{color:#fff;}
-.nav-menu-btn{display:none;background:none;border:none;cursor:pointer;font-size:20px;color:#fff;}
+.nav-menu-btn{display:flex!important;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.2);
+  width:44px;height:44px;cursor:pointer;color:#fff;align-items:center;justify-content:center;font-size:18px;border-radius:10px;transition:background 0.15s;}
+.nav-menu-btn:hover{background:rgba(0,0,0,0.4);}
 .btn-wallet{font-size:13px;padding:7px 16px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px;font-family:var(--sans);}
 .btn-wallet:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.7);}
 .btn-wallet.connected{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.6);}
@@ -50,7 +72,7 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 .hero{padding:72px 0 56px;border-bottom:1px solid var(--border2);}
 .hero-inner{max-width:var(--max);margin:0 auto;padding:0 28px;}
 .hero-eyebrow{font-size:11px;letter-spacing:3px;color:var(--text3);margin-bottom:24px;font-family:var(--mono);text-transform:uppercase;}
-.hero-title{font-family:var(--serif);font-style:italic;font-size:clamp(52px,9vw,96px);font-weight:900;letter-spacing:-3px;line-height:0.9;color:#fff;margin-bottom:24px;}
+.hero-title{font-family:"Sigmar",var(--serif);font-size:clamp(52px,9vw,96px);font-weight:400;letter-spacing:-1px;line-height:0.9;color:#fff;margin-bottom:24px;}
 .hero-title span{color:var(--accent);}
 .hero-sub{font-size:16px;color:var(--text2);line-height:1.75;max-width:420px;margin-bottom:36px;}
 .hero-sub2{display:none;}
@@ -88,7 +110,7 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 /* MANIFESTO */
 .manifesto{border-bottom:1px solid var(--border2);}
 .manifesto-inner{max-width:var(--max);margin:0 auto;padding:64px 28px;display:grid;grid-template-columns:1fr 1fr;gap:48px;}
-.manifesto h2{font-family:var(--serif);font-style:italic;font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:20px;color:#fff;}
+.manifesto h2{font-family:"Sigmar",var(--serif);font-size:clamp(26px,4vw,40px);font-weight:400;letter-spacing:0;line-height:1.1;margin-bottom:20px;color:#fff;}
 .manifesto p{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:14px;}
 .manifesto-right{display:flex;flex-direction:column;border-left:1px solid var(--border2);padding-left:40px;}
 .manifesto-fact{padding:20px 0;border-bottom:1px solid var(--border2);}
@@ -104,7 +126,7 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 .how-steps{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--border2);}
 .how-step{padding:28px 28px;border-right:1px solid var(--border2);}
 .how-step-num{font-size:11px;color:var(--accent);margin-bottom:14px;letter-spacing:1px;font-family:var(--mono);text-transform:uppercase;}
-.how-step h3{font-family:var(--serif);font-style:italic;font-size:18px;font-weight:700;margin-bottom:10px;color:#fff;}
+.how-step h3{font-family:"Sigmar",var(--serif);font-size:18px;font-weight:400;margin-bottom:10px;color:#fff;}
 .how-step p{font-size:14px;color:var(--text2);line-height:1.75;}
 
 /* GALLERY */
@@ -148,9 +170,10 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 .mint-spinner-ring{width:32px;height:32px;border:2px solid var(--border3);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
 .mint-spinner-text{font-size:13px;color:var(--text2);font-family:var(--mono);}
 @keyframes spin{to{transform:rotate(360deg);}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
 .reveal-pop{animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1);}
 @keyframes pop{from{transform:scale(0.92);opacity:0;}to{transform:scale(1);opacity:1;}}
-.reveal-title{font-family:var(--serif);font-style:italic;font-size:26px;font-weight:700;letter-spacing:-0.5px;color:#fff;}
+.reveal-title{font-family:"Sigmar",var(--serif);font-size:26px;font-weight:400;letter-spacing:0;color:#fff;}
 .mint-desc{font-size:14px;color:var(--text2);line-height:1.7;}
 .attr-pill{font-size:11px;background:var(--bg3);border:1px solid var(--border2);padding:3px 8px;color:var(--text2);font-family:var(--mono);}
 .color-dot{display:inline-block;width:8px;height:8px;vertical-align:middle;margin-right:4px;}
@@ -185,7 +208,7 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 .burn-pick.sel-burn .pick-tag{background:var(--c1);}
 .burn-confirm{border:1px solid var(--border2);padding:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;background:var(--bg2);}
 .burn-preview-canvas{image-rendering:pixelated;border:1px solid var(--border2);}
-.burn-confirm-text h4{font-family:var(--serif);font-style:italic;font-size:18px;font-weight:700;margin-bottom:6px;color:#fff;}
+.burn-confirm-text h4{font-family:"Sigmar",var(--serif);font-size:18px;font-weight:400;margin-bottom:6px;color:#fff;}
 .burn-confirm-text p{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:14px;}
 .burn-go{padding:11px 22px;background:var(--c1);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;}
 .burn-go:hover{opacity:0.88;}
@@ -207,7 +230,7 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 .save-btn:hover{background:var(--accent2);}
 .save-btn:disabled{background:var(--bg3);color:var(--text3);cursor:not-allowed;}
 .burn-card{background:rgba(230,57,70,0.06);border:1px solid rgba(230,57,70,0.2);padding:14px;}
-.burn-card h4{font-size:14px;color:var(--c1);margin-bottom:5px;font-family:var(--serif);font-style:italic;}
+.burn-card h4{font-size:14px;color:var(--c1);margin-bottom:5px;font-family:"Sigmar",var(--serif);font-weight:400;}
 .burn-card p{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:10px;}
 .burn-btn{width:100%;padding:9px;border:1px solid var(--c1);background:transparent;color:var(--c1);font-size:13px;cursor:pointer;transition:all 0.15s;}
 .burn-btn:hover{background:var(--c1);color:#fff;}
@@ -243,13 +266,13 @@ nav{background:var(--accent);border-bottom:none;position:sticky;top:0;z-index:10
 
 /* MISC */
 .connect-prompt{text-align:center;padding:80px 20px;}
-.connect-prompt h2{font-family:var(--serif);font-style:italic;font-size:28px;font-weight:700;margin-bottom:12px;color:#fff;}
+.connect-prompt h2{font-family:"Sigmar",var(--serif);font-size:28px;font-weight:400;margin-bottom:12px;color:#fff;}
 .connect-prompt p{font-size:15px;color:var(--text2);margin-bottom:28px;max-width:340px;margin-left:auto;margin-right:auto;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg3);border:1px solid var(--border2);color:#fff;padding:11px 20px;font-size:14px;opacity:0;transition:all 0.22s;pointer-events:none;z-index:999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 footer{border-top:1px solid var(--border2);}
 .footer-inner{max-width:var(--max);margin:0 auto;padding:24px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
-.footer-logo{font-family:var(--serif);font-style:italic;font-size:20px;font-weight:700;color:#fff;}
+.footer-logo{font-family:"Sigmar",var(--serif);font-size:20px;font-weight:400;color:#fff;}
 .footer-links a{font-size:13px;color:var(--text3);text-decoration:none;cursor:pointer;margin-left:20px;}
 .footer-links a:hover{color:var(--text2);}
 .footer-note{font-size:12px;color:var(--text3);font-family:var(--mono);}
@@ -287,7 +310,7 @@ footer{border-top:1px solid var(--border2);}
 .menu-overlay.open{display:flex;}
 .menu-overlay-inner{display:flex;flex-direction:column;height:100%;padding:24px 32px 32px;}
 .menu-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px;}
-.menu-logo{font-family:var(--serif);font-style:italic;font-size:24px;font-weight:700;color:#fff;cursor:pointer;}
+.menu-logo{font-family:"Sigmar",var(--serif);font-size:24px;font-weight:400;color:#fff;cursor:pointer;}
 .menu-close{background:rgba(30,30,30,0.9);border:1px solid #333;width:44px;height:44px;cursor:pointer;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;}
 .menu-nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .menu-nav a{font-size:clamp(36px,7vw,72px);font-weight:700;color:#fff;cursor:pointer;letter-spacing:-2px;line-height:1.1;transition:color 0.1s;display:block;border-bottom:1px solid #1a1a1a;padding:8px 0;}
@@ -308,8 +331,10 @@ footer{border-top:1px solid var(--border2);}
 .btn-hero-mint{font-size:14px;font-weight:700;padding:14px 36px;background:var(--accent);color:#fff;border:none;cursor:pointer;transition:background 0.15s;}
 .btn-hero-mint:hover{background:var(--accent2);}
 .hero-sub-text{font-size:13px;color:var(--text3);font-family:var(--mono);}
-.scroll-indicator{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:10px;letter-spacing:3px;font-family:var(--mono);}
-.hero-mega{font-size:clamp(56px,10vw,110px);font-weight:900;line-height:0.88;letter-spacing:-4px;color:#fff;}
+.scroll-indicator{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:10px;letter-spacing:3px;font-family:var(--mono);text-decoration:none;padding-top:8px;transition:color 0.15s;text-transform:uppercase;}
+.scroll-indicator:hover{color:var(--text2);}
+.scroll-indicator svg{animation:bounce 2s ease-in-out infinite;}
+.hero-mega{font-family:"Sigmar",var(--serif);font-size:clamp(56px,10vw,110px);font-weight:400;line-height:0.88;letter-spacing:0;color:#fff;}
 .hero-accent{color:var(--accent);}
 .hero-eyebrow{font-size:11px;letter-spacing:3px;color:var(--text3);font-family:var(--mono);margin-bottom:24px;text-transform:uppercase;}
 
@@ -364,6 +389,17 @@ footer{border-top:1px solid var(--border2);}
   </div>
 </div>
 
+<div class="grain"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="liquidGlass" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"></feGaussianBlur>
+      <feSpecularLighting in="blur" surfaceScale="3" specularConstant="1.2" specularExponent="22" lighting-color="#ffffff" result="spec">
+        <fePointLight x="-200" y="-300" z="220"></fePointLight>
+      </feSpecularLighting>
+    </filter>
+  </defs>
+</svg>
 <nav>
   <div class="nav-inner">
     <div class="nav-logo" onclick="showPage('home')">
@@ -402,7 +438,11 @@ footer{border-top:1px solid var(--border2);}
   <section class="hero-full">
     <div class="hero-text-wrap">
       <div class="hero-eyebrow">on-chain pixel art · ethereum · cc0</div>
-      <h1 class="hero-mega">Burn<br>every<br><span class="hero-accent">thing.</span></h1>
+      <h1 class="hero-mega">
+        <span class="glass-text" data-text="Burn">Burn</span><br>
+        <span class="glass-text" data-text="every">every</span><br>
+        <span class="hero-accent"><span class="glass-text" data-text="thing.">thing.</span></span>
+      </h1>
     </div>
     <div class="hero-nft-wrap">
       <canvas id="hero-nft-canvas" width="480" height="480"></canvas>
@@ -411,20 +451,20 @@ footer{border-top:1px solid var(--border2);}
       <button class="btn-hero-mint" onclick="showPage('mint')">Mint a Pyre</button>
       <div class="hero-sub-text">10,000 supply · 0.01 ETH · CC0</div>
     </div>
-    <div class="scroll-indicator">
-      <span>SCROLL</span>
-      <svg width="12" height="20" viewBox="0 0 12 20"><path d="M6 0v16M1 11l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-    </div>
+    <a href="#home-about" class="scroll-indicator" onclick="event.preventDefault();document.getElementById('home-about')?.scrollIntoView({behavior:'smooth'})">
+      <span>scroll</span>
+      <svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M6 0v16M1 11l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
   </section>
   <div class="stats-bar">
     <div class="stats-inner">
       <div class="stat"><div class="stat-val" id="stat-remaining">10,000</div><div class="stat-lbl">Remaining</div></div>
-      <div class="stat"><div class="stat-val">0.001Ξ</div><div class="stat-lbl">Mint Price</div></div>
+      <div class="stat"><div class="stat-val">0.01Ξ</div><div class="stat-lbl">Mint Price</div></div>
       <div class="stat"><div class="stat-val" id="stat-burned">—</div><div class="stat-lbl">Burned</div></div>
       <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">Tetromino Types</div></div>
     </div>
   </div>
-  <div class="manifesto">
+  <div class="manifesto" id="home-about">
     <div class="manifesto-inner">
       <div>
         <h2>Art that lives<br>on the chain.</h2>
@@ -628,7 +668,7 @@ footer{border-top:1px solid var(--border2);}
   <div class="footer-inner">
     <div class="footer-logo"><span class="logo-s">P</span><span class="logo-t">y</span><span class="logo-i">r</span><span class="logo-x">e</span><span class="logo-dot">.</span></div>
     <div class="footer-links">
-      <a>OpenSea</a><a>EthereumScan</a><a>Twitter</a><a>Discord</a>
+      <a>OpenSea</a><a>Etherscan</a><a>Twitter</a><a>Discord</a>
     </div>
     <div class="footer-note">CC0 &middot; 100% on-chain &middot; Ethereum</div>
   </div>
@@ -1955,16 +1995,20 @@ async function confirmBurn(){
     const tx=await contract.mergeBurn(burnKeepId,burnBurnId);
     if(burnGoBtn)burnGoBtn.textContent='Burning on-chain…';
     await tx.wait(1);
-    // Reload from chain to get accurate sticks + credits
+    // Reload from chain to get accurate sticks + blocks + credits
     const readContract=getContract(false);
-    const rawSticks=await readContract.getSticks(keep.id);
-    const credits=await readContract.editCredits(keep.id);
+    const [rawSticks, rawBlocks, newCredits]=await Promise.all([
+      readContract.getSticks(keep.id),
+      readContract.getBlocks(keep.id),
+      readContract.editCredits(keep.id)
+    ]);
     keep.sticks=rawSticks.map(formatStick);
-    keep.credits=Number(credits);
+    keep.blocks=rawBlocks.map(formatBlock);
+    keep.credits=Number(newCredits);
     myNFTData=myNFTData.filter(x=>x.id!==burnBurnId);
     const keptId=keep.id;
     burnKeepId=null;burnBurnId=null;
-    toast('Burned #'+burn.id+' · Pyre #'+keptId+' now has '+keep.sticks.length+' sticks + 1 edit ✅');
+    toast('Burned #'+burn.id+' · Pyre #'+keptId+' now has '+keep.sticks.length+' elements + 1 edit ✅');
     addHistory('🔥','Burned <strong>Pyre #'+burn.id+'</strong> into <strong>Pyre #'+keptId+'</strong> — unlocked 1 edit');
     buildBurn();
     // Show in-page success banner with edit button
