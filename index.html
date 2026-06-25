@@ -825,6 +825,36 @@ footer{border-top:1px solid var(--border2);}
           </div>
         </div>
 
+        <!-- Task 5: Hold a Pyre -->
+        <div class="raffle-task" id="task-hold">
+          <div class="task-num">05</div>
+          <div class="task-body">
+            <div class="task-title">Hold a Pyre in your wallet</div>
+            <div class="task-desc">Verified on-chain. Connect wallet first.</div>
+          </div>
+          <div class="task-right">
+            <div class="task-ticket" id="task-hold-ticket">
+              <span class="ticket-icon">🎟</span> +2 tickets
+            </div>
+            <button class="task-btn" id="task-hold-btn" onclick="raffleCheckHold()">Check</button>
+          </div>
+        </div>
+
+        <!-- Task 6: Mint a Pyre -->
+        <div class="raffle-task" id="task-minted">
+          <div class="task-num">06</div>
+          <div class="task-body">
+            <div class="task-title">Mint a Pyre</div>
+            <div class="task-desc">Verified on-chain. Must have minted at least once.</div>
+          </div>
+          <div class="task-right">
+            <div class="task-ticket" id="task-minted-ticket">
+              <span class="ticket-icon">🎟</span> +2 tickets
+            </div>
+            <button class="task-btn" id="task-minted-btn" onclick="raffleCheckMinted()">Check</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1320,7 +1350,8 @@ function startShowcaseTimer(){
 // ── RAFFLE ────────────────────────────────────────────────────────────────
 const RAFFLE_TWEET_URL = 'https://x.com/pyre_ethereum/status/2070174549065244772';
 const RAFFLE_END = new Date(Date.now() + 7*24*60*60*1000); // 7 days from now
-const RAFFLE_TASKS = ['wallet','follow','like','rt'];
+const RAFFLE_TASKS = ['wallet','follow','like','rt','hold','minted'];
+const RAFFLE_TASK_TICKETS = {wallet:1,follow:1,like:1,rt:1,hold:2,minted:2};
 
 function initRaffle(){
   // Set draw date
@@ -1332,6 +1363,9 @@ function initRaffle(){
     localStorage.setItem('pyre_raffle_wallet','1');
     const el=document.getElementById('raffle-entry-wallet');
     if(el) el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
+    // Auto-check on-chain tasks if not already done
+    if(localStorage.getItem('pyre_raffle_hold')!=='1') raffleCheckHold();
+    if(localStorage.getItem('pyre_raffle_minted')!=='1') raffleCheckMinted();
   }
 
   // Restore all task states from localStorage
@@ -1357,7 +1391,9 @@ function raffleMarkDone(task,save=true){
 }
 
 function raffleUpdateCount(){
-  const count=RAFFLE_TASKS.filter(t=>localStorage.getItem('pyre_raffle_'+t)==='1').length;
+  const count=RAFFLE_TASKS.reduce((sum,t)=>{
+    return sum+(localStorage.getItem('pyre_raffle_'+t)==='1' ? (RAFFLE_TASK_TICKETS[t]||1) : 0);
+  },0);
   const el=document.getElementById('raffle-ticket-count');
   if(el) el.textContent=count;
 }
@@ -1396,6 +1432,45 @@ function raffleRT(){
   setTimeout(()=>raffleMarkDone('rt'),3000);
 }
 
+async function raffleCheckHold(){
+  if(!walletAddress){toast('Connect your wallet first');return;}
+  const btn=document.getElementById('task-hold-btn');
+  if(btn){btn.textContent='Checking…';btn.disabled=true;}
+  try{
+    const c=getContract(false);
+    const bal=await c.balanceOf(walletAddress);
+    if(Number(bal)>0){
+      raffleMarkDone('hold');
+      toast('✅ Verified — you hold '+Number(bal)+' Pyre'+(Number(bal)>1?'s':''));
+    } else {
+      if(btn){btn.textContent='Check';btn.disabled=false;}
+      toast('No Pyres found in this wallet. Mint one first!');
+    }
+  }catch(e){
+    if(btn){btn.textContent='Check';btn.disabled=false;}
+    toast('Error checking balance');
+  }
+}
+
+async function raffleCheckMinted(){
+  if(!walletAddress){toast('Connect your wallet first');return;}
+  const btn=document.getElementById('task-minted-btn');
+  if(btn){btn.textContent='Checking…';btn.disabled=true;}
+  try{
+    const c=getContract(false);
+    const minted=await c.mintedBy(walletAddress);
+    if(Number(minted)>0){
+      raffleMarkDone('minted');
+      toast('✅ Verified — you minted '+Number(minted)+' Pyre'+(Number(minted)>1?'s':''));
+    } else {
+      if(btn){btn.textContent='Check';btn.disabled=false;}
+      toast('No mints found. Mint a Pyre to earn bonus tickets!');
+    }
+  }catch(e){
+    if(btn){btn.textContent='Check';btn.disabled=false;}
+    toast('Error checking mint history');
+  }
+}
 function startCountdown(){
   function tick(){
     const diff=RAFFLE_END-Date.now();
