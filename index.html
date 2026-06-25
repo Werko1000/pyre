@@ -448,6 +448,10 @@ footer{border-top:1px solid var(--border2);}
 }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbHV6Z2dsbmVnaGFwcnZib3NtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTMwNjAsImV4cCI6MjA5Nzk4OTA2MH0.eo83UaovTmCslvSZYSYqGB-nZcgOZD0jxnWY6d2OYE4');
+</script>
 </head>
 <body style="background:#111;">
 
@@ -1409,6 +1413,8 @@ function initRaffle(){
     const msg=document.getElementById('raffle-submitted-msg');
     if(sb) sb.style.display='none';
     if(msg) msg.style.display='block';
+    const stored=JSON.parse(localStorage.getItem('pyre_raffle_entry')||'{}');
+    if(stored.tickets) raffleLoadOdds(stored.tickets);
   }
 
   startCountdown();
@@ -1439,45 +1445,60 @@ function raffleUpdateCount(){
   raffleUpdateOdds(myTickets);
 }
 
-// Simulated total tickets (in real app this comes from a DB)
-// We estimate based on a typical raffle participation rate
 const RAFFLE_PRIZES = 2;
-
 function raffleUpdateOdds(myTickets){
-  const oddsWrap=document.getElementById('raffle-odds-wrap');
-  if(!oddsWrap||myTickets===0)return;
-  oddsWrap.style.display='block';
-
-  // Get stored total from localStorage (grows as user earns tickets)
-  let totalTickets=parseInt(localStorage.getItem('pyre_raffle_total_sim')||'0');
-  if(myTickets>totalTickets){
-    totalTickets=Math.max(myTickets,Math.floor(myTickets*8+Math.random()*20));
-    localStorage.setItem('pyre_raffle_total_sim',totalTickets);
-  }
-
-  // P(win at least 1 prize) = 1 - P(win nothing)
-  // P(win nothing) = C(total-my, prizes) / C(total, prizes)
-  const pWin = myTickets>0 ? Math.min(1-(Math.pow((totalTickets-myTickets)/totalTickets,RAFFLE_PRIZES)),1) : 0;
-  const pct=(pWin*100).toFixed(1);
-
-  document.getElementById('raffle-odds-pct').textContent=pct+'%';
-  document.getElementById('raffle-odds-bar').style.width=Math.min(pWin*100,100)+'%';
-  document.getElementById('raffle-odds-detail').textContent=myTickets+' of ~'+totalTickets+' total tickets';
+  // Odds loaded from Supabase after submit — nothing to do here yet
 }
 
-function raffleSubmit(){
+async function raffleSubmit(){
   const myTickets=parseInt(document.getElementById('raffle-ticket-count').textContent)||0;
   if(myTickets===0){toast('Complete at least one task first!');return;}
   if(!walletAddress){toast('Connect your wallet first!');return;}
 
-  // Store entry in localStorage
-  const entry={wallet:walletAddress,tickets:myTickets,ts:Date.now()};
-  localStorage.setItem('pyre_raffle_entry',JSON.stringify(entry));
+  const btn=document.getElementById('raffle-submit-btn');
+  if(btn){btn.textContent='Submitting…';btn.disabled=true;}
 
-  // Show submitted state
-  document.getElementById('raffle-submit-btn').style.display='none';
-  document.getElementById('raffle-submitted-msg').style.display='block';
-  toast('Entry submitted! '+myTickets+' ticket'+(myTickets>1?'s':'')+' 🎟');
+  const tasks={};
+  RAFFLE_TASKS.forEach(t=>{tasks[t]=localStorage.getItem('pyre_raffle_'+t)==='1';});
+
+  try{
+    const {error}=await _supa.from('raffle_entries').upsert({
+      wallet: walletAddress.toLowerCase(),
+      tickets: myTickets,
+      tasks: tasks,
+      updated_at: new Date().toISOString()
+    },{onConflict:'wallet'});
+
+    if(error) throw error;
+
+    localStorage.setItem('pyre_raffle_entry', JSON.stringify({wallet:walletAddress,tickets:myTickets}));
+    document.getElementById('raffle-submit-btn').style.display='none';
+    document.getElementById('raffle-submitted-msg').style.display='block';
+    toast('Entry submitted! '+myTickets+' ticket'+(myTickets>1?'s':'')+' 🎟');
+    raffleLoadOdds(myTickets);
+  }catch(e){
+    console.error('Supabase error:',e);
+    if(btn){btn.textContent='Submit entry';btn.disabled=false;}
+    toast('Error submitting — try again');
+  }
+}
+
+async function raffleLoadOdds(myTickets){
+  try{
+    const {data,error}=await _supa.from('raffle_entries').select('tickets');
+    if(error||!data)return;
+    const totalTickets=data.reduce((sum,r)=>sum+r.tickets,0);
+    const pWin=totalTickets>0?Math.min(1-Math.pow((totalTickets-myTickets)/totalTickets,2),1):0;
+    const pct=(pWin*100).toFixed(1);
+    const oddsWrap=document.getElementById('raffle-odds-wrap');
+    if(oddsWrap)oddsWrap.style.display='block';
+    const pctEl=document.getElementById('raffle-odds-pct');
+    if(pctEl)pctEl.textContent=pct+'%';
+    const bar=document.getElementById('raffle-odds-bar');
+    if(bar)bar.style.width=Math.min(pWin*100,100)+'%';
+    const detail=document.getElementById('raffle-odds-detail');
+    if(detail)detail.textContent=myTickets+' of '+totalTickets+' total tickets';
+  }catch(e){console.warn('Could not load odds',e);}
 }
 
 function raffleConnectWallet(){
