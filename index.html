@@ -376,6 +376,51 @@ footer{border-top:1px solid var(--border2);}
 .hero-accent{color:var(--accent);}
 .hero-eyebrow{font-size:11px;letter-spacing:3px;color:var(--text3);font-family:var(--mono);margin-bottom:24px;text-transform:uppercase;}
 
+/* ── RAFFLE ──────────────────────────────────────────────────────────────── */
+.raffle-hero{background:linear-gradient(135deg,#1a0a00 0%,#1a1a1a 60%);border-bottom:1px solid var(--border2);padding:64px 28px;}
+.raffle-hero-inner{max-width:var(--max);margin:0 auto;}
+.raffle-eyebrow{font-size:12px;color:var(--c1);letter-spacing:3px;text-transform:uppercase;font-family:var(--mono);margin-bottom:16px;}
+.raffle-title{font-family:"Sigmar",var(--serif);font-size:clamp(40px,8vw,80px);font-weight:400;color:#fff;line-height:0.95;margin-bottom:16px;}
+.raffle-sub{font-size:16px;color:var(--text2);}
+.raffle-body{max-width:var(--max);margin:0 auto;padding:48px 28px;display:flex;flex-direction:column;gap:48px;}
+.raffle-prize-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.raffle-prize-card{background:var(--bg2);border:1px solid var(--border2);overflow:hidden;}
+.raffle-prize-card:last-child{border-color:var(--accent);}
+.raffle-prize-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:12px 16px;border-bottom:1px solid var(--border2);font-family:var(--mono);}
+.raffle-prize-card:last-child .raffle-prize-label{color:var(--accent);}
+.raffle-prize-info{padding:14px 16px;}
+.raffle-prize-name{font-size:15px;font-weight:600;color:#fff;margin-bottom:6px;}
+.raffle-prize-desc{font-size:13px;color:var(--text2);line-height:1.6;}
+.raffle-countdown-wrap{text-align:center;}
+.raffle-section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);margin-bottom:20px;}
+.raffle-countdown{display:flex;align-items:center;justify-content:center;gap:8px;}
+.raffle-cd-block{background:var(--bg2);border:1px solid var(--border2);padding:16px 20px;min-width:72px;text-align:center;}
+.raffle-cd-val{font-family:var(--mono);font-size:32px;font-weight:700;color:#fff;line-height:1;}
+.raffle-cd-lbl{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:6px;font-family:var(--mono);}
+.raffle-cd-sep{font-size:28px;font-weight:700;color:var(--border3);font-family:var(--mono);}
+.raffle-tasks{display:flex;flex-direction:column;gap:1px;background:var(--border2);}
+.raffle-task{display:flex;align-items:center;gap:16px;padding:18px 20px;background:var(--bg2);transition:background 0.15s;}
+.raffle-task.done{background:rgba(107,143,160,0.06);}
+.task-num{font-size:12px;color:var(--text3);font-family:var(--mono);width:24px;flex-shrink:0;}
+.task-body{flex:1;}
+.task-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:3px;}
+.task-desc{font-size:12px;color:var(--text3);}
+.task-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.task-ticket{font-size:12px;color:var(--text3);font-family:var(--mono);opacity:0.4;transition:all 0.3s;}
+.task-ticket.earned{color:var(--accent);opacity:1;font-weight:700;}
+.task-btn{font-size:12px;font-weight:700;padding:8px 18px;border:1px solid var(--border2);background:transparent;color:#e7e7e7;cursor:pointer;transition:all 0.15s;font-family:var(--mono);letter-spacing:1px;white-space:nowrap;}
+.task-btn:hover{border-color:#fff;color:#fff;}
+.task-btn.done{border-color:var(--accent);color:var(--accent);cursor:default;}
+.raffle-entry-wrap{background:var(--bg2);border:1px solid var(--border2);padding:24px;}
+.raffle-entry-card{display:flex;align-items:center;gap:20px;margin-bottom:16px;flex-wrap:wrap;}
+.raffle-entry-icon{font-size:36px;}
+.raffle-entry-count{font-family:var(--mono);font-size:40px;font-weight:700;color:#fff;line-height:1;}
+.raffle-entry-label{font-size:12px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);}
+.raffle-entry-wallet{font-size:12px;color:var(--text3);font-family:var(--mono);margin-left:auto;}
+.raffle-entry-note{font-size:13px;color:var(--text2);line-height:1.6;}
+.raffle-entry-note a{color:var(--accent);}
+.raffle-entry-note strong{color:#fff;}
+
 @media(max-width:700px){
   .nav-links{display:none;}
   .nav-menu-btn{display:block!important;}
@@ -413,7 +458,7 @@ footer{border-top:1px solid var(--border2);}
       <a onclick="closeMenu();showPage('mynfts')">my pyres</a>
       <a onclick="closeMenu();showPage('burn')">burn & merge</a>
       <a onclick="closeMenu();showPage('editor')">editor</a>
-      <a onclick="closeMenu();showPage('home')">home</a>
+      <a onclick="closeMenu();showPage('raffle')" style="color:var(--c1);">🔥 raffle</a>
     </nav>
     <div class="menu-bottom">
       <button class="menu-wallet" id="menu-wallet-btn" onclick="handleWalletClick()">
@@ -624,6 +669,136 @@ footer{border-top:1px solid var(--border2);}
       <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre is built from just three ingredients — colors, sticks, and Tetrominos. Infinite combinations, all on-chain.</p>
       <div class="blocks-section" id="home-blocks"></div>
     </div>
+  </div>
+</div>
+
+<div id="page-raffle" class="page">
+  <div class="raffle-hero">
+    <div class="raffle-hero-inner">
+      <div class="raffle-eyebrow">🔥 limited drop</div>
+      <h1 class="raffle-title">Win a free Pyre.</h1>
+      <p class="raffle-sub">3 winners. drawn randomly. fully on-chain.</p>
+    </div>
+  </div>
+
+  <div class="raffle-body">
+
+    <!-- PRIZE -->
+    <div class="raffle-prize-wrap">
+      <div class="raffle-prize-card">
+        <div class="raffle-prize-label">prize</div>
+        <canvas id="raffle-nft-canvas" width="320" height="320" style="image-rendering:pixelated;width:100%;border:1px solid #333;display:block;"></canvas>
+        <div class="raffle-prize-info">
+          <div class="raffle-prize-name">1 × Free Pyre Mint</div>
+          <div class="raffle-prize-desc">Minted directly to your wallet. Chainlink VRF randomness. 100% on-chain.</div>
+        </div>
+      </div>
+      <div class="raffle-prize-card">
+        <div class="raffle-prize-label">grand prize</div>
+        <canvas id="raffle-nft-canvas-2" width="320" height="320" style="image-rendering:pixelated;width:100%;border:1px solid var(--accent);display:block;"></canvas>
+        <div class="raffle-prize-info">
+          <div class="raffle-prize-name">1 × Pyre Mint + 1 Burn</div>
+          <div class="raffle-prize-desc">We mint, burn two together, send you the merged Pyre. More elements, one edit credit unlocked.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COUNTDOWN -->
+    <div class="raffle-countdown-wrap">
+      <div class="raffle-section-label">raffle closes in</div>
+      <div class="raffle-countdown" id="raffle-countdown">
+        <div class="raffle-cd-block"><div class="raffle-cd-val" id="cd-days">--</div><div class="raffle-cd-lbl">days</div></div>
+        <div class="raffle-cd-sep">:</div>
+        <div class="raffle-cd-block"><div class="raffle-cd-val" id="cd-hours">--</div><div class="raffle-cd-lbl">hours</div></div>
+        <div class="raffle-cd-sep">:</div>
+        <div class="raffle-cd-block"><div class="raffle-cd-val" id="cd-mins">--</div><div class="raffle-cd-lbl">mins</div></div>
+        <div class="raffle-cd-sep">:</div>
+        <div class="raffle-cd-block"><div class="raffle-cd-val" id="cd-secs">--</div><div class="raffle-cd-lbl">secs</div></div>
+      </div>
+    </div>
+
+    <!-- HOW TO ENTER -->
+    <div class="raffle-tasks-wrap">
+      <div class="raffle-section-label">how to enter — each task = 1 ticket</div>
+
+      <div class="raffle-tasks">
+
+        <!-- Task 1: Connect wallet -->
+        <div class="raffle-task" id="task-wallet">
+          <div class="task-num">01</div>
+          <div class="task-body">
+            <div class="task-title">Connect your wallet</div>
+            <div class="task-desc">Required to receive your prize if you win.</div>
+          </div>
+          <div class="task-right">
+            <div class="task-ticket" id="task-wallet-ticket">
+              <span class="ticket-icon">🎟</span> +1 ticket
+            </div>
+            <button class="task-btn" id="task-wallet-btn" onclick="raffleConnectWallet()">Connect</button>
+          </div>
+        </div>
+
+        <!-- Task 2: Follow -->
+        <div class="raffle-task" id="task-follow">
+          <div class="task-num">02</div>
+          <div class="task-body">
+            <div class="task-title">Follow @pyrewtf on X</div>
+            <div class="task-desc">Stay updated on the draw and future drops.</div>
+          </div>
+          <div class="task-right">
+            <div class="task-ticket" id="task-follow-ticket">
+              <span class="ticket-icon">🎟</span> +1 ticket
+            </div>
+            <button class="task-btn" id="task-follow-btn" onclick="raffleFollow()">Follow</button>
+          </div>
+        </div>
+
+        <!-- Task 3: Like tweet -->
+        <div class="raffle-task" id="task-like">
+          <div class="task-num">03</div>
+          <div class="task-body">
+            <div class="task-title">Like the announcement tweet</div>
+            <div class="task-desc">Opens in X. Come back after liking.</div>
+          </div>
+          <div class="task-right">
+            <div class="task-ticket" id="task-like-ticket">
+              <span class="ticket-icon">🎟</span> +1 ticket
+            </div>
+            <button class="task-btn" id="task-like-btn" onclick="raffleLike()">Like</button>
+          </div>
+        </div>
+
+        <!-- Task 4: Retweet -->
+        <div class="raffle-task" id="task-rt">
+          <div class="task-num">04</div>
+          <div class="task-body">
+            <div class="task-title">Retweet the announcement</div>
+            <div class="task-desc">Spread the word. Opens in X.</div>
+          </div>
+          <div class="task-right">
+            <div class="task-ticket" id="task-rt-ticket">
+              <span class="ticket-icon">🎟</span> +1 ticket
+            </div>
+            <button class="task-btn" id="task-rt-btn" onclick="raffleRT()">Retweet</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- YOUR TICKETS -->
+    <div class="raffle-entry-wrap" id="raffle-entry-wrap">
+      <div class="raffle-entry-card">
+        <div class="raffle-entry-icon">🎟</div>
+        <div>
+          <div class="raffle-entry-count" id="raffle-ticket-count">0</div>
+          <div class="raffle-entry-label">tickets earned</div>
+        </div>
+        <div class="raffle-entry-wallet" id="raffle-entry-wallet">— no wallet connected —</div>
+      </div>
+      <p class="raffle-entry-note">Winners drawn <strong id="raffle-draw-date">TBD</strong>. Results posted on <a href="https://twitter.com/pyrewtf" target="_blank">@pyrewtf</a>.</p>
+    </div>
+
   </div>
 </div>
 
@@ -939,6 +1114,7 @@ function showPage(id){
   document.getElementById('page-'+id).classList.add('active');
   window.scrollTo(0,0);
   if(id==='gallery')buildGallery();
+  if(id==='raffle') initRaffle();
   if(id==='mynfts')buildMyNFTs();
   if(id==='editor')buildEditor();
   if(id==='mint')resetMint();
@@ -1097,6 +1273,97 @@ let showcaseTimer=null;
 function startShowcaseTimer(){
   if(showcaseTimer)clearInterval(showcaseTimer);
   showcaseTimer=setInterval(()=>showcaseNext(),5000);
+}
+
+// ── RAFFLE ────────────────────────────────────────────────────────────────
+const RAFFLE_TWEET_URL = 'https://twitter.com/pyrewtf/status/TWEET_ID'; // replace with real tweet
+const RAFFLE_END = new Date(Date.now() + 7*24*60*60*1000); // 7 days from now
+const RAFFLE_TASKS = ['wallet','follow','like','rt'];
+
+function initRaffle(){
+  // Draw prize NFTs
+  const cv1=document.getElementById('raffle-nft-canvas');
+  const cv2=document.getElementById('raffle-nft-canvas-2');
+  if(cv1){const ctx=cv1.getContext('2d');drawNFT(ctx,makeNFT(5,[77]),cv1.width/GRID,[]);}
+  if(cv2){const ctx=cv2.getContext('2d');drawNFT(ctx,makeNFT(12,[42,15]),cv2.width/GRID,[]);}
+
+  // Set draw date
+  const drawEl=document.getElementById('raffle-draw-date');
+  if(drawEl) drawEl.textContent=RAFFLE_END.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+  // Restore state
+  RAFFLE_TASKS.forEach(t=>raffleRestoreTask(t));
+  raffleUpdateCount();
+  startCountdown();
+}
+
+function raffleRestoreTask(task){
+  const done=localStorage.getItem('pyre_raffle_'+task)==='1';
+  if(done) raffleMarkDone(task,false);
+}
+
+function raffleMarkDone(task,save=true){
+  if(save) localStorage.setItem('pyre_raffle_'+task,'1');
+  const row=document.getElementById('task-'+task);
+  const btn=document.getElementById('task-'+task+'-btn');
+  const ticket=document.getElementById('task-'+task+'-ticket');
+  if(row) row.classList.add('done');
+  if(btn){btn.textContent='✓ done';btn.classList.add('done');btn.disabled=true;}
+  if(ticket) ticket.classList.add('earned');
+  raffleUpdateCount();
+}
+
+function raffleUpdateCount(){
+  const count=RAFFLE_TASKS.filter(t=>localStorage.getItem('pyre_raffle_'+t)==='1').length;
+  const el=document.getElementById('raffle-ticket-count');
+  if(el) el.textContent=count;
+}
+
+function raffleConnectWallet(){
+  if(!walletAddress){handleWalletClick();setTimeout(()=>{
+    if(walletAddress){raffleMarkDone('wallet');
+      const el=document.getElementById('raffle-entry-wallet');
+      if(el)el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);}
+  },3000);}
+  else{raffleMarkDone('wallet');
+    const el=document.getElementById('raffle-entry-wallet');
+    if(el)el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);}
+}
+
+function raffleFollow(){
+  window.open('https://twitter.com/intent/follow?screen_name=pyrewtf','_blank');
+  setTimeout(()=>raffleMarkDone('follow'),2000);
+}
+
+function raffleLike(){
+  window.open(RAFFLE_TWEET_URL,'_blank');
+  setTimeout(()=>raffleMarkDone('like'),3000);
+}
+
+function raffleRT(){
+  window.open('https://twitter.com/intent/retweet?tweet_id=TWEET_ID','_blank');
+  setTimeout(()=>raffleMarkDone('rt'),3000);
+}
+
+function startCountdown(){
+  function tick(){
+    const diff=RAFFLE_END-Date.now();
+    if(diff<=0){
+      ['days','hours','mins','secs'].forEach(u=>{
+        const el=document.getElementById('cd-'+u);if(el)el.textContent='00';});
+      return;
+    }
+    const d=Math.floor(diff/86400000);
+    const h=Math.floor((diff%86400000)/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    const pad=n=>String(n).padStart(2,'0');
+    document.getElementById('cd-days').textContent=pad(d);
+    document.getElementById('cd-hours').textContent=pad(h);
+    document.getElementById('cd-mins').textContent=pad(m);
+    document.getElementById('cd-secs').textContent=pad(s);
+  }
+  tick(); setInterval(tick,1000);
 }
 
 function buildHeroNFT(){
