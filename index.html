@@ -421,7 +421,7 @@ footer{border-top:1px solid var(--border2);}
         <button class="wallet-dropdown-item" onclick="disconnectWallet()">Disconnect</button>
       </div>
     </div>
-    <button class="nav-menu-btn" onclick="toggleMobileNav()" aria-label="Menu">&#9776;</button>
+    <button class="nav-menu-btn" onclick="openMenu()" aria-label="Menu">&#9776;</button>
   </div>
   <div class="mobile-nav" id="mobile-nav">
     <a onclick="showPage('home');toggleMobileNav()">home</a>
@@ -959,7 +959,7 @@ function copyWallet(){
 }
 function openMenu(){document.getElementById('menu-overlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');document.body.style.overflow='';}
-function toggleMobileNav(){}
+function toggleMobileNav(){openMenu();}
 
 function buildHeroNFT(){
   const cv=document.getElementById('hero-nft-canvas');
