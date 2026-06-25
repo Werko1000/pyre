@@ -685,29 +685,9 @@ footer { background:#0d0d0d; }
         <div class="editor-hint" id="editor-hint">Click to place · drag to move sticks</div>
       </div>
       <div class="editor-side">
-        <div class="tool-tabs">
-          <button class="tool-tab sticks-tab active" id="tab-sticks" onclick="setEditorTool('sticks')">✏️ Sticks</button>
-          <button class="tool-tab blocks-tab" id="tab-blocks" onclick="setEditorTool('blocks')">🟦 Tetrix</button>
-        </div>
-        <div id="editor-stick-panel">
-          <div class="section-label">Sticks</div>
-          <div id="editor-stick-list"></div>
-        </div>
-        <div id="editor-block-panel" style="display:none;">
-          <div class="section-label" style="margin-bottom:6px;">Tetromino</div>
-          <div class="tetro-grid" id="tetro-picker"></div>
-          <div style="margin-top:8px;">
-            <div class="section-label" style="margin-bottom:4px;">Rotation</div>
-            <div class="rot-btns" id="rot-btns">
-              <button class="rot-btn active" onclick="setBlockRot(0)">0°</button>
-              <button class="rot-btn" onclick="setBlockRot(1)">90°</button>
-              <button class="rot-btn" onclick="setBlockRot(2)">180°</button>
-              <button class="rot-btn" onclick="setBlockRot(3)">270°</button>
-            </div>
-          </div>
-          <div style="margin-top:8px;" class="section-label">Color</div>
-          <div id="block-color-picker" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;"></div>
-        </div>
+        <div class="section-label">Elements</div>
+        <div id="editor-stick-list"></div>
+        <div id="editor-block-list" style="margin-top:6px;"></div>
         <div id="editor-controls"></div>
         <button class="save-btn" id="save-btn" onclick="handleSave()">Save layout on-chain</button>
         <div style="margin-top:6px;">
@@ -745,7 +725,7 @@ footer { background:#0d0d0d; }
 <script>
 // NPC-inspired palette: skin tones, grays, muted accents
 const PALETTE=['#252525','#6B6B6B','#C8C8C8','#F0F0F0','#D4B87A','#BEA865','#C4B5D0','#9080A0','#4A6B80','#B5C4CC','#8A7060','#E8E0D0','#1C1C1C','#A0A0A0','#D0C0A8','#5A7A90'];
-const DIR_NAMES=["--","|","↘","↗"];
+const DIR_NAMES=["—","|"];
 const GRID=24;
 
 // ── Contract config ──────────────────────────────────────────────────────────
@@ -2221,6 +2201,27 @@ function buildEditor(){
         +DIR_NAMES.map((d,di)=>'<button class="dir-btn'+(s&&s.dir===di?' active':'')+'" onclick="setDir('+di+')">'+d+'</button>').join('')+'</div>';
     }
   }
+
+  // Render blocks in sidebar
+  const blockList=document.getElementById('editor-block-list');
+  if(blockList){
+    blockList.innerHTML='';
+    if(editorBlocks.length>0){
+      const lbl=document.createElement('div');lbl.className='section-label';lbl.style.marginBottom='6px';lbl.textContent='Blocks';blockList.appendChild(lbl);
+      const TNAMES=['I','O','T','S','Z','L','J'];
+      editorBlocks.forEach((b,i)=>{
+        const card=document.createElement('div');card.className='editor-stick-card';
+        card.style.borderLeft='3px solid '+b.color;
+        card.style.opacity=locked?'0.55':'1';
+        card.innerHTML='<div class="stick-label">Block '+(i+1)+' — '+TNAMES[b.blockType]+'-Block</div>'
+          +'<div class="stick-attrs"><span class="attr-pill"><span class="color-dot" style="background:'+b.color+'"></span></span>'
+          +'<span class="attr-pill">'+TNAMES[b.blockType]+'</span>'
+          +'<span class="attr-pill">'+['0°','90°','180°','270°'][b.rotation]+'</span></div>';
+        blockList.appendChild(card);
+      });
+    }
+  }
+
   if(!editorCanvasReady)initEditorCanvas();
 }
 
