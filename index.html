@@ -32,11 +32,11 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .logo-s,.logo-t,.logo-i,.logo-x { color:#000; }
 .logo-dot { color:var(--accent); }
 .nav-links { display:flex; gap:32px; align-items:center; }
-.nav-links a { font-size:13px; color:#555; text-decoration:none; cursor:pointer; transition:color 0.15s; letter-spacing:0; font-weight:500; }
+.nav-links a { font-size:13px; color:#b0b0b0; text-decoration:none; cursor:pointer; transition:color 0.15s; letter-spacing:0; font-weight:500; }
 .nav-links a:hover { color:#000; }
 .nav-menu-btn { display:none; background:none; border:none; cursor:pointer; font-size:20px; color:var(--text3); }
-.btn-wallet { font-size:12px; padding:6px 14px; border:1px solid #333; background:transparent; color:#888; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
-.btn-wallet:hover { border-color:#aaa; color:#fff; }
+.btn-wallet { font-size:12px; padding:6px 14px; border:1px solid #333; background:transparent; color:#e7e7e7; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
+.btn-wallet:hover { border-color:#e7e7e7; color:#fff; }
 .btn-wallet.connected { border-color:var(--accent); color:var(--accent); background:rgba(107,143,160,0.08); }
 .wallet-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
 .wallet-dropdown { position:absolute; right:32px; top:56px; background:#fff; border:1px solid var(--border); padding:6px; min-width:200px; z-index:200; }
@@ -44,7 +44,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .wallet-dropdown-item { width:100%; text-align:left; padding:8px 10px; font-size:12px; color:var(--c1); background:transparent; border:none; cursor:pointer; }
 .wallet-dropdown-item:hover { background:var(--bg3); }
 .mobile-nav { display:none; background:#fff; border-bottom:1px solid var(--border); padding:10px 32px; flex-direction:column; }
-.mobile-nav a { font-size:14px; color:var(--text2); padding:12px 0; cursor:pointer; border-bottom:1px solid var(--border); }
+.mobile-nav a { font-size:14px; color:#e7e7e7; padding:12px 0; cursor:pointer; border-bottom:1px solid var(--border); }
 .mobile-nav.open { display:flex; }
 
 /* HERO */
@@ -77,12 +77,12 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .stat { padding:28px 0; border-right:1px solid var(--border); padding-right:24px; margin-right:24px; }
 .stat:last-child { border-right:none; margin-right:0; }
 .stat-val { font-family:var(--serif); font-size:32px; font-weight:700; letter-spacing:-1px; color:#000; }
-.stat-lbl { font-size:12px; color:#555; margin-top:4px; font-weight:500; }
+.stat-lbl { font-size:12px; color:#b0b0b0; margin-top:4px; font-weight:500; }
 
 /* SECTIONS */
 .section { border-bottom:1px solid var(--border); }
 .section-inner { max-width:var(--max); margin:0 auto; padding:56px 32px; }
-.section-label { font-size:12px; color:#555; margin-bottom:28px; font-family:var(--mono); font-weight:600; }
+.section-label { font-size:12px; color:#b0b0b0; margin-bottom:28px; font-family:var(--mono); font-weight:600; }
 
 /* MANIFESTO */
 .manifesto { border-bottom:1px solid var(--border); }
@@ -145,13 +145,13 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .mint-spinner-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.92); display:none; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
 .mint-spinner-overlay.active { display:flex; }
 .mint-spinner-ring { width:32px; height:32px; border:2px solid var(--border2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
-.mint-spinner-text { font-size:12px; color:var(--text2); font-family:var(--mono); }
+.mint-spinner-text { font-size:12px; color:#e7e7e7; font-family:var(--mono); }
 @keyframes spin { to { transform:rotate(360deg); } }
 .reveal-pop { animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
 @keyframes pop { from { transform:scale(0.92); opacity:0; } to { transform:scale(1); opacity:1; } }
 .reveal-title { font-family:var(--serif); font-style:italic; font-size:24px; font-weight:700; letter-spacing:-0.5px; }
-.mint-desc { font-size:13px; color:var(--text2); line-height:1.7; }
-.attr-pill { font-size:11px; background:var(--bg3); border:1px solid var(--border); padding:3px 8px; color:var(--text2); font-family:var(--mono); }
+.mint-desc { font-size:13px; color:#e7e7e7; line-height:1.7; }
+.attr-pill { font-size:11px; background:var(--bg3); border:1px solid var(--border); padding:3px 8px; color:#e7e7e7; font-family:var(--mono); }
 .color-dot { display:inline-block; width:8px; height:8px; vertical-align:middle; margin-right:4px; }
 .stick-attrs { display:flex; gap:5px; flex-wrap:wrap; }
 .mint-actions { display:flex; gap:10px; }
@@ -161,7 +161,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .qty-wrap { margin:14px 0 10px; }
 .qty-label { font-size:11px; color:var(--text3); margin-bottom:8px; font-family:var(--mono); }
 .qty-btns { display:flex; gap:6px; }
-.qty-btn { flex:1; padding:10px 0; border:1px solid var(--border2); background:transparent; color:var(--text2); font-size:15px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+.qty-btn { flex:1; padding:10px 0; border:1px solid var(--border2); background:transparent; color:#e7e7e7; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.15s; }
 .qty-btn:hover { border-color:#000; color:#000; }
 .qty-btn.active { border-color:#000; background:#000; color:#fff; }
 .mint-total-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0 14px; border-bottom:1px solid var(--border); margin-bottom:14px; }
@@ -185,7 +185,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .burn-confirm { border:1px solid var(--border); padding:20px; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
 .burn-preview-canvas { image-rendering:pixelated; border:1px solid var(--border); }
 .burn-confirm-text h4 { font-family:var(--serif); font-style:italic; font-size:16px; font-weight:700; margin-bottom:6px; }
-.burn-confirm-text p { font-size:13px; color:var(--text2); line-height:1.65; margin-bottom:14px; }
+.burn-confirm-text p { font-size:13px; color:#e7e7e7; line-height:1.65; margin-bottom:14px; }
 .burn-go { padding:11px 22px; background:var(--c1); color:#fff; border:none; font-size:13px; cursor:pointer; }
 .burn-go:hover { opacity:0.88; }
 .burn-go:disabled { opacity:0.4; cursor:not-allowed; }
@@ -213,7 +213,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .save-btn:disabled { background:var(--bg3); color:var(--text3); cursor:not-allowed; }
 .burn-card { background:rgba(230,57,70,0.03); border:1px solid rgba(230,57,70,0.15); padding:14px; }
 .burn-card h4 { font-size:13px; color:var(--c1); margin-bottom:5px; font-family:var(--serif); font-style:italic; }
-.burn-card p { font-size:12px; color:var(--text2); line-height:1.55; margin-bottom:10px; }
+.burn-card p { font-size:12px; color:#e7e7e7; line-height:1.55; margin-bottom:10px; }
 .burn-btn { width:100%; padding:8px; border:1px solid var(--c1); background:transparent; color:var(--c1); font-size:12px; cursor:pointer; transition:all 0.15s; }
 .burn-btn:hover { background:var(--c1); color:#fff; }
 .editor-stick-card { border:1px solid var(--border); padding:10px 13px; cursor:pointer; background:#fff; transition:border-color 0.15s; }
@@ -223,7 +223,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .edit-status.has-credit { background:rgba(107,143,160,0.06); border:1px solid rgba(107,143,160,0.2); color:var(--accent); }
 .edit-status.no-credit { background:var(--bg2); border:1px solid var(--border); color:var(--text3); }
 .edit-status .credit-num { font-family:var(--serif); font-size:20px; font-weight:700; }
-.dir-btn { flex:1; padding:8px 0; border:1px solid var(--border2); background:transparent; color:var(--text2); font-size:15px; cursor:pointer; transition:all 0.15s; }
+.dir-btn { flex:1; padding:8px 0; border:1px solid var(--border2); background:transparent; color:#e7e7e7; font-size:15px; cursor:pointer; transition:all 0.15s; }
 .dir-btn.active { border-color:var(--accent); background:var(--accent); color:#fff; }
 
 /* MY PYRES */
@@ -235,7 +235,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .mynft-footer { padding:10px 12px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); }
 .mynft-info h4 { font-size:12px; font-weight:600; font-family:var(--mono); }
 .mynft-info span { font-size:11px; color:var(--text3); }
-.edit-btn { font-size:11px; padding:5px 12px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all 0.15s; }
+.edit-btn { font-size:11px; padding:5px 12px; border:1px solid var(--border); background:transparent; color:#e7e7e7; cursor:pointer; transition:all 0.15s; }
 .edit-btn:hover { border-color:#000; color:#000; }
 .edit-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:600; padding:2px 8px; }
 .mynft-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); margin-bottom:20px; }
@@ -247,7 +247,7 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 .history-list { display:flex; flex-direction:column; gap:6px; }
 .history-item { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--bg2); border:1px solid var(--border); }
 .history-icon { font-size:14px; flex-shrink:0; width:20px; text-align:center; }
-.history-text { font-size:12px; color:var(--text2); flex:1; line-height:1.5; }
+.history-text { font-size:12px; color:#e7e7e7; flex:1; line-height:1.5; }
 .history-text strong { color:#000; font-weight:600; }
 .history-time { font-size:10px; color:var(--text3); font-family:var(--mono); }
 
@@ -282,14 +282,14 @@ nav { border-bottom:1px solid var(--border); background:#fff; position:sticky; t
 /* MISC */
 .connect-prompt { text-align:center; padding:80px 20px; }
 .connect-prompt h2 { font-family:var(--serif); font-style:italic; font-size:26px; font-weight:700; margin-bottom:10px; }
-.connect-prompt p { font-size:14px; color:var(--text2); margin-bottom:28px; max-width:320px; margin-left:auto; margin-right:auto; }
+.connect-prompt p { font-size:14px; color:#e7e7e7; margin-bottom:28px; max-width:320px; margin-left:auto; margin-right:auto; }
 .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(8px); background:#000; color:#fff; padding:10px 18px; font-size:13px; opacity:0; transition:all 0.22s; pointer-events:none; z-index:999; white-space:nowrap; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 footer { border-top:1px solid var(--border); }
 .footer-inner { max-width:var(--max); margin:0 auto; padding:24px 32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
 .footer-logo { font-family:var(--serif); font-style:italic; font-size:18px; font-weight:700; color:#000; }
 .footer-links a { font-size:12px; color:var(--text3); text-decoration:none; cursor:pointer; margin-left:20px; }
-.footer-links a:hover { color:var(--text2); }
+.footer-links a:hover { color:#e7e7e7; }
 .footer-note { font-size:11px; color:var(--text3); font-family:var(--mono); }
 .page { display:none; }
 .page.active { display:block; }
@@ -320,11 +320,11 @@ nav { border-bottom:1px solid #1a1a1a; background:rgba(17,17,17,0.97); position:
 .logo-s,.logo-t,.logo-i,.logo-x { color:#fff; }
 .logo-dot { color:var(--accent); }
 .nav-links { display:flex; gap:28px; align-items:center; }
-.nav-links a { font-size:13px; color:#666; text-decoration:none; cursor:pointer; transition:color 0.15s; font-weight:500; }
-.nav-links a:hover { color:#fff; }
-.nav-menu-btn { display:none; background:none; border:none; cursor:pointer; font-size:20px; color:#888; }
+.nav-links a { font-size:13px; color:#b0b0b0; text-decoration:none; cursor:pointer; transition:color 0.15s; font-weight:500; }
+.nav-links a:hover { color:#e7e7e7; }
+.nav-menu-btn { display:none; background:none; border:none; cursor:pointer; font-size:20px; color:#e7e7e7; }
 .mobile-nav { display:none; background:#111; border-bottom:1px solid #1a1a1a; padding:10px 28px; flex-direction:column; }
-.mobile-nav a { font-size:14px; color:#888; padding:12px 0; cursor:pointer; border-bottom:1px solid #1a1a1a; }
+.mobile-nav a { font-size:14px; color:#e7e7e7; padding:12px 0; cursor:pointer; border-bottom:1px solid #1a1a1a; }
 .mobile-nav.open { display:flex; }
 
 
@@ -338,16 +338,16 @@ nav { border-bottom:1px solid #1a1a1a; background:rgba(17,17,17,0.97); position:
 .menu-nav a { font-size:clamp(40px,8vw,80px); font-weight:700; color:#fff; cursor:pointer; letter-spacing:-2px; line-height:1.1; transition:color 0.1s; display:block; border-bottom:1px solid #1a1a1a; padding:8px 0; }
 .menu-nav a:hover { color:var(--accent); }
 .menu-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:24px; border-top:1px solid #222; }
-.menu-wallet { background:transparent; border:1px solid #333; padding:10px 20px; color:#aaa; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:8px; }
+.menu-wallet { background:transparent; border:1px solid #333; padding:10px 20px; color:#e7e7e7; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:8px; }
 .menu-wallet:hover { border-color:#fff; color:#fff; }
 .menu-links { display:flex; gap:20px; }
-.menu-links a { font-size:13px; color:#555; text-decoration:none; }
+.menu-links a { font-size:13px; color:#b0b0b0; text-decoration:none; }
 .menu-links a:hover { color:#fff; }
 
 /* ── HERO FULLSCREEN ─────────────────────────────────────────────────── */
 .hero-full { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr auto; padding:120px 48px 40px; gap:40px; position:relative; align-items:center; }
 .hero-text-wrap { display:flex; flex-direction:column; justify-content:center; }
-.hero-eyebrow { font-size:11px; letter-spacing:3px; color:#444; font-family:var(--mono); margin-bottom:28px; text-transform:uppercase; }
+.hero-eyebrow { font-size:11px; letter-spacing:3px; color:#b0b0b0; font-family:var(--mono); margin-bottom:28px; text-transform:uppercase; }
 .hero-mega { font-size:clamp(60px,10vw,120px); font-weight:900; line-height:0.88; letter-spacing:-4px; color:#fff; }
 .hero-accent { color:var(--accent); }
 .hero-nft-wrap { display:flex; align-items:center; justify-content:center; }
@@ -355,7 +355,7 @@ nav { border-bottom:1px solid #1a1a1a; background:rgba(17,17,17,0.97); position:
 .hero-cta-row { grid-column:1/-1; display:flex; align-items:center; gap:28px; border-top:1px solid #1a1a1a; padding-top:28px; }
 .btn-hero-mint { font-size:14px; font-weight:700; padding:14px 36px; background:#fff; color:#000; border:none; cursor:pointer; transition:all 0.15s; letter-spacing:0.5px; }
 .btn-hero-mint:hover { background:var(--accent); color:#fff; }
-.hero-sub-text { font-size:12px; color:#444; font-family:var(--mono); }
+.hero-sub-text { font-size:12px; color:#b0b0b0; font-family:var(--mono); }
 .scroll-indicator { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; color:#333; font-size:10px; letter-spacing:3px; font-family:var(--mono); }
 
 /* ── FIX WHITE ELEMENTS FOR DARK BG ─────────────────────────────────── */
@@ -363,18 +363,18 @@ nav { border-bottom:1px solid #1a1a1a; background:rgba(17,17,17,0.97); position:
 .stats-inner { border-color:#1a1a1a; }
 .stat { border-color:#1a1a1a; }
 .stat-val { color:#fff; }
-.stat-lbl { color:#555; }
+.stat-lbl { color:#b0b0b0; }
 .manifesto { background:#111; }
 .manifesto h2 { color:#fff; }
-.manifesto p { color:#888; }
+.manifesto p { color:#e7e7e7; }
 .manifesto-right { border-color:#1a1a1a; }
 .manifesto-fact { border-color:#1a1a1a; }
 .fact-val { color:#fff; }
-.fact-desc { color:#666; }
+.fact-desc { color:#b0b0b0; }
 .how { background:#111; }
 .how-step { border-color:#1a1a1a; }
 .how-step h3 { color:#fff; }
-.how-step p { color:#888; }
+.how-step p { color:#e7e7e7; }
 .section-inner { background:#111; }
 .nft-card { background:#111; border-color:#1a1a1a; }
 .nft-footer { background:#0d0d0d; border-color:#1a1a1a; }
@@ -384,32 +384,32 @@ nav { border-bottom:1px solid #1a1a1a; background:rgba(17,17,17,0.97); position:
 .mp-card-id { color:#fff; }
 .footer-inner { background:#0d0d0d; border-color:#1a1a1a; }
 .footer-logo { color:#fff; }
-.footer-note { color:#444; }
+.footer-note { color:#b0b0b0; }
 footer { background:#0d0d0d; }
 .connect-prompt h2 { color:#fff; }
-.connect-prompt p { color:#888; }
+.connect-prompt p { color:#e7e7e7; }
 .mint-rows { background:#161616; border-color:#222; }
 .mint-row { border-color:#222; }
-.mint-row .lbl { color:#555; }
+.mint-row .lbl { color:#b0b0b0; }
 .mint-row .val { color:#fff; }
 .burn-confirm { background:#161616; border-color:#222; }
 .burn-confirm-text h4 { color:#fff; }
-.burn-confirm-text p { color:#888; }
+.burn-confirm-text p { color:#e7e7e7; }
 .mynft-stat { background:#161616; }
 .mynft-stat-val { color:#fff; }
 .history-item { background:#161616; border-color:#222; }
-.history-text { color:#888; }
+.history-text { color:#e7e7e7; }
 .history-text strong { color:#fff; }
 .editor-canvas-area canvas { border-color:#222; }
 .editor-stick-card { background:#161616; border-color:#222; }
 .tetro-btn { background:#161616; }
-.rot-btn { background:#161616; border-color:#222; color:#888; }
+.rot-btn { background:#161616; border-color:#222; color:#e7e7e7; }
 .burn-card { background:rgba(107,143,160,0.05); }
 .how-step-num { color:var(--accent); }
 .reveal-title { color:#fff; }
-.mint-desc { color:#888; }
+.mint-desc { color:#e7e7e7; }
 .mynft-info h4 { color:#fff; }
-.mynft-info span { color:#555; }
+.mynft-info span { color:#b0b0b0; }
 .mynft-footer { background:#161616; border-color:#222; }
 
 @media(max-width:768px){
@@ -561,7 +561,7 @@ footer { background:#0d0d0d; }
   <div class="section">
     <div class="section-inner">
       <div class="section-label">What you can build</div>
-      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:480px;">Burn enough Pyres and the elements add up. Here's what's possible on a 24×24 canvas.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Burn enough Pyres and the elements add up. Here's what's possible on a 24×24 canvas.</p>
       <div class="masterpiece-grid" id="home-gallery"></div>
     </div>
   </div>
@@ -569,7 +569,7 @@ footer { background:#0d0d0d; }
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Evolution</div>
-      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre starts as a few random elements. Burn to grow. The same DNA evolves from Line to Masterpiece.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre starts as a few random elements. Burn to grow. The same DNA evolves from Line to Masterpiece.</p>
       <div class="evo-section" id="home-evo"></div>
     </div>
   </div>
@@ -577,7 +577,7 @@ footer { background:#0d0d0d; }
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Building Blocks</div>
-      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre is built from just three ingredients — colors, sticks, and Tetrominos. Infinite combinations, all on-chain.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre is built from just three ingredients — colors, sticks, and Tetrominos. Infinite combinations, all on-chain.</p>
       <div class="blocks-section" id="home-blocks"></div>
     </div>
   </div>
@@ -634,7 +634,7 @@ footer { background:#0d0d0d; }
               </div>
             </div>
             <div class="mint-total-row">
-              <span style="color:var(--text2);font-size:13px;">Total</span>
+              <span style="color:#e7e7e7;font-size:13px;">Total</span>
               <span class="mint-price-display" id="mint-total-price" style="font-size:16px;font-weight:700;">TBD</span>
             </div>
             <button class="mint-cta" id="mint-cta" onclick="handleMint()">Mint 1 Pyre</button>
@@ -667,7 +667,7 @@ footer { background:#0d0d0d; }
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Burn &amp; merge</div>
-      <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px;max-width:520px;">Pick the Pyre you want to <b>keep</b> and the one you want to <b>burn</b>. The burned Pyre's elements move into the keeper — and the keeper unlocks one edit. The burned token is gone forever.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:24px;max-width:520px;">Pick the Pyre you want to <b>keep</b> and the one you want to <b>burn</b>. The burned Pyre's elements move into the keeper — and the keeper unlocks one edit. The burned token is gone forever.</p>
       <div id="burn-content"></div>
     </div>
   </div>
@@ -951,8 +951,8 @@ async function handleWalletClick(){
     dd.style.cssText='position:fixed;top:'+(rect.bottom+6)+'px;right:'+(window.innerWidth-rect.right)+'px;'
       +'background:#222;border:0.5px solid #444;border-radius:8px;padding:6px;z-index:200;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.5);';
     dd.innerHTML=
-      '<div style="font-size:11px;color:#666;padding:6px 10px 8px;border-bottom:0.5px solid #333;">'+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4)+'</div>'+
-      '<button onclick="copyWallet()" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'#2a2a2a\'" onmouseout="this.style.background=\'none\'">📋 Copy address</button>'+
+      '<div style="font-size:11px;color:#b0b0b0;padding:6px 10px 8px;border-bottom:0.5px solid #333;">'+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4)+'</div>'+
+      '<button onclick="copyWallet()" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#e7e7e7;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'#2a2a2a\'" onmouseout="this.style.background=\'none\'">📋 Copy address</button>'+
       '<button onclick="disconnectWallet()" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#E63946;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'#2a2a2a\'" onmouseout="this.style.background=\'none\'">⏏️ Disconnect</button>';
     document.body.appendChild(dd);
     setTimeout(()=>document.addEventListener('click',function removeDD(e){if(!dd.contains(e.target)&&e.target!==btn){dd.remove();document.removeEventListener('click',removeDD);}},true),10);
@@ -1359,7 +1359,7 @@ function buildTetroPicker(){
     ctx.fillStyle=TETRO_COLORS[i];
     pts.forEach(([x,y])=>ctx.fillRect(ox+(x-minX)*sc,oy+(y-minY)*sc,sc-1,sc-1));
     cv.style.cssText='display:block;image-rendering:pixelated;';
-    const lbl=document.createElement('div');lbl.style.cssText='font-size:9px;color:#888;text-align:center;margin-top:1px;';lbl.textContent=name;
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:9px;color:#e7e7e7;text-align:center;margin-top:1px;';lbl.textContent=name;
     btn.appendChild(cv);btn.appendChild(lbl);
     btn.onclick=()=>{
       selectedBlock.blockType=i;
@@ -1884,7 +1884,7 @@ async function buildMyNFTs(){
       '<div class="mynft-stat"><div class="mynft-stat-val">'+totalBurned+'</div><div class="mynft-stat-lbl">Burned Total</div></div>'+
     '</div>'+
     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">'+
-      '<p style="font-size:13px;color:var(--text2);">'+myNFTData.length+' Pyre · '+editable.length+' editable</p>'+
+      '<p style="font-size:13px;color:#e7e7e7;">'+myNFTData.length+' Pyre · '+editable.length+' editable</p>'+
       '<button class="btn-outline" style="font-size:13px;padding:7px 16px;" onclick="showPage(\'burn\')">Burn &amp; merge →</button>'+
     '</div>'+
     '<div class="mynft-grid" id="mynft-grid"></div>'+
@@ -2058,7 +2058,7 @@ async function confirmBurn(){
       if(wrap){
         const banner=document.createElement('div');
         banner.style.cssText='background:#edfaf5;border:0.5px solid #b8e6d6;border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;';
-        banner.innerHTML='<div><div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:4px;">Merge complete! 🎉</div><div style="font-size:13px;color:var(--text2);">Pyre #'+keptId+' now has '+keep.sticks.length+' sticks and 1 edit credit.</div></div><button onclick="openEditor('+keptId+')" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Edit now →</button>';
+        banner.innerHTML='<div><div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:4px;">Merge complete! 🎉</div><div style="font-size:13px;color:#e7e7e7;">Pyre #'+keptId+' now has '+keep.sticks.length+' sticks and 1 edit credit.</div></div><button onclick="openEditor('+keptId+')" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Edit now →</button>';
         wrap.prepend(banner);
       }
     },400);
