@@ -2177,50 +2177,44 @@ function buildEditor(){
   const locked=editCredits<=0;
   const hint=document.getElementById('editor-hint');
   if(hint)hint.textContent=locked?'Layout locked — burn to unlock edits':'Click/drag sticks and blocks to move · Tetrix tab to place blocks';
+  // Render all elements (sticks + blocks) in one unified list
   const list=document.getElementById('editor-stick-list');
   if(!list)return;
   list.innerHTML='';
+  const TNAMES=['I','O','T','S','Z','L','J'];
+
   editorSticks.forEach((s,i)=>{
     const card=document.createElement('div');
     card.className='editor-stick-card'+(i===selectedIdx?' active':'');
-    card.style.borderColor=i===selectedIdx?s.color:'var(--border2)';
+    card.style.borderLeft='3px solid '+s.color;
     card.style.opacity=locked?'0.55':'1';
     card.innerHTML='<div class="stick-label">Stick '+(i+1)+(i===selectedIdx?' · selected':'')+'</div>'
-      +'<div class="stick-attrs"><span class="attr-pill"><span class="color-dot" style="background:'+s.color+'"></span></span>'
+      +'<div class="stick-attrs">'
+      +'<span class="attr-pill"><span class="color-dot" style="background:'+s.color+'"></span></span>'
       +'<span class="attr-pill">'+s.length+'px</span>'
-      +'<span class="attr-pill">'+DIR_NAMES[s.dir]+'</span></div>';
+      +'<span class="attr-pill">'+DIR_NAMES[s.dir]+'</span>'
+      +'</div>';
     card.onclick=()=>{selectedIdx=i;buildEditor();};
     list.appendChild(card);
   });
-  const ctrl=document.getElementById('editor-controls');
-  if(ctrl){
-    if(locked){ ctrl.innerHTML=''; }
-    else{
-      const s=editorSticks[selectedIdx];
-      ctrl.innerHTML='<div class="stick-label" style="margin-bottom:8px;">Direction</div><div style="display:flex;gap:6px;">'
-        +DIR_NAMES.map((d,di)=>'<button class="dir-btn'+(s&&s.dir===di?' active':'')+'" onclick="setDir('+di+')">'+d+'</button>').join('')+'</div>';
-    }
-  }
 
-  // Render blocks in sidebar
+  editorBlocks.forEach((b,i)=>{
+    const card=document.createElement('div');
+    card.className='editor-stick-card';
+    card.style.borderLeft='3px solid '+b.color;
+    card.style.opacity=locked?'0.55':'1';
+    card.innerHTML='<div class="stick-label">Block '+(i+1)+' — '+TNAMES[b.blockType]+'-Block</div>'
+      +'<div class="stick-attrs">'
+      +'<span class="attr-pill"><span class="color-dot" style="background:'+b.color+'"></span></span>'
+      +'<span class="attr-pill">'+TNAMES[b.blockType]+'</span>'
+      +'<span class="attr-pill">'+['0°','90°','180°','270°'][b.rotation]+'</span>'
+      +'</div>';
+    list.appendChild(card);
+  });
+
+  // Clear old block list
   const blockList=document.getElementById('editor-block-list');
-  if(blockList){
-    blockList.innerHTML='';
-    if(editorBlocks.length>0){
-      const lbl=document.createElement('div');lbl.className='section-label';lbl.style.marginBottom='6px';lbl.textContent='Blocks';blockList.appendChild(lbl);
-      const TNAMES=['I','O','T','S','Z','L','J'];
-      editorBlocks.forEach((b,i)=>{
-        const card=document.createElement('div');card.className='editor-stick-card';
-        card.style.borderLeft='3px solid '+b.color;
-        card.style.opacity=locked?'0.55':'1';
-        card.innerHTML='<div class="stick-label">Block '+(i+1)+' — '+TNAMES[b.blockType]+'-Block</div>'
-          +'<div class="stick-attrs"><span class="attr-pill"><span class="color-dot" style="background:'+b.color+'"></span></span>'
-          +'<span class="attr-pill">'+TNAMES[b.blockType]+'</span>'
-          +'<span class="attr-pill">'+['0°','90°','180°','270°'][b.rotation]+'</span></div>';
-        blockList.appendChild(card);
-      });
-    }
-  }
+  if(blockList)blockList.innerHTML='';
 
   if(!editorCanvasReady)initEditorCanvas();
 }
