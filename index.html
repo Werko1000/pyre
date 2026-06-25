@@ -11,7 +11,7 @@
 <meta property="og:description" content="Mint sticks and Tetrominos. Burn to combine. Edit to arrange. 100% on-chain. CC0.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@pyrewtf">
+<meta name="twitter:site" content="@pyre_ethereum">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236B8FA0'/><rect x='20' y='45' width='40' height='8' fill='%23F0F0F0'/><rect x='30' y='25' width='8' height='40' fill='%23C4B5D0'/><rect x='55' y='35' width='8' height='8' fill='%23D4B87A'/><rect x='65' y='35' width='8' height='8' fill='%23D4B87A'/><rect x='55' y='45' width='8' height='8' fill='%23D4B87A'/><rect x='65' y='55' width='8' height='8' fill='%23D4B87A'/></svg>">
@@ -466,7 +466,7 @@ footer{border-top:1px solid var(--border2);}
         <span id="menu-wallet-label">connect wallet</span>
       </button>
       <div class="menu-links">
-        <a href="https://twitter.com/pyrewtf" target="_blank">X / Twitter</a>
+        <a href="https://twitter.com/pyre_ethereum" target="_blank">X / Twitter</a>
         <a href="https://sepolia.etherscan.io/address/0x26639D1eCa23C62520ff9ff14F314481571685c9" target="_blank">Etherscan</a>
       </div>
     </div>
@@ -742,7 +742,7 @@ footer{border-top:1px solid var(--border2);}
         <div class="raffle-task" id="task-follow">
           <div class="task-num">02</div>
           <div class="task-body">
-            <div class="task-title">Follow @pyrewtf on X</div>
+            <div class="task-title">Follow @pyre_ethereum on X</div>
             <div class="task-desc">Stay updated on the draw and future drops.</div>
           </div>
           <div class="task-right">
@@ -796,7 +796,7 @@ footer{border-top:1px solid var(--border2);}
         </div>
         <div class="raffle-entry-wallet" id="raffle-entry-wallet">— no wallet connected —</div>
       </div>
-      <p class="raffle-entry-note">Winners drawn <strong id="raffle-draw-date">TBD</strong>. Results posted on <a href="https://twitter.com/pyrewtf" target="_blank">@pyrewtf</a>.</p>
+      <p class="raffle-entry-note">Winners drawn <strong id="raffle-draw-date">TBD</strong>. Results posted on <a href="https://twitter.com/pyre_ethereum" target="_blank">@pyre_ethereum</a>.</p>
     </div>
 
   </div>
@@ -1276,7 +1276,7 @@ function startShowcaseTimer(){
 }
 
 // ── RAFFLE ────────────────────────────────────────────────────────────────
-const RAFFLE_TWEET_URL = 'https://twitter.com/pyrewtf/status/TWEET_ID'; // replace with real tweet
+const RAFFLE_TWEET_URL = 'https://twitter.com/pyre_ethereum/status/TWEET_ID'; // replace with real tweet
 const RAFFLE_END = new Date(Date.now() + 7*24*60*60*1000); // 7 days from now
 const RAFFLE_TASKS = ['wallet','follow','like','rt'];
 
@@ -1331,7 +1331,7 @@ function raffleConnectWallet(){
 }
 
 function raffleFollow(){
-  window.open('https://twitter.com/intent/follow?screen_name=pyrewtf','_blank');
+  window.open('https://twitter.com/intent/follow?screen_name=pyre_ethereum','_blank');
   setTimeout(()=>raffleMarkDone('follow'),2000);
 }
 
