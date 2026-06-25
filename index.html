@@ -628,7 +628,7 @@ footer{border-top:1px solid var(--border2);}
   <div class="footer-inner">
     <div class="footer-logo"><span class="logo-s">P</span><span class="logo-t">y</span><span class="logo-i">r</span><span class="logo-x">e</span><span class="logo-dot">.</span></div>
     <div class="footer-links">
-      <a>OpenSea</a><a>EthereumScan</a><a>Twitter</a><a>Discord</a>
+      <a>OpenSea</a><a>Etherscan</a><a>Twitter</a><a>Discord</a>
     </div>
     <div class="footer-note">CC0 &middot; 100% on-chain &middot; Ethereum</div>
   </div>
@@ -1955,16 +1955,20 @@ async function confirmBurn(){
     const tx=await contract.mergeBurn(burnKeepId,burnBurnId);
     if(burnGoBtn)burnGoBtn.textContent='Burning on-chain…';
     await tx.wait(1);
-    // Reload from chain to get accurate sticks + credits
+    // Reload from chain to get accurate sticks + blocks + credits
     const readContract=getContract(false);
-    const rawSticks=await readContract.getSticks(keep.id);
-    const credits=await readContract.editCredits(keep.id);
+    const [rawSticks, rawBlocks, newCredits]=await Promise.all([
+      readContract.getSticks(keep.id),
+      readContract.getBlocks(keep.id),
+      readContract.editCredits(keep.id)
+    ]);
     keep.sticks=rawSticks.map(formatStick);
-    keep.credits=Number(credits);
+    keep.blocks=rawBlocks.map(formatBlock);
+    keep.credits=Number(newCredits);
     myNFTData=myNFTData.filter(x=>x.id!==burnBurnId);
     const keptId=keep.id;
     burnKeepId=null;burnBurnId=null;
-    toast('Burned #'+burn.id+' · Pyre #'+keptId+' now has '+keep.sticks.length+' sticks + 1 edit ✅');
+    toast('Burned #'+burn.id+' · Pyre #'+keptId+' now has '+keep.sticks.length+' elements + 1 edit ✅');
     addHistory('🔥','Burned <strong>Pyre #'+burn.id+'</strong> into <strong>Pyre #'+keptId+'</strong> — unlocked 1 edit');
     buildBurn();
     // Show in-page success banner with edit button
