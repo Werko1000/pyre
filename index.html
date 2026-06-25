@@ -1456,38 +1456,40 @@ async function raffleSubmit(){
   if(!walletAddress){toast('Connect your wallet first!');return;}
 
   const btn=document.getElementById('raffle-submit-btn');
-  if(btn){btn.textContent='Submitting…';btn.disabled=true;}
+  if(btn){btn.textContent='Verifying on-chain…';btn.disabled=true;}
 
   const tasks={};
   RAFFLE_TASKS.forEach(t=>{tasks[t]=localStorage.getItem('pyre_raffle_'+t)==='1';});
 
   try{
-    const {error}=await _supa.from('raffle_entries').upsert({
-      wallet: walletAddress.toLowerCase(),
-      tickets: myTickets,
-      tasks: tasks,
-      updated_at: new Date().toISOString()
-    },{onConflict:'wallet'});
+    const res=await fetch('/api/submit-raffle',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({wallet:walletAddress,tasks})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Server error');
 
-    if(error) throw error;
+    // Update local state with server-verified tickets
+    if(data.tasks.hold)  {localStorage.setItem('pyre_raffle_hold','1');   raffleMarkDone('hold',false);}
+    if(data.tasks.minted){localStorage.setItem('pyre_raffle_minted','1'); raffleMarkDone('minted',false);}
 
-    localStorage.setItem('pyre_raffle_entry', JSON.stringify({wallet:walletAddress,tickets:myTickets}));
+    localStorage.setItem('pyre_raffle_entry',JSON.stringify({wallet:walletAddress,tickets:data.tickets}));
     document.getElementById('raffle-submit-btn').style.display='none';
     document.getElementById('raffle-submitted-msg').style.display='block';
-    toast('Entry submitted! '+myTickets+' ticket'+(myTickets>1?'s':'')+' 🎟');
-    raffleLoadOdds(myTickets);
+    toast('✅ Verified! '+data.tickets+' ticket'+(data.tickets>1?'s':'')+' 🎟');
+    raffleLoadOdds(data.tickets);
   }catch(e){
-    console.error('Supabase error:',e);
+    console.error('Submit error:',e);
     if(btn){btn.textContent='Submit entry';btn.disabled=false;}
-    toast('Error submitting — try again');
+    toast('Error: '+e.message);
   }
 }
 
 async function raffleLoadOdds(myTickets){
   try{
-    const {data,error}=await _supa.from('raffle_entries').select('tickets');
-    if(error||!data)return;
-    const totalTickets=data.reduce((sum,r)=>sum+r.tickets,0);
+    const res=await fetch('/api/raffle-odds');
+    const {totalTickets,totalParticipants}=await res.json();
     const pWin=totalTickets>0?Math.min(1-Math.pow((totalTickets-myTickets)/totalTickets,2),1):0;
     const pct=(pWin*100).toFixed(1);
     const oddsWrap=document.getElementById('raffle-odds-wrap');
@@ -1497,7 +1499,7 @@ async function raffleLoadOdds(myTickets){
     const bar=document.getElementById('raffle-odds-bar');
     if(bar)bar.style.width=Math.min(pWin*100,100)+'%';
     const detail=document.getElementById('raffle-odds-detail');
-    if(detail)detail.textContent=myTickets+' of '+totalTickets+' total tickets';
+    if(detail)detail.textContent=myTickets+' of '+totalTickets+' total tickets · '+totalParticipants+' participants';
   }catch(e){console.warn('Could not load odds',e);}
 }
 
