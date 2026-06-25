@@ -35,24 +35,42 @@
 html{scroll-behavior:smooth;}
 body{font-family:var(--sans);font-size:15px;background:#1a1a1a;color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;}
 
-/* SHOWCASE — NPC fullscreen style */
+/* SHOWCASE — PYRE burn chain */
 .showcase-section{padding:80px 0;border-bottom:1px solid var(--border2);background:#141414;}
-.showcase-head{max-width:var(--max);margin:0 auto;padding:0 28px 40px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;}
-.showcase-ttl{font-family:"Sigmar",var(--serif);font-size:clamp(28px,5vw,52px);font-weight:400;color:#fff;line-height:1.05;letter-spacing:0;}
-.showcase-meta{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;}
+.showcase-head{max-width:900px;margin:0 auto;padding:0 28px 48px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;}
+.showcase-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--c1);font-family:var(--mono);margin-bottom:10px;}
+.showcase-ttl{font-family:"Sigmar",var(--serif);font-size:clamp(28px,5vw,52px);font-weight:400;color:#fff;line-height:1.05;}
+.showcase-meta{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;}
 .showcase-lbl{color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
 .showcase-sep{color:var(--border3);}
 .showcase-val{color:#fff;font-weight:700;font-size:16px;}
-.showcase-canvas-wrap{max-width:700px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 28px;}
-#showcase-canvas{image-rendering:pixelated;width:100%;max-width:600px;height:auto;aspect-ratio:1;border:1px solid var(--border2);transition:opacity 0.3s;}
-#showcase-canvas.fading{opacity:0;}
-.showcase-controls{display:flex;align-items:center;gap:10px;}
-.showcase-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#e7e7e7;padding:10px 16px;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:6px;font-size:13px;transition:all 0.15s;font-family:var(--mono);}
-.showcase-btn:hover{background:rgba(255,255,255,0.12);border-color:var(--border3);}
-.showcase-random{padding:10px 20px;}
-.showcase-dots{display:flex;gap:6px;}
+
+/* Burn chain */
+.burn-chain-wrap{max-width:900px;margin:0 auto;padding:0 28px;display:flex;align-items:flex-end;justify-content:center;gap:0;}
+.chain-item{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.chain-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);}
+.chain-canvas{image-rendering:pixelated;display:block;border:1px solid var(--border2);transition:all 0.4s;width:100%;max-width:200px;height:auto;aspect-ratio:1;}
+.chain-item--mid .chain-canvas{max-width:240px;border-color:var(--border3);}
+.chain-item--master .chain-canvas{max-width:280px;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+.chain-info{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.chain-info--master{color:var(--accent);font-weight:700;}
+.chain-arrow{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 12px;padding-bottom:32px;flex-shrink:0;}
+.chain-arrow svg{stroke:var(--c1);}
+.chain-arrow path{stroke:var(--c1);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.chain-arrow-lbl{font-size:10px;color:var(--c1);font-family:var(--mono);letter-spacing:1px;}
+.chain-arrow-line{width:1px;height:24px;background:linear-gradient(to bottom,transparent,var(--c1));}
+
+.showcase-controls{display:flex;align-items:center;gap:10px;justify-content:center;}
+.showcase-btn{background:rgba(255,255,255,0.04);border:1px solid var(--border2);color:#e7e7e7;padding:8px 18px;cursor:pointer;border-radius:6px;font-size:12px;transition:all 0.15s;font-family:var(--mono);letter-spacing:1px;}
+.showcase-btn:hover{background:rgba(255,255,255,0.09);border-color:var(--border3);color:#fff;}
+.showcase-dots{display:flex;gap:6px;justify-content:center;}
 .showcase-dot{width:6px;height:6px;border-radius:50%;background:var(--border3);cursor:pointer;transition:all 0.2s;}
 .showcase-dot.active{background:var(--accent);width:20px;border-radius:3px;}
+
+@media(max-width:600px){
+  .burn-chain-wrap{flex-direction:column;align-items:center;}
+  .chain-arrow{flex-direction:row;padding:8px 0;transform:rotate(90deg);}
+}
 .grain{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:0.045;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-size:256px 256px;}
@@ -477,32 +495,63 @@ footer{border-top:1px solid var(--border2);}
       <svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M6 0v16M1 11l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </a>
   </section>
-  <!-- FULLSCREEN NFT SHOWCASE — NPC style -->
+  <!-- BURN CHAIN SHOWCASE — PYRE unique -->
   <section class="showcase-section" id="home-showcase">
     <div class="showcase-head">
-      <div class="showcase-ttl">look at them.<br>they're right here.</div>
+      <div>
+        <div class="showcase-eyebrow">watch it burn.</div>
+        <div class="showcase-ttl">every burn<br>adds more.</div>
+      </div>
       <div class="showcase-meta">
         <span class="showcase-lbl">total supply</span>
         <span class="showcase-sep">|</span>
         <span class="showcase-val" id="stat-remaining">10,000</span>
       </div>
     </div>
-    <div class="showcase-canvas-wrap">
-      <canvas id="showcase-canvas" width="600" height="600"></canvas>
-      <div class="showcase-controls">
-        <button class="showcase-btn" onclick="showcasePrev()" aria-label="previous">
-          <svg viewBox="0 0 24 24" width="20" height="20"><polyline points="15 18 9 12 15 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-        </button>
-        <button class="showcase-btn showcase-random" onclick="showcaseRandom()">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="16" r="1.2" fill="currentColor"/><circle cx="16" cy="16" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
-          random
-        </button>
-        <button class="showcase-btn" onclick="showcaseNext()" aria-label="next">
-          <svg viewBox="0 0 24 24" width="20" height="20"><polyline points="9 18 15 12 9 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-        </button>
+
+    <div class="burn-chain-wrap">
+      <!-- NFT 1: fresh mint -->
+      <div class="chain-item">
+        <div class="chain-label">fresh mint</div>
+        <canvas class="chain-canvas" id="chain-canvas-1" width="240" height="240"></canvas>
+        <div class="chain-info" id="chain-info-1">3 elements</div>
       </div>
-      <div class="showcase-dots" id="showcase-dots"></div>
+
+      <!-- Arrow 1 -->
+      <div class="chain-arrow">
+        <div class="chain-arrow-line"></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--c1)"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+        <div class="chain-arrow-lbl">burn</div>
+      </div>
+
+      <!-- NFT 2: after 1 burn -->
+      <div class="chain-item chain-item--mid">
+        <div class="chain-label">1 burn</div>
+        <canvas class="chain-canvas" id="chain-canvas-2" width="280" height="280"></canvas>
+        <div class="chain-info" id="chain-info-2">7 elements</div>
+      </div>
+
+      <!-- Arrow 2 -->
+      <div class="chain-arrow">
+        <div class="chain-arrow-line"></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--c1)"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+        <div class="chain-arrow-lbl">burn again</div>
+      </div>
+
+      <!-- NFT 3: masterpiece -->
+      <div class="chain-item chain-item--master">
+        <div class="chain-label">masterpiece</div>
+        <canvas class="chain-canvas" id="chain-canvas-3" width="320" height="320"></canvas>
+        <div class="chain-info chain-info--master" id="chain-info-3">12 elements</div>
+      </div>
     </div>
+
+    <div class="showcase-controls" style="margin-top:28px;">
+      <button class="showcase-btn" onclick="showcasePrev()">← prev</button>
+      <button class="showcase-btn showcase-random" onclick="showcaseRandom()">random</button>
+      <button class="showcase-btn" onclick="showcaseNext()">next →</button>
+    </div>
+    <div class="showcase-dots" id="showcase-dots" style="margin-top:14px;"></div>
   </section>
   <div class="manifesto" id="home-about">
     <div class="manifesto-inner">
@@ -1001,20 +1050,21 @@ function openMenu(){document.getElementById('menu-overlay').classList.add('open'
 function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');document.body.style.overflow='';}
 function toggleMobileNav(){openMenu();}
 
-// ── SHOWCASE ──────────────────────────────────────────────────────────────
+// ── SHOWCASE — Burn chain ─────────────────────────────────────────────────
 let showcaseIdx=0;
-const SHOWCASE_NFTS=[
-  makeNFT(8,[42]),makeNFT(5,[30]),makeNFT(12,[15,16]),
-  makeNFT(6,[22]),makeNFT(10,[8]),makeNFT(7,[51]),makeNFT(9,[33])
+const SHOWCASE_CHAINS=[
+  {seeds:[1,2,3],elems:[3,7,12]},
+  {seeds:[4,5,6],elems:[2,6,11]},
+  {seeds:[7,8,9],elems:[4,8,13]},
+  {seeds:[10,11,12],elems:[3,7,10]},
+  {seeds:[13,14,15],elems:[2,5,12]},
 ];
 
 function buildShowcase(){
-  const cv=document.getElementById('showcase-canvas');
-  if(!cv)return;
   const dots=document.getElementById('showcase-dots');
   if(dots){
     dots.innerHTML='';
-    SHOWCASE_NFTS.forEach((_,i)=>{
+    SHOWCASE_CHAINS.forEach((_,i)=>{
       const d=document.createElement('div');
       d.className='showcase-dot'+(i===showcaseIdx?' active':'');
       d.onclick=()=>showcaseGoto(i);
@@ -1026,28 +1076,27 @@ function buildShowcase(){
 }
 
 function renderShowcase(){
-  const cv=document.getElementById('showcase-canvas');
-  if(!cv)return;
-  cv.classList.add('fading');
-  setTimeout(()=>{
+  const chain=SHOWCASE_CHAINS[showcaseIdx];
+  [1,2,3].forEach(n=>{
+    const cv=document.getElementById('chain-canvas-'+n);
+    if(!cv)return;
     const ctx=cv.getContext('2d');
-    const sc=cv.width/GRID;
-    drawNFT(ctx,SHOWCASE_NFTS[showcaseIdx],sc,[]);
-    cv.classList.remove('fading');
-    document.querySelectorAll('.showcase-dot').forEach((d,i)=>{
-      d.classList.toggle('active',i===showcaseIdx);
-    });
-  },300);
+    const nft=makeNFT(chain.elems[n-1],[chain.seeds[n-1]*7+n*13]);
+    drawNFT(ctx,nft,cv.width/GRID,[]);
+    const info=document.getElementById('chain-info-'+n);
+    if(info)info.textContent=chain.elems[n-1]+' elements';
+  });
+  document.querySelectorAll('.showcase-dot').forEach((d,i)=>d.classList.toggle('active',i===showcaseIdx));
 }
 
-function showcaseNext(){showcaseIdx=(showcaseIdx+1)%SHOWCASE_NFTS.length;renderShowcase();}
-function showcasePrev(){showcaseIdx=(showcaseIdx-1+SHOWCASE_NFTS.length)%SHOWCASE_NFTS.length;renderShowcase();}
-function showcaseRandom(){showcaseIdx=Math.floor(Math.random()*SHOWCASE_NFTS.length);renderShowcase();}
+function showcaseNext(){showcaseIdx=(showcaseIdx+1)%SHOWCASE_CHAINS.length;renderShowcase();}
+function showcasePrev(){showcaseIdx=(showcaseIdx-1+SHOWCASE_CHAINS.length)%SHOWCASE_CHAINS.length;renderShowcase();}
+function showcaseRandom(){showcaseIdx=Math.floor(Math.random()*SHOWCASE_CHAINS.length);renderShowcase();}
 function showcaseGoto(i){showcaseIdx=i;renderShowcase();}
 let showcaseTimer=null;
 function startShowcaseTimer(){
   if(showcaseTimer)clearInterval(showcaseTimer);
-  showcaseTimer=setInterval(()=>showcaseNext(),4000);
+  showcaseTimer=setInterval(()=>showcaseNext(),5000);
 }
 
 function buildHeroNFT(){
