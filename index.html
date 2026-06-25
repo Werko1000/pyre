@@ -533,7 +533,7 @@ footer{border-top:1px solid var(--border2);}
     </div>
     <div class="hero-cta-row">
       <button class="btn-hero-mint" onclick="showPage('mint')">Mint a Pyre</button>
-      <div class="hero-sub-text">10,000 supply · 0.01 ETH · CC0</div>
+      <div class="hero-sub-text">10,000 supply · 0.001 ETH · CC0</div>
     </div>
     <a href="#home-about" class="scroll-indicator" onclick="event.preventDefault();document.getElementById('home-about')?.scrollIntoView({behavior:'smooth'})">
       <span>scroll</span>
@@ -1291,7 +1291,14 @@ function initRaffle(){
   const drawEl=document.getElementById('raffle-draw-date');
   if(drawEl) drawEl.textContent=RAFFLE_END.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 
-  // Restore state
+  // Auto-complete wallet task if already connected
+  if(walletAddress){
+    localStorage.setItem('pyre_raffle_wallet','1');
+    const el=document.getElementById('raffle-entry-wallet');
+    if(el) el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
+  }
+
+  // Restore all task states from localStorage
   RAFFLE_TASKS.forEach(t=>raffleRestoreTask(t));
   raffleUpdateCount();
   startCountdown();
@@ -1320,14 +1327,22 @@ function raffleUpdateCount(){
 }
 
 function raffleConnectWallet(){
-  if(!walletAddress){handleWalletClick();setTimeout(()=>{
-    if(walletAddress){raffleMarkDone('wallet');
-      const el=document.getElementById('raffle-entry-wallet');
-      if(el)el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);}
-  },3000);}
-  else{raffleMarkDone('wallet');
+  if(walletAddress){
+    raffleMarkDone('wallet');
     const el=document.getElementById('raffle-entry-wallet');
-    if(el)el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);}
+    if(el) el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
+  } else {
+    handleWalletClick();
+    const check=setInterval(()=>{
+      if(walletAddress){
+        clearInterval(check);
+        raffleMarkDone('wallet');
+        const el=document.getElementById('raffle-entry-wallet');
+        if(el) el.textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
+      }
+    },500);
+    setTimeout(()=>clearInterval(check),30000);
+  }
 }
 
 function raffleFollow(){
