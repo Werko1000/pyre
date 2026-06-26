@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="dark only">
 <meta name="theme-color" content="#1a1a1a">
 <meta property="og:title" content="PYRE — On-chain Pixel Art">
-<meta property="og:description" content="Every Pyre starts as a half-finished alien or robot head. Burn to add parts. Arrange them. Save on-chain forever. CC0.">
+<meta property="og:description" content="Mint parts. Burn to get more. Build your character on-chain. 10,000 unique Pyres on Ethereum. CC0.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@pyre_ethereum">
@@ -556,7 +556,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 <div id="page-home" class="page active">
   <section class="hero-full">
     <div class="hero-text-wrap">
-      <div class="hero-eyebrow">alien · robot · on-chain · ethereum · cc0</div>
+      <div class="hero-eyebrow">your parts · your character · on-chain · ethereum · cc0</div>
       <h1 class="hero-mega">
         <span class="glass-text" data-text="Burn">Burn</span><br>
         <span class="glass-text" data-text="every">every</span><br>
@@ -568,7 +568,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
     </div>
     <div class="hero-cta-row">
       <button class="btn-hero-mint" onclick="showPage('mint')">Mint a Pyre</button>
-      <div class="hero-sub-text">10,000 heads · 0.001 ETH · CC0</div>
+      <div class="hero-sub-text">10,000 characters · 0.001 ETH · CC0</div>
     </div>
     <a href="#home-about" class="scroll-indicator" onclick="event.preventDefault();document.getElementById('home-about')?.scrollIntoView({behavior:'smooth'})">
       <span>scroll</span>
@@ -579,8 +579,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <section class="showcase-section" id="home-showcase">
     <div class="showcase-head">
       <div>
-        <div class="showcase-eyebrow">watch it evolve.</div>
-        <div class="showcase-ttl">starts half-done.<br>you finish it.</div>
+        <div class="showcase-eyebrow">your parts. your character.</div>
+        <div class="showcase-ttl">mint parts.<br>burn to get more.<br>build your character.</div>
       </div>
       <div class="showcase-meta">
         <span class="showcase-lbl">total supply</span>
@@ -592,7 +592,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
     <div class="burn-chain-wrap">
       <!-- NFT 1: fresh mint -->
       <div class="chain-item">
-        <div class="chain-label">fresh mint — half-done head</div>
+        <div class="chain-label">fresh mint</div>
         <canvas class="chain-canvas" id="chain-canvas-1" width="240" height="240"></canvas>
         <div class="chain-info" id="chain-info-1">3 elements</div>
       </div>
@@ -620,7 +620,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 
       <!-- NFT 3: masterpiece -->
       <div class="chain-item chain-item--master">
-        <div class="chain-label">finished — your alien</div>
+        <div class="chain-label">edited — your character</div>
         <canvas class="chain-canvas" id="chain-canvas-3" width="320" height="320"></canvas>
         <div class="chain-info chain-info--master" id="chain-info-3">12 elements</div>
       </div>
@@ -636,10 +636,10 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="manifesto" id="home-about">
     <div class="manifesto-inner">
       <div>
-        <h2>Half-finished heads.<br>You complete them.</h2>
-        <p>Every Pyre starts with a guaranteed head structure — an alien or robot skull, a visor, maybe an antenna. Half-finished. Recognisable. But incomplete.</p>
-        <p>Burn two Pyres together and the survivor gains all elements from both. Eyes. Mouths. Ears. Sensors. Each burn adds parts. You arrange them in the on-chain editor and save forever to Ethereum.</p>
-        <p>No IPFS. No server. Every pixel encoded directly in the contract. If Ethereum exists, your Pyre exists.</p>
+        <h2>Parts on-chain.<br>You build the character.</h2>
+        <p>Every Pyre starts with a head base — a skull block, a visor strip, maybe an antenna. The rest is up to you.</p>
+        <p>Burn two Pyres together and the survivor gets all elements from both. More parts. More options. Open the editor, drag everything into place, and save once to Ethereum. That's your character. Permanent. Yours.</p>
+        <p>No IPFS. No server. Every pixel encoded directly in the contract. If Ethereum exists, your character exists.</p>
       </div>
       <div class="manifesto-right">
         <div class="manifesto-fact">
@@ -666,18 +666,18 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
       <div class="how-steps">
         <div class="how-step">
           <div class="how-step-num">01 — Mint</div>
-          <h3>A head. Half-done.</h3>
-          <p>Every Pyre starts with a guaranteed alien or robot head base — skull block, visor strip, optional antenna. Then Chainlink VRF adds 2–4 random features on top. No two are alike.</p>
+          <h3>Get your parts.</h3>
+          <p>Every Pyre starts with a head base — skull block and visor — plus random extra elements picked by Chainlink VRF. No two are alike. You don't know what you get until it's on-chain.</p>
         </div>
         <div class="how-step">
           <div class="how-step-num">02 — Burn</div>
-          <h3>Burn to add parts.</h3>
-          <p>Sacrifice a second Pyre and its elements merge into yours — eyes, sensors, mouth grilles, antennas. The more you burn, the more complete your alien or robot becomes.</p>
+          <h3>Burn to get more.</h3>
+          <p>Sacrifice a second Pyre and every element it carries merges into yours. More sticks. More blocks. More to work with. Each burn also unlocks one edit credit.</p>
         </div>
         <div class="how-step">
-          <div class="how-step-num">03 — Edit</div>
+          <div class="how-step-num">03 — Build</div>
           <h3>Arrange. Name. Own.</h3>
-          <p>Open the on-chain editor. Drag every element into place. Give your character a name. Save once to Ethereum — permanent, unchangeable, yours forever.</p>
+          <p>Open the editor. Drag every part exactly where you want it. Make it a robot. Make it an alien. Make it something else entirely. Give it a name. Save once to Ethereum — permanent, yours forever.</p>
         </div>
       </div>
     </div>
@@ -685,7 +685,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">What you can build</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every head starts half-done. Burn to add parts. Edit to arrange. Here's what's possible on a 24×24 canvas.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Same parts, different hands. Here's what people built on a 24×24 canvas.</p>
       <div class="masterpiece-grid" id="home-gallery"></div>
     </div>
   </div>
@@ -693,7 +693,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Evolution</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre starts as a half-done alien or robot head. Each burn adds more parts. The editor lets you arrange everything exactly how you want.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Mint. Burn. Arrange. The same head base becomes something different in every pair of hands.</p>
       <div class="evo-section" id="home-evo"></div>
     </div>
   </div>
@@ -701,7 +701,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Building Blocks</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Skulls. Visors. Antennas. Sensors. Every part is a stick or Tetromino in the NPC palette. All encoded on-chain. All yours to arrange.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every character is built from sticks and Tetrominos in the NPC palette. What they become is up to you.</p>
       <div class="blocks-section" id="home-blocks"></div>
     </div>
   </div>
@@ -959,8 +959,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
         </div>
         <div class="mint-info">
           <div id="mint-state-idle">
-            <h3>Your alien or robot, half-done.</h3>
-            <p class="mint-desc">Every Pyre starts with a guaranteed head base — skull block, visor, maybe an antenna. Chainlink VRF then adds random features on top. You'll know it's a head. You won't know which parts it has.</p>
+            <h3>Your character starts here.</h3>
+            <p class="mint-desc">Every Pyre starts with a head base — skull block and visor — plus random extra elements from Chainlink VRF. You get the parts. You decide what they become in the editor.</p>
             <div class="mint-rows">
               <div class="mint-row"><span class="lbl">Elements</span><span class="val">3–5 per Pyre (random)</span></div>
               <div class="mint-row"><span class="lbl">Canvas</span><span class="val">24×24 px on-chain</span></div>
@@ -2281,14 +2281,14 @@ const homeGalleryData=[];
 function buildHomeGallery(){
   const grid=document.getElementById('home-gallery');if(!grid)return;grid.innerHTML='';
   const pieces=[
-    {draw:drawAlienHead,   label:'Alien Scout',    id:'#0001'},
+    {draw:drawAlienHead,   label:'The Scout',    id:'#0001'},
     {draw:drawRobotHead,   label:'Unit-7',         id:'#0042'},
-    {draw:drawAlienCyclop, label:'Cyclops',        id:'#0137'},
+    {draw:drawAlienCyclop, label:'One Eye',        id:'#0137'},
     {draw:drawRobotVisor,  label:'Visor-X',        id:'#0218'},
-    {draw:drawAlienTentac, label:'Tentacle',       id:'#0305'},
-    {draw:drawRobotHeavy,  label:'Heavy Unit',     id:'#0411'},
-    {draw:drawAlienQueen,  label:'Queen',          id:'#0533'},
-    {draw:drawRobotStealth,label:'Stealth-01',     id:'#0667'},
+    {draw:drawAlienTentac, label:'The Crawler',       id:'#0305'},
+    {draw:drawRobotHeavy,  label:'Heavy',     id:'#0411'},
+    {draw:drawAlienQueen,  label:'The Queen',          id:'#0533'},
+    {draw:drawRobotStealth,label:'Ghost',     id:'#0667'},
   ];
   pieces.forEach(m=>{
     const card=document.createElement('div');card.className='mp-card';
@@ -2478,8 +2478,8 @@ function buildHomeEvo(){
   ];
 
   [
-    {title:'Alien evolves →', masterDraw:drawAlienHead, fn:drawAlienEvoStage},
-    {title:'Robot evolves →', masterDraw:drawRobotHead, fn:drawRobotEvoStage},
+    {title:'same parts, built as alien →', masterDraw:drawAlienHead, fn:drawAlienEvoStage},
+    {title:'same parts, built as robot →', masterDraw:drawRobotHead, fn:drawRobotEvoStage},
   ].forEach(row=>{
     const rowWrap=document.createElement('div');rowWrap.style.marginBottom='32px';
     const lbl=document.createElement('div');lbl.className='evo-label';lbl.textContent=row.title;
