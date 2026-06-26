@@ -18,7 +18,7 @@ const ABI = [
 // Base tickets for Twitter tasks (we trust these — can't verify without Twitter API)
 const TWITTER_TASKS = ['wallet', 'follow', 'like', 'rt'];
 const TWITTER_TICKET_VALUE = 1;
-const ONCHAIN_TICKET_VALUE = 2;
+const ONCHAIN_TICKET_VALUE = 3;
 
 export default async function handler(req, res) {
   // CORS
@@ -61,11 +61,12 @@ export default async function handler(req, res) {
       if (done) tickets += TWITTER_TICKET_VALUE;
     });
 
-    // On-chain tasks — server verified (2 tickets each)
+    // On-chain tasks — server verified (1 ticket per NFT, max 3 each)
+    const holdTickets  = Math.min(balance.toNumber(), 3);
+    const mintedTickets= Math.min(minted.toNumber(), 3);
     verifiedTasks.hold   = holdsNFT;
     verifiedTasks.minted = hasMinted;
-    if (holdsNFT)  tickets += ONCHAIN_TICKET_VALUE;
-    if (hasMinted) tickets += ONCHAIN_TICKET_VALUE;
+    tickets += holdTickets + mintedTickets;
 
     // ── Save to Supabase ──────────────────────────────────────────────────
     const supa = createClient(SUPABASE_URL, SUPABASE_KEY);
