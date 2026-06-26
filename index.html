@@ -2722,13 +2722,16 @@ async function loadMyNFTs(){
         const rawBlocks=await contract.getBlocks(tokenId.toNumber());
         const credits=await contract.editCredits(tokenId.toNumber());
         const name=await contract.tokenName(tokenId.toNumber());
+        let ht=0;
+        try{ht=Number(await contract.headType(tokenId.toNumber()));}catch(e){}
         console.log('Token',tokenId.toNumber(),'→',rawSticks.length,'sticks,',rawBlocks.length,'blocks, credits:',Number(credits));
         owned.push({
           id:      tokenId.toNumber(),
           sticks:  rawSticks.map(formatStick),
           blocks:  rawBlocks.map(formatBlock),
           credits: Number(credits),
-          name:    name||'Untitled'
+          name:    name||'Untitled',
+          headType: ht
         });
       }catch(e){ console.warn('Token',tokenId.toNumber(),'error:',e.message); }
     }
@@ -2964,16 +2967,17 @@ async function confirmBurn(){
     myNFTData=myNFTData.filter(x=>x.id!==burnBurnId);
     const keptId=keep.id;
     burnKeepId=null;burnBurnId=null;
-    toast('Burned #'+burn.id+' · Pyre #'+keptId+' now has '+keep.sticks.length+' elements + 1 edit ✅');
-    addHistory('🔥','Burned <strong>Pyre #'+burn.id+'</strong> into <strong>Pyre #'+keptId+'</strong> — unlocked 1 edit');
+    const totalElements=keep.sticks.length+keep.blocks.length;
+    toast('Burned #'+burn.id+' · Pyre #'+keptId+' got '+keep.blocks.length+' new blocks + 1 edit ✅');
+    addHistory('🔥','Burned <strong>Pyre #'+burn.id+'</strong> into <strong>Pyre #'+keptId+'</strong> — +'+keep.blocks.length+' blocks, 1 edit unlocked');
     buildBurn();
     // Show in-page success banner with edit button
     setTimeout(()=>{
       const wrap=document.getElementById('burn-content');
       if(wrap){
         const banner=document.createElement('div');
-        banner.style.cssText='background:#edfaf5;border:0.5px solid #b8e6d6;border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;';
-        banner.innerHTML='<div><div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:4px;">Merge complete! 🎉</div><div style="font-size:13px;color:#e7e7e7;">Pyre #'+keptId+' now has '+keep.sticks.length+' sticks and 1 edit credit.</div></div><button onclick="openEditor('+keptId+')" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Edit now →</button>';
+        banner.style.cssText='background:rgba(107,143,160,0.1);border:1px solid var(--accent);padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;';
+        banner.innerHTML='<div><div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:4px;">Burn complete! 🔥</div><div style="font-size:13px;color:var(--text2);">Pyre #'+keptId+' received '+keep.blocks.length+' random blocks and 1 edit credit.</div></div><button onclick="showPage(\'mynfts\')" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">View in My Pyres →</button>';
         wrap.prepend(banner);
       }
     },400);
