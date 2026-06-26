@@ -2578,13 +2578,14 @@ function addHistory(icon, text){
   localStorage.setItem('pyre_history', JSON.stringify(h));
 }
 
-function renderHistory(){
+function renderHistory(showAll=false){
   const list=document.getElementById('history-list');
   if(!list)return;
   const h=JSON.parse(localStorage.getItem('pyre_history')||'[]');
   if(h.length===0){list.innerHTML='<div style="font-size:12px;color:var(--text3);padding:10px 0;">No activity yet.</div>';return;}
   list.innerHTML='';
-  h.forEach(item=>{
+  const visible=showAll?h:h.slice(0,5);
+  visible.forEach(item=>{
     const div=document.createElement('div');div.className='history-item';
     const ago=timeAgo(item.time);
     div.innerHTML='<div class="history-icon">'+item.icon+'</div>'
@@ -2592,6 +2593,18 @@ function renderHistory(){
       +'<div class="history-time">'+ago+'</div>';
     list.appendChild(div);
   });
+  if(h.length>5){
+    const more=document.createElement('div');
+    more.style.cssText='font-size:12px;color:var(--text3);padding:8px 0;cursor:pointer;font-family:var(--mono);';
+    if(showAll){
+      more.textContent='↑ show less';
+      more.onclick=()=>renderHistory(false);
+    } else {
+      more.textContent='+ '+(h.length-5)+' more — show all';
+      more.onclick=()=>renderHistory(true);
+    }
+    list.appendChild(more);
+  }
 }
 
 function timeAgo(ts){
