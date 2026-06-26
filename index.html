@@ -502,7 +502,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
       </button>
       <div class="menu-links">
         <a href="https://twitter.com/pyre_ethereum" target="_blank">X / Twitter</a>
-        <a href="https://sepolia.etherscan.io/address/0x5352647F3bF8cd6240C04ca11Ea6112788504fFC" target="_blank">Etherscan</a>
+        <a href="https://sepolia.etherscan.io/address/0xeCd456C0a12432950A3f99fcC2b0Ce29A1F60555" target="_blank">Etherscan</a>
       </div>
     </div>
   </div>
@@ -1075,7 +1075,7 @@ const DIR_NAMES=["—","|"];
 const GRID=24;
 
 // ── Contract config ──────────────────────────────────────────────────────────
-const CONTRACT_ADDRESS = "0x5352647F3bF8cd6240C04ca11Ea6112788504fFC";
+const CONTRACT_ADDRESS = "0xeCd456C0a12432950A3f99fcC2b0Ce29A1F60555";
 const CHAIN_ID_HEX = "0xaa36a7"; // Ethereum Sepolia = 11155111
 const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/9t2l29UXveRJxvspv3swk";
 
@@ -1093,6 +1093,7 @@ const ABI = [
   "function tokensOfOwner(address owner) view returns (uint256[])",
   "function balanceOf(address owner) view returns (uint256)",
   "function mintedBy(address) view returns (uint256)",
+  "function headType(uint256) view returns (uint8)",
   "function totalMinted() view returns (uint256)",
   "function totalSupply() view returns (uint256)",
   "function mintOpen() view returns (bool)",
@@ -1906,16 +1907,23 @@ async function handleMint(){
   }
 }
 
+const HEAD_TYPE_NAMES=['Grunt','Cyclops','Dome','Narrow','Wide','Stealth','Brute','Ghost','Insect','Elder'];
+
 async function revealMintFromChain(tokenId){
   if(revealTimer){clearTimeout(revealTimer);revealTimer=null;}
   try {
     const contract=getContract();
-    const rawSticks=await contract.getSticks(tokenId);
-    const rawBlocks=await contract.getBlocks(tokenId);
-    const credits=await contract.editCredits(tokenId);
+    const [rawSticks,rawBlocks,credits,ht]=await Promise.all([
+      contract.getSticks(tokenId),
+      contract.getBlocks(tokenId),
+      contract.editCredits(tokenId),
+      contract.headType(tokenId)
+    ]);
     const sticks=rawSticks.map(formatStick);
     const blocks=rawBlocks.map(formatBlock);
-    const nft={id:tokenId,sticks,blocks,credits:Number(credits),name:'Untitled'};
+    const htNum=Number(ht);
+    const htName=HEAD_TYPE_NAMES[htNum]||'Unknown';
+    const nft={id:tokenId,sticks,blocks,credits:Number(credits),name:'Untitled',headType:htNum};
     myNFTData=myNFTData.filter(x=>x.id!==tokenId);
     myNFTData.unshift(nft);
 
@@ -1927,7 +1935,6 @@ async function revealMintFromChain(tokenId){
       cv.classList.add('reveal-pop');
       mintVisual.innerHTML='';
       mintVisual.appendChild(cv);
-      // Also add spinner slot back (hidden)
       const sp=document.createElement('div');
       sp.className='mint-spinner-overlay';sp.id='mint-spinner';
       sp.innerHTML='<div class="mint-spinner-ring"></div><div class="mint-spinner-text" id="mint-spinner-text"></div>';
@@ -1938,9 +1945,9 @@ async function revealMintFromChain(tokenId){
     document.getElementById('mint-state-revealed').style.display='';
     document.getElementById('reveal-title').textContent='Meet Pyre #'+tokenId;
 
-    // Update description
+    // Update description with head type
     const desc=document.querySelector('#mint-state-revealed .mint-desc');
-    if(desc) desc.textContent='Minted on-chain! '+sticks.length+' sticks and '+blocks.length+' tetromino'+(blocks.length!==1?'s':'')+' — burn another Pyre to unlock edits.';
+    if(desc) desc.textContent='Type: '+htName+' ('+htNum+'/10) · '+sticks.length+' sticks · '+blocks.length+' blocks — burn another Pyre to unlock edits.';
 
     // Build element list
     const list=document.getElementById('reveal-stick-list');
@@ -2801,7 +2808,7 @@ async function buildMyNFTs(){
     const stage=getStage((item.sticks.length||0)+(item.blocks||[]).length);
     const total=(item.sticks.length||0)+(item.blocks||[]).length;
     footer.innerHTML='<div class="mynft-info"><h4>'+(item.name&&item.name!=='Untitled'?item.name:'Pyre')+' #'+item.id+'</h4>'
-      +'<span>'+stage+' · '+total+' elements</span></div>'
+      +'<span>'+(HEAD_TYPE_NAMES[n.headType]||'Pyre')+' · '+stage+' · '+total+' elements</span></div>'
       +'<button class="edit-btn" onclick="openEditor('+item.id+')" style="'+(item.credits>0?'border-color:var(--accent);color:var(--accent);':'')+'">edit</button>';
     card.appendChild(cv);card.appendChild(footer);
     grid.appendChild(card);
