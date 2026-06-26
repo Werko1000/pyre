@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="dark only">
 <meta name="theme-color" content="#1a1a1a">
 <meta property="og:title" content="PYRE — On-chain Pixel Art">
-<meta property="og:description" content="Mint sticks and Tetrominos. Burn to combine. Edit to arrange. 100% on-chain. CC0.">
+<meta property="og:description" content="Every Pyre starts as a half-finished alien or robot head. Burn to add parts. Arrange them. Save on-chain forever. CC0.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@pyre_ethereum">
@@ -556,7 +556,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 <div id="page-home" class="page active">
   <section class="hero-full">
     <div class="hero-text-wrap">
-      <div class="hero-eyebrow">on-chain pixel art · ethereum · cc0</div>
+      <div class="hero-eyebrow">alien · robot · on-chain · ethereum · cc0</div>
       <h1 class="hero-mega">
         <span class="glass-text" data-text="Burn">Burn</span><br>
         <span class="glass-text" data-text="every">every</span><br>
@@ -568,7 +568,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
     </div>
     <div class="hero-cta-row">
       <button class="btn-hero-mint" onclick="showPage('mint')">Mint a Pyre</button>
-      <div class="hero-sub-text">10,000 supply · 0.001 ETH · CC0</div>
+      <div class="hero-sub-text">10,000 heads · 0.001 ETH · CC0</div>
     </div>
     <a href="#home-about" class="scroll-indicator" onclick="event.preventDefault();document.getElementById('home-about')?.scrollIntoView({behavior:'smooth'})">
       <span>scroll</span>
@@ -579,8 +579,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <section class="showcase-section" id="home-showcase">
     <div class="showcase-head">
       <div>
-        <div class="showcase-eyebrow">watch it burn.</div>
-        <div class="showcase-ttl">every burn<br>adds more.</div>
+        <div class="showcase-eyebrow">watch it evolve.</div>
+        <div class="showcase-ttl">starts half-done.<br>you finish it.</div>
       </div>
       <div class="showcase-meta">
         <span class="showcase-lbl">total supply</span>
@@ -592,7 +592,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
     <div class="burn-chain-wrap">
       <!-- NFT 1: fresh mint -->
       <div class="chain-item">
-        <div class="chain-label">fresh mint</div>
+        <div class="chain-label">fresh mint — half-done head</div>
         <canvas class="chain-canvas" id="chain-canvas-1" width="240" height="240"></canvas>
         <div class="chain-info" id="chain-info-1">3 elements</div>
       </div>
@@ -606,7 +606,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 
       <!-- NFT 2: after 1 burn -->
       <div class="chain-item chain-item--mid">
-        <div class="chain-label">1 burn</div>
+        <div class="chain-label">1 burn — more parts</div>
         <canvas class="chain-canvas" id="chain-canvas-2" width="280" height="280"></canvas>
         <div class="chain-info" id="chain-info-2">7 elements</div>
       </div>
@@ -620,7 +620,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 
       <!-- NFT 3: masterpiece -->
       <div class="chain-item chain-item--master">
-        <div class="chain-label">masterpiece</div>
+        <div class="chain-label">finished — your alien</div>
         <canvas class="chain-canvas" id="chain-canvas-3" width="320" height="320"></canvas>
         <div class="chain-info chain-info--master" id="chain-info-3">12 elements</div>
       </div>
@@ -636,10 +636,10 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="manifesto" id="home-about">
     <div class="manifesto-inner">
       <div>
-        <h2>Art that lives<br>on the chain.</h2>
-        <p>Most NFT projects store images on IPFS or a centralized server. If the team disappears, the art disappears. PYRE is different.</p>
-        <p>Every pixel, every color, every stick position is encoded directly into the smart contract on Ethereum. The SVG is generated on-chain, on demand, every time. No image to host. Nothing to lose.</p>
-        <p>Burn two Pyres together and get all elements in one canvas — yours to arrange however you like. Keep burning, keep building. The chain remembers everything.</p>
+        <h2>Half-finished heads.<br>You complete them.</h2>
+        <p>Every Pyre starts with a guaranteed head structure — an alien or robot skull, a visor, maybe an antenna. Half-finished. Recognisable. But incomplete.</p>
+        <p>Burn two Pyres together and the survivor gains all elements from both. Eyes. Mouths. Ears. Sensors. Each burn adds parts. You arrange them in the on-chain editor and save forever to Ethereum.</p>
+        <p>No IPFS. No server. Every pixel encoded directly in the contract. If Ethereum exists, your Pyre exists.</p>
       </div>
       <div class="manifesto-right">
         <div class="manifesto-fact">
@@ -666,18 +666,18 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
       <div class="how-steps">
         <div class="how-step">
           <div class="how-step-num">01 — Mint</div>
-          <h3>Random elements, VRF-powered.</h3>
-          <p>Each Pyre is minted with random sticks and Tetrominos — color, length, type all chosen by Chainlink VRF. No two are alike.</p>
+          <h3>A head. Half-done.</h3>
+          <p>Every Pyre starts with a guaranteed alien or robot head base — skull block, visor strip, optional antenna. Then Chainlink VRF adds 2–4 random features on top. No two are alike.</p>
         </div>
         <div class="how-step">
           <div class="how-step-num">02 — Burn</div>
-          <h3>Burn two, get one richer.</h3>
-          <p>Sacrifice two Pyres and receive one carrying all elements. Burn again. Stack more. The more you burn, the richer your canvas.</p>
+          <h3>Burn to add parts.</h3>
+          <p>Sacrifice a second Pyre and its elements merge into yours — eyes, sensors, mouth grilles, antennas. The more you burn, the more complete your alien or robot becomes.</p>
         </div>
         <div class="how-step">
-          <div class="how-step-num">03 — Create</div>
-          <h3>Arrange. Commit. Own.</h3>
-          <p>Use the on-chain editor to place every element exactly where you want. Save to the contract. That's your art, permanently.</p>
+          <div class="how-step-num">03 — Edit</div>
+          <h3>Arrange. Name. Own.</h3>
+          <p>Open the on-chain editor. Drag every element into place. Give your character a name. Save once to Ethereum — permanent, unchangeable, yours forever.</p>
         </div>
       </div>
     </div>
@@ -685,7 +685,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">What you can build</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Burn enough Pyres and the elements add up. Here's what's possible on a 24×24 canvas.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every head starts half-done. Burn to add parts. Edit to arrange. Here's what's possible on a 24×24 canvas.</p>
       <div class="masterpiece-grid" id="home-gallery"></div>
     </div>
   </div>
@@ -693,7 +693,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Evolution</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre starts as a few random elements. Burn to grow. The same DNA evolves from Line to Masterpiece.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre starts as a half-done alien or robot head. Each burn adds more parts. The editor lets you arrange everything exactly how you want.</p>
       <div class="evo-section" id="home-evo"></div>
     </div>
   </div>
@@ -701,7 +701,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Building Blocks</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every Pyre is built from just three ingredients — colors, sticks, and Tetrominos. Infinite combinations, all on-chain.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Skulls. Visors. Antennas. Sensors. Every part is a stick or Tetromino in the NPC palette. All encoded on-chain. All yours to arrange.</p>
       <div class="blocks-section" id="home-blocks"></div>
     </div>
   </div>
@@ -959,8 +959,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
         </div>
         <div class="mint-info">
           <div id="mint-state-idle">
-            <h3>Mint is a surprise.</h3>
-            <p class="mint-desc">Each Pyre is generated from on-chain Chainlink randomness — sticks and Tetrominos, unmanipulable, unknowable in advance.</p>
+            <h3>Your alien or robot, half-done.</h3>
+            <p class="mint-desc">Every Pyre starts with a guaranteed head base — skull block, visor, maybe an antenna. Chainlink VRF then adds random features on top. You'll know it's a head. You won't know which parts it has.</p>
             <div class="mint-rows">
               <div class="mint-row"><span class="lbl">Elements</span><span class="val">3–5 per Pyre (random)</span></div>
               <div class="mint-row"><span class="lbl">Canvas</span><span class="val">24×24 px on-chain</span></div>
@@ -1366,11 +1366,11 @@ function toggleMobileNav(){openMenu();}
 // ── SHOWCASE — Burn chain ─────────────────────────────────────────────────
 let showcaseIdx=0;
 const SHOWCASE_CHAINS=[
-  {seeds:[1,2,3],elems:[3,7,12]},
-  {seeds:[4,5,6],elems:[2,6,11]},
-  {seeds:[7,8,9],elems:[4,8,13]},
-  {seeds:[10,11,12],elems:[3,7,10]},
-  {seeds:[13,14,15],elems:[2,5,12]},
+  {type:'alien', elems:[4,7,12]},
+  {type:'robot', elems:[4,8,13]},
+  {type:'alien', elems:[3,7,11]},
+  {type:'robot', elems:[5,9,14]},
+  {type:'alien', elems:[4,8,12]},
 ];
 
 function buildShowcase(){
@@ -1394,8 +1394,15 @@ function renderShowcase(){
     const cv=document.getElementById('chain-canvas-'+n);
     if(!cv)return;
     const ctx=cv.getContext('2d');
-    const nft=makeNFT(chain.elems[n-1],[chain.seeds[n-1]*7+n*13]);
-    drawNFT(ctx,nft,cv.width/GRID,[]);
+    ctx.fillStyle=BG_C;ctx.fillRect(0,0,cv.width,cv.height);
+    // Draw alien or robot evo stage
+    let tmp;
+    if(chain.type==='alien') tmp=drawAlienEvoStage(n-1);
+    else tmp=drawRobotEvoStage(n-1);
+    if(n===3){
+      tmp=(chain.type==='alien')?drawAlienHead():drawRobotHead();
+    }
+    ctx.drawImage(tmp,0,0,cv.width,cv.height);
     const info=document.getElementById('chain-info-'+n);
     if(info)info.textContent=chain.elems[n-1]+' elements';
   });
@@ -1709,8 +1716,11 @@ function buildHeroNFT(){
   const cv=document.getElementById('hero-nft-canvas');
   if(!cv)return;
   const ctx=cv.getContext('2d');
-  // Draw one of our masterpiece drawings
-  drawNFT(ctx,makeNFT(8,[42]),480/GRID,[]);
+  ctx.fillStyle=BG_C;ctx.fillRect(0,0,cv.width,cv.height);
+  const SC=cv.width/GRID;
+  // Draw full alien masterpiece scaled up
+  const tmp=drawAlienHead();
+  ctx.drawImage(tmp,0,0,cv.width,cv.height);
 }
 
 function updateWalletUI(){
@@ -2271,14 +2281,14 @@ const homeGalleryData=[];
 function buildHomeGallery(){
   const grid=document.getElementById('home-gallery');if(!grid)return;grid.innerHTML='';
   const pieces=[
-    {draw:drawMohawk,  label:'Mohawk Punk',  id:'#0001'},
-    {draw:drawBeanie,  label:'Beanie OG',    id:'#0042'},
-    {draw:drawTower,   label:'City Tower',   id:'#0137'},
-    {draw:drawNPCFace, label:'NPC Face',     id:'#0218'},
-    {draw:drawShades,  label:'Shades Punk',  id:'#0305'},
-    {draw:drawHouse,   label:'Pixel House',  id:'#0411'},
-    {draw:drawBlonde,  label:'Blonde Punk',  id:'#0533'},
-    {draw:drawPunkGray,label:'Gray Punk',    id:'#0667'},
+    {draw:drawAlienHead,   label:'Alien Scout',    id:'#0001'},
+    {draw:drawRobotHead,   label:'Unit-7',         id:'#0042'},
+    {draw:drawAlienCyclop, label:'Cyclops',        id:'#0137'},
+    {draw:drawRobotVisor,  label:'Visor-X',        id:'#0218'},
+    {draw:drawAlienTentac, label:'Tentacle',       id:'#0305'},
+    {draw:drawRobotHeavy,  label:'Heavy Unit',     id:'#0411'},
+    {draw:drawAlienQueen,  label:'Queen',          id:'#0533'},
+    {draw:drawRobotStealth,label:'Stealth-01',     id:'#0667'},
   ];
   pieces.forEach(m=>{
     const card=document.createElement('div');card.className='mp-card';
@@ -2291,38 +2301,195 @@ function buildHomeGallery(){
   });
 }
 
+// ── ALIEN / ROBOT HEAD DRAWINGS ────────────────────────────────────────────
+const BG_C='#6B8FA0';
+const PAL=['#252525','#6B6B6B','#C8C8C8','#F0F0F0','#D4B87A','#BEA865',
+           '#C4B5D0','#9080A0','#4A6B80','#B5C4CC','#8A7060','#E8E0D0',
+           '#1C1C1C','#A0A0A0','#D0C0A8','#5A7A90','#4A8060','#A04040',
+           '#C87840','#5A9090'];
+
+function mkCanvas(sc){
+  const cv=document.createElement('canvas');
+  cv.width=GRID*sc;cv.height=GRID*sc;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle=BG_C;ctx.fillRect(0,0,GRID*sc,GRID*sc);
+  return [cv,ctx];
+}
+function dot(ctx,x,y,c,sc){if(x<0||x>=GRID||y<0||y>=GRID)return;ctx.fillStyle=c;ctx.fillRect(x*sc,y*sc,sc,sc);}
+function ln(ctx,x,y,w,c,sc){for(let i=0;i<w;i++)dot(ctx,x+i,y,c,sc);}
+function cl(ctx,x,y,h,c,sc){for(let i=0;i<h;i++)dot(ctx,x,y+i,c,sc);}
+function bx(ctx,x,y,w,h,c,sc){for(let dy=0;dy<h;dy++)ln(ctx,x,y+dy,w,c,sc);}
+
+function drawAlienHead(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LV='#C4B5D0',PU='#9080A0',GN='#4A8060',DK='#252525',WH='#F0F0F0',TN='#D4B87A',YL='#BEA865';
+  bx(ctx,8,4,8,12,LV,SC);bx(ctx,6,6,12,8,LV,SC);
+  cl(ctx,7,6,8,PU,SC);cl(ctx,16,6,8,PU,SC);ln(ctx,8,4,8,PU,SC);
+  bx(ctx,8,8,4,3,DK,SC);bx(ctx,12,8,4,3,DK,SC);
+  ln(ctx,9,9,2,GN,SC);ln(ctx,13,9,2,GN,SC);dot(ctx,9,9,WH,SC);dot(ctx,13,9,WH,SC);
+  cl(ctx,12,0,4,TN,SC);dot(ctx,11,0,TN,SC);dot(ctx,13,0,TN,SC);dot(ctx,12,0,YL,SC);
+  ln(ctx,9,13,6,DK,SC);dot(ctx,10,14,LV,SC);ln(ctx,11,14,2,WH,SC);dot(ctx,13,14,LV,SC);
+  bx(ctx,10,16,4,3,LV,SC);cl(ctx,7,8,4,GN,SC);cl(ctx,16,8,4,GN,SC);
+  bx(ctx,7,19,10,4,PU,SC);ln(ctx,5,20,2,LV,SC);ln(ctx,17,20,2,LV,SC);
+  ln(ctx,9,19,6,GN,SC);cl(ctx,8,2,3,GN,SC);cl(ctx,15,2,3,GN,SC);
+  dot(ctx,7,3,GN,SC);dot(ctx,16,3,GN,SC);
+  bx(ctx,9,20,2,2,TN,SC);bx(ctx,12,20,2,2,TN,SC);
+  return cv;
+}
+
+function drawRobotHead(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LG='#C8C8C8',GR='#6B6B6B',DB='#4A6B80',CY='#5A9090',DK='#252525',YL='#D4B87A',RED='#A04040',WH='#F0F0F0';
+  bx(ctx,7,5,10,11,LG,SC);cl(ctx,12,5,11,GR,SC);ln(ctx,7,11,10,GR,SC);
+  bx(ctx,8,8,8,3,DB,SC);
+  ln(ctx,9,9,2,CY,SC);ln(ctx,13,9,2,CY,SC);dot(ctx,11,9,WH,SC);dot(ctx,12,9,WH,SC);
+  dot(ctx,8,6,DK,SC);dot(ctx,15,6,DK,SC);dot(ctx,8,14,DK,SC);dot(ctx,15,14,DK,SC);
+  dot(ctx,6,9,RED,SC);dot(ctx,6,10,RED,SC);dot(ctx,17,9,RED,SC);dot(ctx,17,10,RED,SC);
+  for(let i=0;i<4;i++)dot(ctx,9+i*2,13,DK,SC);ln(ctx,8,14,8,GR,SC);
+  bx(ctx,4,7,3,7,GR,SC);bx(ctx,17,7,3,7,GR,SC);dot(ctx,5,10,YL,SC);dot(ctx,18,10,YL,SC);
+  cl(ctx,11,2,3,GR,SC);cl(ctx,12,2,3,GR,SC);ln(ctx,10,2,4,GR,SC);dot(ctx,11,1,RED,SC);
+  bx(ctx,10,16,4,3,GR,SC);cl(ctx,11,16,3,LG,SC);cl(ctx,12,16,3,LG,SC);
+  bx(ctx,6,19,12,4,LG,SC);ln(ctx,6,19,12,GR,SC);
+  bx(ctx,9,20,3,2,DB,SC);bx(ctx,12,20,3,2,DB,SC);
+  bx(ctx,3,19,3,4,GR,SC);bx(ctx,18,19,3,4,GR,SC);
+  return cv;
+}
+
+function drawAlienCyclop(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LV='#C4B5D0',PU='#9080A0',GN='#4A8060',DK='#252525',WH='#F0F0F0',TN='#D4B87A',YL='#BEA865';
+  bx(ctx,7,5,10,12,LV,SC);bx(ctx,5,7,14,8,LV,SC);
+  cl(ctx,6,7,8,PU,SC);cl(ctx,17,7,8,PU,SC);
+  bx(ctx,8,8,8,5,DK,SC);bx(ctx,9,9,6,3,GN,SC);
+  dot(ctx,11,10,WH,SC);dot(ctx,12,10,WH,SC);dot(ctx,13,10,WH,SC);
+  cl(ctx,11,1,4,TN,SC);dot(ctx,10,1,TN,SC);dot(ctx,12,1,TN,SC);dot(ctx,11,0,YL,SC);
+  ln(ctx,10,13,4,DK,SC);ln(ctx,9,14,6,LV,SC);
+  ln(ctx,10,15,4,WH,SC);
+  bx(ctx,10,16,4,4,LV,SC);
+  cl(ctx,6,9,4,PU,SC);cl(ctx,17,9,4,PU,SC);dot(ctx,5,11,GN,SC);dot(ctx,18,11,GN,SC);
+  bx(ctx,7,20,10,3,PU,SC);ln(ctx,5,21,2,LV,SC);ln(ctx,17,21,2,LV,SC);
+  return cv;
+}
+
+function drawRobotVisor(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LG='#C8C8C8',GR='#6B6B6B',DB='#4A6B80',OR='#C87840',DK='#252525',WH='#F0F0F0',YL='#D4B87A';
+  bx(ctx,6,4,12,14,LG,SC);ln(ctx,6,4,12,GR,SC);ln(ctx,6,17,12,GR,SC);
+  cl(ctx,6,4,14,GR,SC);cl(ctx,17,4,14,GR,SC);
+  bx(ctx,7,7,10,5,DK,SC);
+  ln(ctx,8,9,8,OR,SC);dot(ctx,8,8,OR,SC);dot(ctx,15,8,OR,SC);
+  dot(ctx,9,9,WH,SC);dot(ctx,10,9,WH,SC);dot(ctx,13,9,WH,SC);dot(ctx,14,9,WH,SC);
+  ln(ctx,8,13,2,YL,SC);ln(ctx,14,13,2,YL,SC);
+  bx(ctx,4,8,2,6,GR,SC);bx(ctx,18,8,2,6,GR,SC);
+  dot(ctx,4,10,OR,SC);dot(ctx,19,10,OR,SC);
+  cl(ctx,11,1,3,GR,SC);cl(ctx,12,1,3,GR,SC);
+  bx(ctx,9,18,6,4,GR,SC);cl(ctx,10,18,4,LG,SC);
+  bx(ctx,5,19,4,3,GR,SC);bx(ctx,15,19,4,3,GR,SC);
+  for(let i=0;i<4;i++)dot(ctx,9+i*2,14,DK,SC);
+  return cv;
+}
+
+function drawAlienTentac(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LV='#C4B5D0',PU='#9080A0',GN='#4A8060',DK='#252525',WH='#F0F0F0',TN='#D4B87A';
+  bx(ctx,8,3,8,13,LV,SC);bx(ctx,6,5,12,9,LV,SC);
+  cl(ctx,7,5,9,PU,SC);cl(ctx,16,5,9,PU,SC);ln(ctx,8,3,8,PU,SC);
+  bx(ctx,8,8,4,3,DK,SC);bx(ctx,12,8,4,3,DK,SC);
+  ln(ctx,9,9,2,GN,SC);ln(ctx,13,9,2,GN,SC);
+  dot(ctx,9,9,WH,SC);dot(ctx,13,9,WH,SC);
+  // Tentacles coming from head
+  cl(ctx,7,1,4,GN,SC);dot(ctx,6,1,GN,SC);dot(ctx,5,2,GN,SC);
+  cl(ctx,16,1,4,GN,SC);dot(ctx,17,1,GN,SC);dot(ctx,18,2,GN,SC);
+  cl(ctx,10,0,3,TN,SC);cl(ctx,13,0,3,TN,SC);
+  ln(ctx,9,14,6,DK,SC);ln(ctx,10,15,4,LV,SC);
+  bx(ctx,10,16,4,3,LV,SC);
+  bx(ctx,6,19,12,4,PU,SC);
+  ln(ctx,3,19,3,GN,SC);ln(ctx,18,19,3,GN,SC);
+  cl(ctx,3,20,3,GN,SC);cl(ctx,20,20,3,GN,SC);
+  return cv;
+}
+
+function drawRobotHeavy(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LG='#C8C8C8',GR='#6B6B6B',DB='#4A6B80',RED='#A04040',DK='#252525',WH='#F0F0F0',TN='#D4B87A';
+  bx(ctx,6,4,12,13,LG,SC);
+  cl(ctx,6,4,13,GR,SC);cl(ctx,17,4,13,GR,SC);ln(ctx,6,4,12,GR,SC);ln(ctx,6,16,12,GR,SC);
+  bx(ctx,7,7,10,5,DB,SC);
+  ln(ctx,8,8,3,RED,SC);ln(ctx,13,8,3,RED,SC);
+  ln(ctx,9,10,6,WH,SC);dot(ctx,11,9,WH,SC);dot(ctx,12,9,WH,SC);
+  ln(ctx,7,13,10,DK,SC);ln(ctx,8,14,2,TN,SC);ln(ctx,14,14,2,TN,SC);
+  ln(ctx,10,14,4,GR,SC);
+  bx(ctx,3,5,3,12,GR,SC);bx(ctx,18,5,3,12,GR,SC);
+  dot(ctx,4,8,RED,SC);dot(ctx,19,8,RED,SC);dot(ctx,4,12,RED,SC);dot(ctx,19,12,RED,SC);
+  bx(ctx,6,17,12,5,GR,SC);
+  bx(ctx,7,18,4,3,DB,SC);bx(ctx,13,18,4,3,DB,SC);
+  ln(ctx,9,19,6,WH,SC);
+  return cv;
+}
+
+function drawAlienQueen(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const LV='#C4B5D0',PU='#9080A0',GN='#4A8060',DK='#252525',WH='#F0F0F0',TN='#D4B87A',YL='#BEA865';
+  // Crown
+  cl(ctx,9,0,3,TN,SC);cl(ctx,12,0,3,TN,SC);cl(ctx,15,0,3,TN,SC);
+  dot(ctx,9,0,YL,SC);dot(ctx,12,0,YL,SC);dot(ctx,15,0,YL,SC);
+  ln(ctx,9,3,7,TN,SC);
+  bx(ctx,7,4,10,12,LV,SC);bx(ctx,5,6,14,8,LV,SC);
+  cl(ctx,6,6,8,PU,SC);cl(ctx,17,6,8,PU,SC);
+  bx(ctx,8,7,4,3,DK,SC);bx(ctx,12,7,4,3,DK,SC);
+  ln(ctx,9,8,2,GN,SC);ln(ctx,13,8,2,GN,SC);
+  dot(ctx,9,8,WH,SC);dot(ctx,13,8,WH,SC);
+  ln(ctx,9,12,6,DK,SC);ln(ctx,10,13,4,WH,SC);
+  bx(ctx,9,15,6,3,LV,SC);
+  bx(ctx,6,18,12,5,PU,SC);ln(ctx,4,19,2,LV,SC);ln(ctx,18,19,2,LV,SC);
+  ln(ctx,8,18,8,YL,SC);
+  cl(ctx,5,8,4,GN,SC);cl(ctx,18,8,4,GN,SC);
+  bx(ctx,9,20,2,2,YL,SC);bx(ctx,13,20,2,2,YL,SC);
+  return cv;
+}
+
+function drawRobotStealth(){
+  const SC=6;const [cv,ctx]=mkCanvas(SC);
+  const DK2='#1C1C1C',GR='#6B6B6B',DB='#4A6B80',CY='#5A9090',WH='#F0F0F0',RED='#A04040';
+  bx(ctx,7,4,10,14,DK2,SC);bx(ctx,5,6,14,10,DK2,SC);
+  cl(ctx,6,6,10,GR,SC);cl(ctx,17,6,10,GR,SC);ln(ctx,7,4,10,GR,SC);ln(ctx,7,17,10,GR,SC);
+  bx(ctx,8,8,8,4,DB,SC);
+  ln(ctx,9,10,6,CY,SC);dot(ctx,9,9,CY,SC);dot(ctx,14,9,CY,SC);
+  dot(ctx,11,10,WH,SC);dot(ctx,12,10,WH,SC);
+  // Stealth lines
+  for(let i=0;i<3;i++){ln(ctx,8,13+i,8,GR,SC);}
+  dot(ctx,5,10,RED,SC);dot(ctx,18,10,RED,SC);
+  bx(ctx,4,7,1,8,GR,SC);bx(ctx,19,7,1,8,GR,SC);
+  cl(ctx,11,1,3,GR,SC);cl(ctx,12,1,3,GR,SC);dot(ctx,11,1,CY,SC);
+  bx(ctx,9,18,6,4,DK2,SC);cl(ctx,10,18,4,GR,SC);
+  bx(ctx,5,19,4,3,DK2,SC);bx(ctx,15,19,4,3,DK2,SC);
+  return cv;
+}
+
 // ── EVOLUTION SECTION ──────────────────────────────────────────────────
 function buildHomeEvo(){
   const el=document.getElementById('home-evo');if(!el)return;el.innerHTML='';
   const STAGES=[
-    {name:'Line',        burns:'0 burns',  count:3,  col:'#444'},
-    {name:'Sketch',      burns:'1 burn',   count:5,  col:'#6B6B6B'},
-    {name:'Study',       burns:'3 burns',  count:9,  col:'#6B8FA0'},
-    {name:'Painting',    burns:'7 burns',  count:15, col:'#D4B87A'},
-    {name:'Masterpiece', burns:'15 burns', count:null,col:'#C4B5D0'},
+    {name:'Fresh Mint',    burns:'head base',  col:'#6B6B6B'},
+    {name:'1 Burn',        burns:'+eyes+sensors',col:'#6B8FA0'},
+    {name:'2 Burns',       burns:'+mouth+ears', col:'#D4B87A'},
+    {name:'3 Burns',       burns:'+neck+body',  col:'#C4B5D0'},
+    {name:'Masterpiece',   burns:'complete',    col:'#E8E0D0'},
   ];
 
-  // Two rows: one for punk evolution, one for random seed
   [
-    {title:'Mohawk Punk evolves →', masterDraw:drawMohawk, seed:42},
-    {title:'Random Pyre evolves →', masterDraw:null,       seed:137},
+    {title:'Alien evolves →', masterDraw:drawAlienHead, fn:drawAlienEvoStage},
+    {title:'Robot evolves →', masterDraw:drawRobotHead, fn:drawRobotEvoStage},
   ].forEach(row=>{
-    const rowWrap=document.createElement('div');
+    const rowWrap=document.createElement('div');rowWrap.style.marginBottom='32px';
     const lbl=document.createElement('div');lbl.className='evo-label';lbl.textContent=row.title;
     const cards=document.createElement('div');cards.className='evo-row';
     STAGES.forEach((st,i)=>{
       const item=document.createElement('div');item.className='evo-item';
       const wrap=document.createElement('div');wrap.className='evo-canvas-wrap';
       let cv;
-      if(st.name==='Masterpiece' && row.masterDraw){
-        cv=row.masterDraw();
-      } else {
-        cv=document.createElement('canvas');
-        const sc=Math.floor(160/GRID);
-        cv.width=GRID*sc;cv.height=GRID*sc;
-        const ctx=cv.getContext('2d');
-        drawNFT(ctx,makeNFT(st.count,[row.seed]),Math.floor(160/GRID),(row.seed%2===0?[]:[]));
-      }
+      if(i===4){cv=row.masterDraw();}
+      else{cv=row.fn(i);}
       cv.style.cssText='display:block;width:100%;image-rendering:pixelated;';
       wrap.appendChild(cv);
       const info=document.createElement('div');info.className='evo-info';
@@ -2331,12 +2498,37 @@ function buildHomeEvo(){
       const bar=document.createElement('div');bar.className='evo-bar';
       bar.style.cssText='background:'+st.col+';width:'+((i+1)*20)+'%;';
       info.appendChild(bar);
-      item.appendChild(wrap);item.appendChild(info);
-      cards.appendChild(item);
+      item.appendChild(wrap);item.appendChild(info);cards.appendChild(item);
     });
-    rowWrap.appendChild(lbl);rowWrap.appendChild(cards);
-    el.appendChild(rowWrap);
+    rowWrap.appendChild(lbl);rowWrap.appendChild(cards);el.appendChild(rowWrap);
   });
+}
+
+function drawAlienEvoStage(stage){
+  const SC=4;const [cv,ctx]=mkCanvas(SC);
+  const LV='#C4B5D0',PU='#9080A0',GN='#4A8060',DK='#252525',WH='#F0F0F0',TN='#D4B87A',YL='#BEA865';
+  // Stage 0: head base + visor always present
+  bx(ctx,8,4,8,12,LV,SC);bx(ctx,6,6,12,8,LV,SC);
+  cl(ctx,7,6,8,PU,SC);cl(ctx,16,6,8,PU,SC);ln(ctx,8,4,8,PU,SC);
+  ln(ctx,8,9,8,DK,SC); // visor
+  if(stage>=0){ cl(ctx,12,0,4,TN,SC);dot(ctx,11,0,TN,SC);dot(ctx,12,0,YL,SC); } // antenna
+  if(stage>=1){ bx(ctx,8,8,4,3,DK,SC);bx(ctx,12,8,4,3,DK,SC);ln(ctx,9,9,2,GN,SC);ln(ctx,13,9,2,GN,SC);dot(ctx,9,9,WH,SC);dot(ctx,13,9,WH,SC); }
+  if(stage>=2){ ln(ctx,9,13,6,DK,SC);dot(ctx,10,14,LV,SC);ln(ctx,11,14,2,WH,SC);dot(ctx,13,14,LV,SC); }
+  if(stage>=3){ bx(ctx,10,16,4,3,LV,SC);cl(ctx,7,8,4,GN,SC);cl(ctx,16,8,4,GN,SC); }
+  return cv;
+}
+
+function drawRobotEvoStage(stage){
+  const SC=4;const [cv,ctx]=mkCanvas(SC);
+  const LG='#C8C8C8',GR='#6B6B6B',DB='#4A6B80',CY='#5A9090',DK='#252525',YL='#D4B87A',RED='#A04040',WH='#F0F0F0';
+  bx(ctx,7,5,10,11,LG,SC);cl(ctx,12,5,11,GR,SC);ln(ctx,7,11,10,GR,SC);
+  bx(ctx,8,8,8,3,DB,SC); // visor always
+  dot(ctx,8,6,DK,SC);dot(ctx,15,6,DK,SC);dot(ctx,8,14,DK,SC);dot(ctx,15,14,DK,SC);
+  if(stage>=0){ cl(ctx,11,2,3,GR,SC);cl(ctx,12,2,3,GR,SC);ln(ctx,10,2,4,GR,SC);dot(ctx,11,1,RED,SC); } // antenna
+  if(stage>=1){ ln(ctx,9,9,2,CY,SC);ln(ctx,13,9,2,CY,SC);dot(ctx,11,9,WH,SC);dot(ctx,12,9,WH,SC);dot(ctx,6,9,RED,SC);dot(ctx,17,9,RED,SC); }
+  if(stage>=2){ for(let i=0;i<4;i++)dot(ctx,9+i*2,13,DK,SC);ln(ctx,8,14,8,GR,SC); }
+  if(stage>=3){ bx(ctx,4,7,3,7,GR,SC);bx(ctx,17,7,3,7,GR,SC);dot(ctx,5,10,YL,SC);dot(ctx,18,10,YL,SC);bx(ctx,10,16,4,3,GR,SC); }
+  return cv;
 }
 
 // Seeded makeNFT – see main makeNFT above
