@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="dark only">
 <meta name="theme-color" content="#1a1a1a">
 <meta property="og:title" content="PYRE — On-chain Pixel Art">
-<meta property="og:description" content="Mint parts. Burn to get more. Build your character on-chain. 10,000 unique Pyres on Ethereum. CC0.">
+<meta property="og:description" content="Mint one of 10 head archetypes. Burn for random parts. Arrange everything in the on-chain editor. 10,000 unique characters on Ethereum. CC0.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@pyre_ethereum">
@@ -556,7 +556,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 <div id="page-home" class="page active">
   <section class="hero-full">
     <div class="hero-text-wrap">
-      <div class="hero-eyebrow">your parts · your character · on-chain · ethereum · cc0</div>
+      <div class="hero-eyebrow">mint a head · burn for parts · build your character · on-chain</div>
       <h1 class="hero-mega">
         <span class="glass-text" data-text="Burn">Burn</span><br>
         <span class="glass-text" data-text="every">every</span><br>
@@ -579,8 +579,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <section class="showcase-section" id="home-showcase">
     <div class="showcase-head">
       <div>
-        <div class="showcase-eyebrow">your parts. your character.</div>
-        <div class="showcase-ttl">mint parts.<br>burn to get more.<br>build your character.</div>
+        <div class="showcase-eyebrow">how it works.</div>
+        <div class="showcase-ttl">mint a head.<br>burn for parts.<br>build it your way.</div>
       </div>
       <div class="showcase-meta">
         <span class="showcase-lbl">total supply</span>
@@ -592,7 +592,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
     <div class="burn-chain-wrap">
       <!-- NFT 1: fresh mint -->
       <div class="chain-item">
-        <div class="chain-label">fresh mint</div>
+        <div class="chain-label">mint — head base</div>
         <canvas class="chain-canvas" id="chain-canvas-1" width="240" height="240"></canvas>
         <div class="chain-info" id="chain-info-1">3 elements</div>
       </div>
@@ -606,7 +606,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 
       <!-- NFT 2: after 1 burn -->
       <div class="chain-item chain-item--mid">
-        <div class="chain-label">1 burn — more parts</div>
+        <div class="chain-label">burn — random parts added</div>
         <canvas class="chain-canvas" id="chain-canvas-2" width="280" height="280"></canvas>
         <div class="chain-info" id="chain-info-2">7 elements</div>
       </div>
@@ -620,7 +620,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 
       <!-- NFT 3: masterpiece -->
       <div class="chain-item chain-item--master">
-        <div class="chain-label">edited — your character</div>
+        <div class="chain-label">edit — your character</div>
         <canvas class="chain-canvas" id="chain-canvas-3" width="320" height="320"></canvas>
         <div class="chain-info chain-info--master" id="chain-info-3">12 elements</div>
       </div>
@@ -636,10 +636,10 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="manifesto" id="home-about">
     <div class="manifesto-inner">
       <div>
-        <h2>Parts on-chain.<br>You build the character.</h2>
-        <p>Every Pyre starts with a head base — a skull block, a visor strip, maybe an antenna. The rest is up to you.</p>
-        <p>Burn two Pyres together and the survivor gets all elements from both. More parts. More options. Open the editor, drag everything into place, and save once to Ethereum. That's your character. Permanent. Yours.</p>
-        <p>No IPFS. No server. Every pixel encoded directly in the contract. If Ethereum exists, your character exists.</p>
+        <h2>Mint a head.<br>Burn for parts.<br>Build your character.</h2>
+        <p>Every Pyre mints as one of 10 head archetypes — a skull block, a visor, maybe an antenna. Recognisable. But incomplete.</p>
+        <p>Burn a second Pyre into it and random extra elements are added — sticks and Tetrominos from across the palette, placed anywhere on the canvas. The more you burn, the more you have to work with.</p>
+        <p>Open the editor, drag everything into place, give it a name, save once to Ethereum. No IPFS. No server. If Ethereum exists, your character exists.</p>
       </div>
       <div class="manifesto-right">
         <div class="manifesto-fact">
@@ -666,18 +666,18 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
       <div class="how-steps">
         <div class="how-step">
           <div class="how-step-num">01 — Mint</div>
-          <h3>Get your parts.</h3>
-          <p>Every Pyre starts with a head base — skull block and visor — plus random extra elements picked by Chainlink VRF. No two are alike. You don't know what you get until it's on-chain.</p>
+          <h3>Get your head.</h3>
+          <p>Every mint produces one of 10 head archetypes — a base skull and visor, chosen randomly by Chainlink VRF. You know the type when it's revealed. You don't know what comes next.</p>
         </div>
         <div class="how-step">
           <div class="how-step-num">02 — Burn</div>
-          <h3>Burn to get more.</h3>
-          <p>Sacrifice a second Pyre and every element it carries merges into yours. More sticks. More blocks. More to work with. Each burn also unlocks one edit credit.</p>
+          <h3>Burn for random parts.</h3>
+          <p>Burn a second Pyre into yours and random sticks and Tetrominos are added — color, size, and position all chosen on-chain. You never know what you get. That's the point. Each burn also unlocks one edit credit.</p>
         </div>
         <div class="how-step">
-          <div class="how-step-num">03 — Build</div>
+          <div class="how-step-num">03 — Edit</div>
           <h3>Arrange. Name. Own.</h3>
-          <p>Open the editor. Drag every part exactly where you want it. Make it a robot. Make it an alien. Make it something else entirely. Give it a name. Save once to Ethereum — permanent, yours forever.</p>
+          <p>Open the editor. Drag every element exactly where you want it. Your head base, your burn parts — all moveable. Give it a name. Save once to Ethereum — permanent, yours forever.</p>
         </div>
       </div>
     </div>
@@ -685,7 +685,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">What others built</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Same parts. Different hands. Eight characters built from the exact same elements on a 24×24 canvas.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Start with a head. Burn for random parts. Arrange everything in the editor. Here's what's possible on a 24×24 canvas.</p>
       <div class="masterpiece-grid" id="home-gallery"></div>
     </div>
   </div>
@@ -693,7 +693,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Evolution</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Mint. Burn. Arrange. The same head base becomes something different in every pair of hands.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Mint a head base. Each burn adds random elements. Arrange them in the editor. The result is yours.</p>
       <div class="evo-section" id="home-evo"></div>
     </div>
   </div>
@@ -701,7 +701,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Building Blocks</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Every character is built from sticks and Tetrominos in the NPC palette. What they become is up to you.</p>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Head base at mint. Random sticks and Tetrominos from burns. All arranged by you in the editor. All on-chain forever.</p>
       <div class="blocks-section" id="home-blocks"></div>
     </div>
   </div>
@@ -959,8 +959,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
         </div>
         <div class="mint-info">
           <div id="mint-state-idle">
-            <h3>Your character starts here.</h3>
-            <p class="mint-desc">Every Pyre starts with a head base — skull block and visor — plus random extra elements from Chainlink VRF. You get the parts. You decide what they become in the editor.</p>
+            <h3>Your head. Your canvas.</h3>
+            <p class="mint-desc">Every mint produces one of 10 head archetypes — a base skull and visor. Burn a second Pyre in and random sticks and Tetrominos are added. Then open the editor and arrange everything exactly how you want.</p>
             <div class="mint-rows">
               <div class="mint-row"><span class="lbl">Elements</span><span class="val">3–5 per Pyre (random)</span></div>
               <div class="mint-row"><span class="lbl">Canvas</span><span class="val">24×24 px on-chain</span></div>
@@ -1947,7 +1947,7 @@ async function revealMintFromChain(tokenId){
 
     // Update description with head type
     const desc=document.querySelector('#mint-state-revealed .mint-desc');
-    if(desc) desc.textContent='Type: '+htName+' ('+htNum+'/10) · '+sticks.length+' sticks · '+blocks.length+' blocks — burn another Pyre to unlock edits.';
+    if(desc) desc.textContent='You got a '+htName+' head. Burn another Pyre to add random parts and unlock the editor.';
 
     // Build element list
     const list=document.getElementById('reveal-stick-list');
