@@ -377,6 +377,31 @@ footer{border-top:1px solid var(--border2);}
 .hero-eyebrow{font-size:11px;letter-spacing:3px;color:var(--text3);font-family:var(--mono);margin-bottom:24px;text-transform:uppercase;}
 
 /* ── RAFFLE ──────────────────────────────────────────────────────────────── */
+
+/* TESTNET MODAL */
+.testnet-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);}
+.testnet-modal-overlay.open{display:flex;}
+.testnet-modal{background:#1a1a1a;border:1px solid rgba(212,184,122,0.3);max-width:460px;width:100%;padding:36px 32px;text-align:center;}
+.testnet-modal-icon{font-size:36px;margin-bottom:16px;}
+.testnet-modal-title{font-family:"Sigmar",var(--serif);font-size:26px;font-weight:400;color:#fff;margin-bottom:12px;}
+.testnet-modal-text{font-size:14px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
+.testnet-modal-text strong{color:#D4B87A;}
+.testnet-modal-facts{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;text-align:left;}
+.testnet-fact{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2);line-height:1.5;}
+.testnet-fact-icon{color:#D4B87A;font-weight:700;flex-shrink:0;margin-top:1px;}
+.testnet-fact strong{color:#fff;}
+.testnet-fact a{color:#D4B87A;text-decoration:underline;}
+.testnet-modal-btn{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:"Sigmar",var(--serif);transition:background 0.15s;margin-bottom:14px;}
+.testnet-modal-btn:hover{background:var(--accent2);}
+.testnet-modal-skip{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);cursor:pointer;justify-content:center;font-family:var(--mono);}
+.testnet-modal-skip input{cursor:pointer;}
+/* TESTNET BANNER */
+.testnet-banner{background:rgba(212,184,122,0.08);border-bottom:1px solid rgba(212,184,122,0.2);padding:10px 28px;font-size:12px;color:#b0a070;font-family:var(--mono);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.testnet-banner strong{color:#D4B87A;}
+.testnet-banner a{color:#D4B87A;text-decoration:underline;}
+.testnet-dot{width:7px;height:7px;border-radius:50%;background:#D4B87A;flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
 .raffle-hero{background:linear-gradient(135deg,#1a0a00 0%,#1a1a1a 60%);border-bottom:1px solid var(--border2);padding:64px 28px;}
 .raffle-hero-inner{max-width:var(--max);margin:0 auto;}
 .raffle-eyebrow{font-size:12px;color:var(--c1);letter-spacing:3px;text-transform:uppercase;font-family:var(--mono);margin-bottom:16px;}
@@ -920,6 +945,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
 </div>
 
 <div id="page-mint" class="page">
+
   <div class="section">
     <div class="section-inner">
       <div class="section-label">Mint a Pyre</div>
@@ -1216,6 +1242,7 @@ function showPage(id){
   document.getElementById('page-'+id).classList.add('active');
   window.scrollTo(0,0);
   if(id==='gallery')buildGallery();
+  if(id==='mint'||id==='raffle') openTestnetModal();
   if(id==='raffle') initRaffle();
   if(id==='mynfts')buildMyNFTs();
   if(id==='editor')buildEditor();
@@ -1324,6 +1351,14 @@ function copyWallet(){
   document.getElementById('wallet-dropdown')?.remove();
   navigator.clipboard?.writeText(walletAddress).then(()=>toast('Address copied!'));
 }
+function openTestnetModal(){
+  if(sessionStorage.getItem('pyre_testnet_ok')) return;
+  document.getElementById('testnet-modal').classList.add('open');
+}
+function closeTestnetModal(){
+  document.getElementById('testnet-modal').classList.remove('open');
+}
+
 function openMenu(){document.getElementById('menu-overlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');document.body.style.overflow='';}
 function toggleMobileNav(){openMenu();}
@@ -2997,5 +3032,39 @@ function setDir(di){ if(editCredits<=0)return; editorSticks[selectedIdx].dir=di;
 
 buildHero();buildHomeGallery();buildHomeEvo();buildBlocksSection();buildHeroNFT();buildShowcase();loadPrice();
 </script>
+
+<!-- TESTNET MODAL -->
+<div id="testnet-modal" class="testnet-modal-overlay" onclick="if(event.target===this)closeTestnetModal()">
+  <div class="testnet-modal">
+    <div class="testnet-modal-icon">⚠️</div>
+    <h2 class="testnet-modal-title">Testnet Preview</h2>
+    <p class="testnet-modal-text">
+      PYRE is currently running on <strong>Ethereum Sepolia Testnet</strong>.
+    </p>
+    <div class="testnet-modal-facts">
+      <div class="testnet-fact">
+        <span class="testnet-fact-icon">✓</span>
+        <span>Minting is <strong>completely free</strong> — no real ETH needed</span>
+      </div>
+      <div class="testnet-fact">
+        <span class="testnet-fact-icon">✓</span>
+        <span>Get free Sepolia ETH at <a href="https://sepoliafaucet.com" target="_blank">sepoliafaucet.com</a></span>
+      </div>
+      <div class="testnet-fact">
+        <span class="testnet-fact-icon">✓</span>
+        <span>Raffle prizes are <strong>real</strong> — $25 ETH + free mints</span>
+      </div>
+      <div class="testnet-fact">
+        <span class="testnet-fact-icon">✓</span>
+        <span>Mainnet launch coming soon</span>
+      </div>
+    </div>
+    <button class="testnet-modal-btn" onclick="closeTestnetModal()">Got it — let's go 🔥</button>
+    <label class="testnet-modal-skip">
+      <input type="checkbox" id="testnet-dont-show" onchange="if(this.checked)sessionStorage.setItem('pyre_testnet_ok','1')">
+      don't show again this session
+    </label>
+  </div>
+</div>
 </body>
 </html>
