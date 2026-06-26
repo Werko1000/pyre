@@ -502,7 +502,7 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
       </button>
       <div class="menu-links">
         <a href="https://twitter.com/pyre_ethereum" target="_blank">X / Twitter</a>
-        <a href="https://sepolia.etherscan.io/address/0x26639D1eCa23C62520ff9ff14F314481571685c9" target="_blank">Etherscan</a>
+        <a href="https://sepolia.etherscan.io/address/0x5352647F3bF8cd6240C04ca11Ea6112788504fFC" target="_blank">Etherscan</a>
       </div>
     </div>
   </div>
@@ -684,8 +684,8 @@ const _supa = supabase.createClient('https://ciluzgglneghaprvbosm.supabase.co', 
   </div>
   <div class="section">
     <div class="section-inner">
-      <div class="section-label">What you can build</div>
-      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Same parts, different hands. Here's what people built on a 24×24 canvas.</p>
+      <div class="section-label">What others built</div>
+      <p style="font-size:14px;color:#e7e7e7;line-height:1.7;margin-bottom:28px;max-width:480px;">Same parts. Different hands. Eight characters built from the exact same elements on a 24×24 canvas.</p>
       <div class="masterpiece-grid" id="home-gallery"></div>
     </div>
   </div>
@@ -1075,7 +1075,7 @@ const DIR_NAMES=["—","|"];
 const GRID=24;
 
 // ── Contract config ──────────────────────────────────────────────────────────
-const CONTRACT_ADDRESS = "0x26639D1eCa23C62520ff9ff14F314481571685c9";
+const CONTRACT_ADDRESS = "0x5352647F3bF8cd6240C04ca11Ea6112788504fFC";
 const CHAIN_ID_HEX = "0xaa36a7"; // Ethereum Sepolia = 11155111
 const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/9t2l29UXveRJxvspv3swk";
 
@@ -2296,7 +2296,7 @@ function buildHomeGallery(){
     const info=document.createElement('div');info.className='mp-card-info';
     info.innerHTML='<div class="mp-card-id">'+m.id+'</div>'
       +'<div class="mp-card-label">'+m.label+'</div>'
-      +'<div class="mp-card-stage">Masterpiece</div>';
+      +'<div class="mp-card-stage">Built by owner</div>';
     card.appendChild(cv);card.appendChild(info);grid.appendChild(card);
   });
 }
