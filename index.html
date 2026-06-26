@@ -2811,7 +2811,7 @@ async function buildMyNFTs(){
     const stage=getStage((item.sticks.length||0)+(item.blocks||[]).length);
     const total=(item.sticks.length||0)+(item.blocks||[]).length;
     footer.innerHTML='<div class="mynft-info"><h4>'+(item.name&&item.name!=='Untitled'?item.name:'Pyre')+' #'+item.id+'</h4>'
-      +'<span>'+(HEAD_TYPE_NAMES[n.headType]||'Pyre')+' · '+stage+' · '+total+' elements</span></div>'
+      +'<span>'+(HEAD_TYPE_NAMES[item.headType]||'Pyre')+' · '+stage+' · '+total+' elements</span></div>'
       +'<button class="edit-btn" onclick="openEditor('+item.id+')" style="'+(item.credits>0?'border-color:var(--accent);color:var(--accent);':'')+'">edit</button>';
     card.appendChild(cv);card.appendChild(footer);
     grid.appendChild(card);
@@ -2930,18 +2930,14 @@ function renderBurnConfirm(){
   if(burnKeepId===null||burnBurnId===null){area.innerHTML='';return;}
   const keep=myNFTData.find(x=>x.id===burnKeepId);
   const burn=myNFTData.find(x=>x.id===burnBurnId);
-  const mergedSticks=keep.sticks.concat(burn.sticks);
-  const mergedBlocks=(keep.blocks||[]).concat(burn.blocks||[]);
   const keepTotal=(keep.sticks.length)+(keep.blocks||[]).length;
-  const burnTotal=(burn.sticks.length)+(burn.blocks||[]).length;
-  const newTotal=keepTotal+burnTotal;
   area.innerHTML='<div class="burn-confirm"><canvas class="burn-preview-canvas" id="burn-preview" width="150" height="150"></canvas><div class="burn-confirm-text">'
-    +'<h4>Pyre #'+keep.id+' will hold '+newTotal+' elements</h4>'
-    +'<p>Burning #'+burn.id+' moves its '+burnTotal+' elements into #'+keep.id+' and unlocks one edit. #'+burn.id+' is destroyed permanently.</p>'
+    +'<h4>Pyre #'+keep.id+' receives 3–5 random blocks</h4>'
+    +'<p>Burning #'+burn.id+' destroys it permanently and adds 3–5 random new blocks to #'+keep.id+'. You also unlock one edit credit to arrange everything.</p>'
     +'<button class="burn-go" onclick="confirmBurn()">Burn #'+burn.id+' → keep #'+keep.id+'</button>'
     +'</div></div>';
   const cv=document.getElementById('burn-preview');
-  drawNFT(cv.getContext('2d'),mergedSticks,150/GRID,mergedBlocks);
+  drawNFT(cv.getContext('2d'),keep.sticks,150/GRID,keep.blocks||[]);
 }
 
 async function confirmBurn(){
