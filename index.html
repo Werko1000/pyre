@@ -1486,29 +1486,48 @@ async function raffleSubmit(){
   if(!walletAddress){toast('Connect your wallet first!');return;}
 
   const btn=document.getElementById('raffle-submit-btn');
-  if(btn){btn.textContent='Verifying on-chain…';btn.disabled=true;}
+  if(btn){btn.textContent='Submitting…';btn.disabled=true;}
 
   const tasks={};
   RAFFLE_TASKS.forEach(t=>{tasks[t]=localStorage.getItem('pyre_raffle_'+t)==='1';});
 
   try{
-    const res=await fetch('/api/submit-raffle',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({wallet:walletAddress,tasks})
-    });
-    const data=await res.json();
-    if(!res.ok) throw new Error(data.error||'Server error');
+    // Try Vercel API first
+    let success=false;
+    try{
+      const res=await fetch('/api/submit-raffle',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({wallet:walletAddress,tasks})
+      });
+      if(res.ok){
+        const data=await res.json();
+        if(data.tasks?.hold)  {localStorage.setItem('pyre_raffle_hold','1');   raffleMarkDone('hold',false);}
+        if(data.tasks?.minted){localStorage.setItem('pyre_raffle_minted','1'); raffleMarkDone('minted',false);}
+        localStorage.setItem('pyre_raffle_entry',JSON.stringify({wallet:walletAddress,tickets:data.tickets}));
+        toast('✅ Verified! '+data.tickets+' ticket'+(data.tickets>1?'s':'')+' 🎟');
+        raffleLoadOdds(data.tickets);
+        success=true;
+      }
+    }catch(e){console.warn('API unavailable, using Supabase directly');}
 
-    // Update local state with server-verified tickets
-    if(data.tasks.hold)  {localStorage.setItem('pyre_raffle_hold','1');   raffleMarkDone('hold',false);}
-    if(data.tasks.minted){localStorage.setItem('pyre_raffle_minted','1'); raffleMarkDone('minted',false);}
+    // Fallback: save directly to Supabase (without on-chain columns)
+    if(!success){
+      const {error}=await _supa.from('raffle_entries').upsert({
+        wallet: walletAddress.toLowerCase(),
+        tickets: myTickets,
+        tasks,
+        updated_at: new Date().toISOString()
+      },{onConflict:'wallet'});
+      if(error) throw error;
+      localStorage.setItem('pyre_raffle_entry',JSON.stringify({wallet:walletAddress,tickets:myTickets}));
+      toast('✅ Entry saved! '+myTickets+' ticket'+(myTickets>1?'s':'')+' 🎟');
+      raffleLoadOdds(myTickets);
+    }
 
-    localStorage.setItem('pyre_raffle_entry',JSON.stringify({wallet:walletAddress,tickets:data.tickets}));
     document.getElementById('raffle-submit-btn').style.display='none';
     document.getElementById('raffle-submitted-msg').style.display='block';
-    toast('✅ Verified! '+data.tickets+' ticket'+(data.tickets>1?'s':'')+' 🎟');
-    raffleLoadOdds(data.tickets);
+
   }catch(e){
     console.error('Submit error:',e);
     if(btn){btn.textContent='Submit entry';btn.disabled=false;}
