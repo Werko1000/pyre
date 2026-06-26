@@ -1417,6 +1417,11 @@ function initRaffle(){
     if(stored.tickets) raffleLoadOdds(stored.tickets);
   }
 
+  // Load odds for anyone with tickets
+  const myTickets=RAFFLE_TASKS.reduce((sum,t)=>
+    sum+(localStorage.getItem('pyre_raffle_'+t)==='1'?(RAFFLE_TASK_TICKETS[t]||1):0),0);
+  if(myTickets>0) raffleLoadOdds(myTickets);
+
   startCountdown();
 }
 
@@ -1488,9 +1493,27 @@ async function raffleSubmit(){
 
 async function raffleLoadOdds(myTickets){
   try{
-    const res=await fetch('/api/raffle-odds');
-    const {totalTickets,totalParticipants}=await res.json();
-    const pWin=totalTickets>0?Math.min(1-Math.pow((totalTickets-myTickets)/totalTickets,2),1):0;
+    let totalTickets=0, totalParticipants=0;
+
+    // Try Vercel API first, fallback to Supabase directly
+    try{
+      const res=await fetch('/api/raffle-odds');
+      if(res.ok){
+        const d=await res.json();
+        totalTickets=d.totalTickets||0;
+        totalParticipants=d.totalParticipants||0;
+      } else throw new Error('API not available');
+    }catch{
+      // Fallback: query Supabase directly
+      const {data}=await _supa.from('raffle_entries').select('tickets');
+      if(data){
+        totalTickets=data.reduce((s,r)=>s+r.tickets,0);
+        totalParticipants=data.length;
+      }
+    }
+
+    if(totalTickets===0)return;
+    const pWin=Math.min(1-Math.pow((totalTickets-myTickets)/Math.max(totalTickets,1),2),1);
     const pct=(pWin*100).toFixed(1);
     const oddsWrap=document.getElementById('raffle-odds-wrap');
     if(oddsWrap)oddsWrap.style.display='block';
