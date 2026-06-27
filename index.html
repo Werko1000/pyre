@@ -1163,21 +1163,9 @@ function makeOnchainImg(tokenId, size){
   const img=document.createElement('img');
   img.style.cssText='width:100%;display:block;border-radius:0;';
   img.alt='Pyre #'+tokenId;
-  // grey placeholder
   img.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"><rect width="50" height="50" fill="%23f5f5f5"/></svg>';
   fetchTokenImage(tokenId).then(src=>{ if(src) img.src=src; });
   return img;
-}
-// Convert JS stick back to on-chain tuple
-function toChainStick(s) {
-  const colorIdx = PALETTE.indexOf(s.color);
-  return {
-    color:  colorIdx >= 0 ? colorIdx : 0,
-    length: Number(s.length),
-    x:      Number(s.x),
-    y:      Number(s.y),
-    dir:    Number(s.dir)
-  };
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
